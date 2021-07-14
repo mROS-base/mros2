@@ -1,0 +1,17 @@
+#
+# Makefile definition for mROS2 library
+#
+
+MROS2DIR := $(ROOTDIR)/mros2
+DRIVERSDIR := $(ROOTDIR)/STM32CubeF7/Drivers
+MIDDLEWARE := $(ROOTDIR)/STM32CubeF7/Middlewares
+APLDIR := $(ROOTDIR)/src/startup
+MICROCDR_DIR := $(RTPSDIR)/thirdparty/Micro-CDR
+
+INCLUDES += -I$(MROS2DIR)/include
+INCLUDES += -I$(MROS2DIR)/mros2_msgs
+
+APPLDIR        += $(MROS2DIR)/src
+
+APPL_CXXOBJS    += mros2.o
+

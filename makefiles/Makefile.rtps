@@ -1,0 +1,47 @@
+#
+# Makefile definition for embeddedRTPS stack
+#
+
+RTPSDIR := $(ROOTDIR)/mros2/embeddedRTPS
+DRIVERSDIR := $(ROOTDIR)/STM32CubeF7/Drivers
+APLDIR := $(ROOTDIR)/src/startup
+MICROCDR_DIR := $(RTPSDIR)/thirdparty/Micro-CDR
+
+CDEFS            += -DMROS2_USE_CUBE -DMROS2_USE_EMBEDDEDRTPS
+
+INCLUDES += -I$(RTPSDIR)/include
+INCLUDES += -I$(RTPSDIR)/thirdparty/lwip
+INCLUDES += -I$(MICROCDR_DIR)/include
+INCLUDES += -I$(MICROCDR_DIR)/src/c/types
+
+APPLDIR        += $(RTPSDIR)/src
+APPLDIR        += $(RTPSDIR)/src/communication
+APPLDIR        += $(RTPSDIR)/src/discovery
+APPLDIR        += $(RTPSDIR)/src/entities
+APPLDIR        += $(RTPSDIR)/src/messages
+APPLDIR        += $(RTPSDIR)/src/storages
+APPLDIR        += $(MICROCDR_DIR)/src/c
+APPLDIR        += $(MICROCDR_DIR)/src/c/types
+
+APPL_CXXOBJS    += UdpDriver.o
+APPL_CXXOBJS    += ParticipantProxyData.o
+APPL_CXXOBJS    += SEDPAgent.o
+APPL_CXXOBJS    += SPDPAgent.o
+APPL_CXXOBJS    += TopicData.o
+APPL_CXXOBJS    += Domain.o
+APPL_CXXOBJS    += Participant.o
+APPL_CXXOBJS    += StatelessReader.o
+APPL_CXXOBJS    += MessageReceiver.o
+APPL_CXXOBJS    += MessageTypes.o
+APPL_CXXOBJS    += HistoryCache.o
+APPL_CXXOBJS    += PBufWrapper.o
+APPL_CXXOBJS    += SimpleHistoryCache.o
+APPL_CXXOBJS    += rtps.o
+APPL_CXXOBJS    += ThreadPool.o
+
+APPL_COBJS      += array.o
+APPL_COBJS      += basic.o
+APPL_COBJS      += sequence.o
+APPL_COBJS      += string.o
+APPL_COBJS      += common.o
+
