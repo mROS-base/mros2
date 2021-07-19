@@ -26,12 +26,22 @@ rtps::Domain *domain_ptr = NULL;
 rtps::Participant *part_ptr = NULL; //TODO: detele this
 rtps::Writer *pub_ptr = NULL;
 
+#define SUB_MSG_COUNT	10
+#define SUB_MSG_SIZE	4	// addr size
+osMessageQueueId_t subscriber_msg_gueue_id;
+
+typedef struct {
+	void (*cb_fp)(intptr_t);
+	intptr_t argp;
+}SubscribeDataType;
+
+
 Node Node::create_node()
 {
    Node node;
    syslog(LOG_NOTICE, "create_node");
    syslog(LOG_NOTICE, "start creating participant");
-   while(domain_ptr == NULL){dly_tsk(100000);}
+   while(domain_ptr == NULL){osDelay(100);}
    node.part = domain_ptr->createParticipant();
    part_ptr = node.part;
    if(node.part == nullptr){
@@ -54,7 +64,14 @@ Subscriber Node::create_subscription(std::string node_name, int qos, void(*fp)(T
     Subscriber sub;
     sub.topic_name = node_name;
 	sub.cb_fp = (void (*)(intptr_t))fp;
-	reader->registerCallback(sub.callback_handler, (void *)&sub);
+
+	SubscribeDataType *data_p;
+	data_p = new SubscribeDataType;
+	syslog(LOG_NOTICE, "create subscription complete. data memory address=0x%x", data_p);
+	data_p->cb_fp = (void (*)(intptr_t))fp;
+	data_p->argp = NULL;
+
+	reader->registerCallback(sub.callback_handler, (void *)data_p);
     return sub;
 }
 
@@ -77,7 +94,7 @@ void Subscriber::callback_handler(void* callee, const rtps::ReaderCacheChange& c
 	std_msgs::msg::String msg;
 	msg.data.resize(msg_size);
 	memcpy(&msg.data[0], &cacheChange.data[8], msg_size);
-	mros2::Subscriber *sub = (mros2::Subscriber*)callee;
+	SubscribeDataType *sub = (SubscribeDataType*)callee;
 	void (*fp)(intptr_t) = sub->cb_fp;
 	fp((intptr_t)&msg);
 }
@@ -104,7 +121,13 @@ void init(int argc, char *argv)
 void spin()
 {
     while(true){
-        slp_tsk();
+    	osStatus_t ret;
+       	SubscribeDataType* msg;
+   		ret = osMessageQueueGet(subscriber_msg_gueue_id, &msg, NULL, osWaitForever);
+   		if (ret != osOK) {
+   			syslog(LOG_NOTICE, "mROS2 spin() wait error %d", ret);
+   		}
+   		//delete msg;
     }
 }
 
@@ -127,10 +150,18 @@ void message_callback(void* callee, const rtps::ReaderCacheChange& cacheChange){
 
 void mros2_init(void *args)
 {
+	osStatus_t ret;
     static rtps::Domain domain;
     domain_ptr = &domain;
 	syslog(LOG_NOTICE, "mROS2 init start");
-    while(!completeSubInit || !completePubInit){dly_tsk(100000);}
+
+	subscriber_msg_gueue_id = osMessageQueueNew(SUB_MSG_COUNT, SUB_MSG_SIZE, NULL);
+	if (subscriber_msg_gueue_id == NULL) {
+		syslog(LOG_NOTICE, "mROS2 init Error");
+		return;
+	}
+
+    while(!completeSubInit || !completePubInit){osDelay(100);}
 
 	 bool subMatched = false;
 	 bool pubMatched = false;
@@ -146,11 +177,14 @@ void mros2_init(void *args)
 
 	 //Wait for the subscriber on the Linux side to match
 	 while(!subMatched || !pubMatched){
-	 	dly_tsk(1000000);
+		 osDelay(1000);
 	 }
 
 	 //BSP_LED_On(LED1);
-	 ext_tsk();
+	 ret = osThreadTerminate(NULL);
+	 if (ret != osOK) {
+	 	syslog(LOG_NOTICE, "mros2 init() task terminate error %d", ret);
+	 }
 }
 
 
