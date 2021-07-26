@@ -2,7 +2,8 @@
 # Makefile definition for lwIP stack and CMSIS driver
 #
 
-CDEFS += -DMROS2_LWIP_NO_STDDEF -DSTM32F767xx
+CDEFS += -DUSE_LWIP_NO_STDDEF 
+CDEFS += -DSTM32F767xx
 CDEFS += -DosObjectsExternal
 
 #
