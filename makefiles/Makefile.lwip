@@ -15,26 +15,13 @@ LWIPDIR := $(ROOTDIR)/STM32CubeF7/Middlewares/Third_Party/LwIP
 INCLUDES += -I$(LWIPDIR)/src
 INCLUDES += -I$(LWIPDIR)/src/include
 INCLUDES += -I$(LWIPDIR)/system
-ifneq ($(TOPPERS_KERNEL),asp3)
-INCLUDES += -I$(DRIVERSDIR)/STM32F7xx_HAL_Driver/Inc
-INCLUDES += -I$(DRIVERSDIR)/STM32F7xx_HAL_Driver/Inc/Legacy
-INCLUDES += -I$(DRIVERSDIR)/CMSIS/Device/ST/STM32F7xx/Include
-INCLUDES += -I$(DRIVERSDIR)/CMSIS/Core/Include
-endif
 INCLUDES += -I$(APLDIR)/include
-ifeq ($(TOPPERS_KERNEL),asp)
-INCLUDES += -I$(APLDIR)/include/asp
-endif
 
 APPLDIR	+= $(LWIPDIR)/system/OS
 APPLDIR	+= $(LWIPDIR)/src/netif
 APPLDIR	+= $(LWIPDIR)/src/api
 APPLDIR	+= $(LWIPDIR)/src/core
 APPLDIR	+= $(LWIPDIR)/src/core/ipv4
-ifneq ($(TOPPERS_KERNEL),asp3)
-APPLDIR += $(DRIVERSDIR)/Src
-APPLDIR += $(DRIVERSDIR)/Src/Legacy
-endif
 APPLDIR += $(APLDIR)/src
 
 #
@@ -82,23 +69,12 @@ APPL_COBJS	+= ip4.o
 APPL_COBJS	+= igmp.o
 APPL_COBJS	+= autoip.o
 APPL_COBJS	+= ip4_frag.o
-ifneq ($(TOPPERS_KERNEL),asp3)
-APPL_COBJS      += stm32f7xx_hal.o
-endif
-APPL_COBJS      += stm32f7xx_hal_eth.o
-APPL_COBJS      += stm32f7xx_hal_cortex.o
-APPL_COBJS		+= stm32f7xx_it.o
-APPL_COBJS      += ethernetif.o
-APPL_COBJS      += lwip.o
-ifneq ($(TOPPERS_KERNEL),asp3)
-APPL_COBJS      += stm32f7xx_hal_pwr.o
-APPL_COBJS      += stm32f7xx_hal_pwr_ex.o
-APPL_COBJS      += system_stm32f7xx.o
-endif
-APPL_COBJS      += stm32f7xx_hal_pcd.o
-APPL_COBJS      += stm32f7xx_hal_pcd_ex.o
-APPL_COBJS      += stm32f7xx_ll_usb.o
-APPL_COBJS      += syscalls.o
-ifneq ($(TOPPERS_KERNEL),asp3)
-APPL_COBJS      += main.o
-endif
+APPL_COBJS  += stm32f7xx_hal_eth.o
+APPL_COBJS  += stm32f7xx_hal_cortex.o
+APPL_COBJS	+= stm32f7xx_it.o
+APPL_COBJS  += ethernetif.o
+APPL_COBJS  += lwip.o
+APPL_COBJS  += stm32f7xx_hal_pcd.o
+APPL_COBJS  += stm32f7xx_hal_pcd_ex.o
+APPL_COBJS  += stm32f7xx_ll_usb.o
+APPL_COBJS  += syscalls.o
