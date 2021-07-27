@@ -1,21 +1,7 @@
 #include "mros2.h"
 
-#include <kernel.h>
-#include <t_syslog.h>
-#include <t_stdlib.h>
-#include "syssvc/serial.h"
-#include "syssvc/syslog.h"
-#include "kernel_cfg.h"
 #include <rtps/rtps.h>
-#include "sample1.h"
 #include "cmsis_os.h"
-#include "lwip.h"
-#include <cstdint>
-
-#include "stm32f7xx_hal.h"
-#include "stm32f7xx_nucleo_144.h"
-
-#include "rtps/rtps.h"
 
 #include "TEST.hpp"
 #include "std_msgs/msg/string.hpp"
@@ -39,16 +25,16 @@ typedef struct {
 Node Node::create_node()
 {
    Node node;
-   syslog(LOG_NOTICE, "create_node");
-   syslog(LOG_NOTICE, "start creating participant");
+   CMSIS_IMPL_INFO("create_node");
+   CMSIS_IMPL_INFO("start creating participant");
    while(domain_ptr == NULL){osDelay(100);}
    node.part = domain_ptr->createParticipant();
    part_ptr = node.part;
    if(node.part == nullptr){
-       syslog(LOG_ERROR, "NODE CREATION FAILED");
+	   CMSIS_IMPL_ERROR("NODE CREATION FAILED");
        while(true){}
    }
-   syslog(LOG_NOTICE, "successfully created participant");
+   CMSIS_IMPL_INFO("successfully created participant");
    return node;
 }
 bool completeSubInit = false;
@@ -67,9 +53,9 @@ Subscriber Node::create_subscription(std::string node_name, int qos, void(*fp)(T
 
 	SubscribeDataType *data_p;
 	data_p = new SubscribeDataType;
-	syslog(LOG_NOTICE, "create subscription complete. data memory address=0x%x", data_p);
+	CMSIS_IMPL_INFO("create subscription complete. data memory address=0x%x", data_p);
 	data_p->cb_fp = (void (*)(intptr_t))fp;
-	data_p->argp = NULL;
+	data_p->argp = 0;
 
 	reader->registerCallback(sub.callback_handler, (void *)data_p);
     return sub;
@@ -125,7 +111,7 @@ void spin()
        	SubscribeDataType* msg;
    		ret = osMessageQueueGet(subscriber_msg_gueue_id, &msg, NULL, osWaitForever);
    		if (ret != osOK) {
-   			syslog(LOG_NOTICE, "mROS2 spin() wait error %d", ret);
+   			CMSIS_IMPL_INFO("mROS2 spin() wait error %d", ret);
    		}
    		//delete msg;
     }
@@ -136,16 +122,16 @@ void setTrue(void* args){
 	*static_cast<volatile bool*>(args) = true;
 }
 void pubMatch(void* args){
-	syslog(LOG_NOTICE, "publisher matched with remote subscriber");
+	CMSIS_IMPL_INFO("publisher matched with remote subscriber");
 }
 
 void subMatch(void* args){
-	syslog(LOG_NOTICE, "subscriber matched with remote publisher");
+	CMSIS_IMPL_INFO("subscriber matched with remote publisher");
 }
 
 
 void message_callback(void* callee, const rtps::ReaderCacheChange& cacheChange){
-	syslog(LOG_NOTICE, "recv message");
+	CMSIS_IMPL_INFO("recv message");
 }
 
 void mros2_init(void *args)
@@ -153,11 +139,11 @@ void mros2_init(void *args)
 	osStatus_t ret;
     static rtps::Domain domain;
     domain_ptr = &domain;
-	syslog(LOG_NOTICE, "mROS2 init start");
+    CMSIS_IMPL_INFO("mROS2 init start");
 
 	subscriber_msg_gueue_id = osMessageQueueNew(SUB_MSG_COUNT, SUB_MSG_SIZE, NULL);
 	if (subscriber_msg_gueue_id == NULL) {
-		syslog(LOG_NOTICE, "mROS2 init Error");
+		CMSIS_IMPL_INFO("mROS2 init Error");
 		return;
 	}
 
@@ -173,7 +159,7 @@ void mros2_init(void *args)
 
 
 	 domain.completeInit();
-	 syslog(LOG_NOTICE, "mROS2 init complete");
+	 CMSIS_IMPL_INFO("mROS2 init complete");
 
 	 //Wait for the subscriber on the Linux side to match
 	 while(!subMatched || !pubMatched){
@@ -183,7 +169,7 @@ void mros2_init(void *args)
 	 //BSP_LED_On(LED1);
 	 ret = osThreadTerminate(NULL);
 	 if (ret != osOK) {
-	 	syslog(LOG_NOTICE, "mros2 init() task terminate error %d", ret);
+		 CMSIS_IMPL_INFO("mros2 init() task terminate error %d", ret);
 	 }
 }
 
