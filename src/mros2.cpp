@@ -1,4 +1,5 @@
 #include "mros2.h"
+#include "mros2_user_config.h"
 
 #include <rtps/rtps.h>
 #include "cmsis_os.h"
@@ -6,13 +7,14 @@
 #include "TEST.hpp"
 #include "std_msgs/msg/string.hpp"
 
+
 namespace mros2 {
 
 rtps::Domain *domain_ptr = NULL;
 rtps::Participant *part_ptr = NULL; //TODO: detele this
 rtps::Writer *pub_ptr = NULL;
 
-#define SUB_MSG_COUNT	10
+
 #define SUB_MSG_SIZE	4	// addr size
 osMessageQueueId_t subscriber_msg_gueue_id;
 
@@ -55,7 +57,7 @@ Subscriber Node::create_subscription(std::string node_name, int qos, void(*fp)(T
 	data_p = new SubscribeDataType;
 	CMSIS_IMPL_INFO("create subscription complete. data memory address=0x%x", data_p);
 	data_p->cb_fp = (void (*)(intptr_t))fp;
-	data_p->argp = 0;
+	data_p->argp = (intptr_t)NULL;
 
 	reader->registerCallback(sub.callback_handler, (void *)data_p);
     return sub;
@@ -137,11 +139,13 @@ void message_callback(void* callee, const rtps::ReaderCacheChange& cacheChange){
 void mros2_init(void *args)
 {
 	osStatus_t ret;
+	int sub_msg_count;
     static rtps::Domain domain;
     domain_ptr = &domain;
     CMSIS_IMPL_INFO("mROS2 init start");
 
-	subscriber_msg_gueue_id = osMessageQueueNew(SUB_MSG_COUNT, SUB_MSG_SIZE, NULL);
+	sub_msg_count = mros2_get_submsg_count();
+	subscriber_msg_gueue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
 	if (subscriber_msg_gueue_id == NULL) {
 		CMSIS_IMPL_INFO("mROS2 init Error");
 		return;
@@ -151,7 +155,6 @@ void mros2_init(void *args)
 
 	 bool subMatched = false;
 	 bool pubMatched = false;
-	 bool received_message = false;
 
 	 //Register callback to ensure that a publisher is matched to the writer before sending messages
 	 part_ptr->registerOnNewPublisherMatchedCallback(subMatch, &pubMatched);
