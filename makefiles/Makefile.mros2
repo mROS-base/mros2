@@ -1,0 +1,12 @@
+#
+# Makefile definition for mROS2 library
+#
+
+MROS2DIR := $(ROOTDIR)/mros2
+
+INCLUDES += -I$(MROS2DIR)/include
+INCLUDES += -I$(MROS2DIR)/mros2_msgs
+
+APPLDIR += $(MROS2DIR)/src
+
+APPL_CXXOBJS += mros2.o
