@@ -103,7 +103,15 @@ void init(int argc, char *argv)
 	buf[1] = 1;
 	buf[2] = 0;
 	buf[3] = 0;
-    sys_thread_new("mROS2Thread", mros2_init, NULL, 1000, 24); //TODO: fix this
+
+	osThreadAttr_t attributes;
+	
+	attributes.name = "mROS2Thread",
+	attributes.stack_size = 1000,
+	attributes.priority = (osPriority_t)24,
+
+	osThreadNew(mros2_init, NULL, (const osThreadAttr_t*)&attributes);
+
 }
 
 void spin()
