@@ -75,6 +75,7 @@ APPL_COBJS  += stm32f7xx_hal_eth.o
 APPL_COBJS  += stm32f7xx_hal_cortex.o
 APPL_COBJS	+= stm32f7xx_it.o
 APPL_COBJS  += ethernetif.o
+APPL_COBJS  += ethernetif_init.o
 APPL_COBJS  += lwip.o
 APPL_COBJS  += stm32f7xx_hal_pcd.o
 APPL_COBJS  += stm32f7xx_hal_pcd_ex.o
