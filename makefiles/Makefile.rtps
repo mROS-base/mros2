@@ -9,6 +9,7 @@ CDEFS += -DMROS2_USE_CUBE
 CDEFS += -DMROS2_USE_EMBEDDEDRTPS
 
 INCLUDES += -I$(RTPSDIR)/include
+INCLUDES += -I$(RTPSDIR)/include/rtps
 INCLUDES += -I$(RTPSDIR)/thirdparty/lwip
 INCLUDES += -I$(MICROCDR_DIR)/include
 INCLUDES += -I$(MICROCDR_DIR)/src/c/types
