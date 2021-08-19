@@ -8,7 +8,8 @@
 #include "std_msgs/msg/string.hpp"
 
 
-namespace mros2 {
+namespace mros2
+{
 
 rtps::Domain *domain_ptr = NULL;
 rtps::Participant *part_ptr = NULL; //TODO: detele this
@@ -19,25 +20,27 @@ rtps::Writer *pub_ptr = NULL;
 osMessageQueueId_t subscriber_msg_gueue_id;
 
 typedef struct {
-	void (*cb_fp)(intptr_t);
-	intptr_t argp;
-}SubscribeDataType;
+  void (*cb_fp)(intptr_t);
+  intptr_t argp;
+} SubscribeDataType;
 
 
 Node Node::create_node()
 {
-   Node node;
-   CMSIS_IMPL_INFO("create_node");
-   CMSIS_IMPL_INFO("start creating participant");
-   while(domain_ptr == NULL){osDelay(100);}
-   node.part = domain_ptr->createParticipant();
-   part_ptr = node.part;
-   if(node.part == nullptr){
-	   CMSIS_IMPL_ERROR("NODE CREATION FAILED");
-       while(true){}
-   }
-   CMSIS_IMPL_INFO("successfully created participant");
-   return node;
+  Node node;
+  CMSIS_IMPL_INFO("create_node");
+  CMSIS_IMPL_INFO("start creating participant");
+  while(domain_ptr == NULL) {
+    osDelay(100);
+  }
+  node.part = domain_ptr->createParticipant();
+  part_ptr = node.part;
+  if(node.part == nullptr) {
+    CMSIS_IMPL_ERROR("NODE CREATION FAILED");
+    while(true) {}
+  }
+  CMSIS_IMPL_INFO("successfully created participant");
+  return node;
 }
 bool completeSubInit = false;
 bool completePubInit = false;
@@ -47,44 +50,44 @@ uint32_t subCbArray[10];
 template <class T>
 Subscriber Node::create_subscription(std::string node_name, int qos, void(*fp)(T))
 {
-	rtps::Reader* reader = domain_ptr->createReader(*(this->part), ("rt/"+node_name).c_str(), message_traits::TypeName<T>().value(), false);
-    completeSubInit = true;
-    Subscriber sub;
-    sub.topic_name = node_name;
-	sub.cb_fp = (void (*)(intptr_t))fp;
+  rtps::Reader* reader = domain_ptr->createReader(*(this->part), ("rt/"+node_name).c_str(), message_traits::TypeName<T>().value(), false);
+  completeSubInit = true;
+  Subscriber sub;
+  sub.topic_name = node_name;
+  sub.cb_fp = (void (*)(intptr_t))fp;
 
-	SubscribeDataType *data_p;
-	data_p = new SubscribeDataType;
-	CMSIS_IMPL_INFO("create subscription complete. data memory address=0x%x", data_p);
-	data_p->cb_fp = (void (*)(intptr_t))fp;
-	data_p->argp = (intptr_t)NULL;
+  SubscribeDataType *data_p;
+  data_p = new SubscribeDataType;
+  CMSIS_IMPL_INFO("create subscription complete. data memory address=0x%x", data_p);
+  data_p->cb_fp = (void (*)(intptr_t))fp;
+  data_p->argp = (intptr_t)NULL;
 
-	reader->registerCallback(sub.callback_handler, (void *)data_p);
-    return sub;
+  reader->registerCallback(sub.callback_handler, (void *)data_p);
+  return sub;
 }
 
 template <class T>
 Publisher Node::create_publisher(std::string node_name, int qos)
 {
-    rtps::Writer* writer = domain_ptr->createWriter(*part_ptr, ("rt/"+node_name).c_str(), message_traits::TypeName<T*>().value(), false);
-    completePubInit = true;
-    Publisher pub;
-    pub_ptr = writer;
-    pub.topic_name = node_name;
-    return pub;
+  rtps::Writer* writer = domain_ptr->createWriter(*part_ptr, ("rt/"+node_name).c_str(), message_traits::TypeName<T*>().value(), false);
+  completePubInit = true;
+  Publisher pub;
+  pub_ptr = writer;
+  pub.topic_name = node_name;
+  return pub;
 }
 
 void Subscriber::callback_handler(void* callee, const rtps::ReaderCacheChange& cacheChange)
 {
-	//TODO: move this to msg header files
-	uint32_t msg_size;
-	memcpy(&msg_size, &cacheChange.data[4], 4);
-	std_msgs::msg::String msg;
-	msg.data.resize(msg_size);
-	memcpy(&msg.data[0], &cacheChange.data[8], msg_size);
-	SubscribeDataType *sub = (SubscribeDataType*)callee;
-	void (*fp)(intptr_t) = sub->cb_fp;
-	fp((intptr_t)&msg);
+  //TODO: move this to msg header files
+  uint32_t msg_size;
+  memcpy(&msg_size, &cacheChange.data[4], 4);
+  std_msgs::msg::String msg;
+  msg.data.resize(msg_size);
+  memcpy(&msg.data[0], &cacheChange.data[8], msg_size);
+  SubscribeDataType *sub = (SubscribeDataType*)callee;
+  void (*fp)(intptr_t) = sub->cb_fp;
+  fp((intptr_t)&msg);
 }
 
 uint8_t buf[100];
@@ -93,95 +96,101 @@ uint8_t buf_index = 4;
 template <class T>
 void Publisher::publish(T& msg)
 {
-	msg.copyToBuf(&buf[4]);
-	pub_ptr->newChange(rtps::ChangeKind_t::ALIVE, buf, msg.getTotalSize() + 4);
+  msg.copyToBuf(&buf[4]);
+  pub_ptr->newChange(rtps::ChangeKind_t::ALIVE, buf, msg.getTotalSize() + 4);
 }
 
 void init(int argc, char *argv)
 {
-	buf[0] = 0;
-	buf[1] = 1;
-	buf[2] = 0;
-	buf[3] = 0;
+  buf[0] = 0;
+  buf[1] = 1;
+  buf[2] = 0;
+  buf[3] = 0;
 
-	osThreadAttr_t attributes;
-	
-	attributes.name = "mROS2Thread",
-	attributes.stack_size = 1000,
-	attributes.priority = (osPriority_t)24,
+  osThreadAttr_t attributes;
 
-	osThreadNew(mros2_init, NULL, (const osThreadAttr_t*)&attributes);
+  attributes.name = "mROS2Thread",
+  attributes.stack_size = 1000,
+  attributes.priority = (osPriority_t)24,
+
+  osThreadNew(mros2_init, NULL, (const osThreadAttr_t*)&attributes);
 
 }
 
 void spin()
 {
-    while(true){
-    	osStatus_t ret;
-       	SubscribeDataType* msg;
-   		ret = osMessageQueueGet(subscriber_msg_gueue_id, &msg, NULL, osWaitForever);
-   		if (ret != osOK) {
-   			CMSIS_IMPL_INFO("mROS2 spin() wait error %d", ret);
-   		}
-   		//delete msg;
+  while(true) {
+    osStatus_t ret;
+    SubscribeDataType* msg;
+    ret = osMessageQueueGet(subscriber_msg_gueue_id, &msg, NULL, osWaitForever);
+    if (ret != osOK) {
+      CMSIS_IMPL_INFO("mROS2 spin() wait error %d", ret);
     }
+    //delete msg;
+  }
 }
 
 //Callback function to set the boolean to true upon a match
-void setTrue(void* args){
-	*static_cast<volatile bool*>(args) = true;
+void setTrue(void* args)
+{
+  *static_cast<volatile bool*>(args) = true;
 }
-void pubMatch(void* args){
-	CMSIS_IMPL_INFO("publisher matched with remote subscriber");
-}
-
-void subMatch(void* args){
-	CMSIS_IMPL_INFO("subscriber matched with remote publisher");
+void pubMatch(void* args)
+{
+  CMSIS_IMPL_INFO("publisher matched with remote subscriber");
 }
 
+void subMatch(void* args)
+{
+  CMSIS_IMPL_INFO("subscriber matched with remote publisher");
+}
 
-void message_callback(void* callee, const rtps::ReaderCacheChange& cacheChange){
-	CMSIS_IMPL_INFO("recv message");
+
+void message_callback(void* callee, const rtps::ReaderCacheChange& cacheChange)
+{
+  CMSIS_IMPL_INFO("recv message");
 }
 
 void mros2_init(void *args)
 {
-	osStatus_t ret;
-	int sub_msg_count;
-    static rtps::Domain domain;
-    domain_ptr = &domain;
-    CMSIS_IMPL_INFO("mROS2 init start");
+  osStatus_t ret;
+  int sub_msg_count;
+  static rtps::Domain domain;
+  domain_ptr = &domain;
+  CMSIS_IMPL_INFO("mROS2 init start");
 
-	sub_msg_count = mros2_get_submsg_count();
-	subscriber_msg_gueue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
-	if (subscriber_msg_gueue_id == NULL) {
-		CMSIS_IMPL_INFO("mROS2 init Error");
-		return;
-	}
+  sub_msg_count = mros2_get_submsg_count();
+  subscriber_msg_gueue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
+  if (subscriber_msg_gueue_id == NULL) {
+    CMSIS_IMPL_INFO("mROS2 init Error");
+    return;
+  }
 
-    while(!completeSubInit || !completePubInit){osDelay(100);}
+  while(!completeSubInit || !completePubInit) {
+    osDelay(100);
+  }
 
-	 bool subMatched = false;
-	 bool pubMatched = false;
+  bool subMatched = false;
+  bool pubMatched = false;
 
-	 //Register callback to ensure that a publisher is matched to the writer before sending messages
-	 part_ptr->registerOnNewPublisherMatchedCallback(subMatch, &pubMatched);
-	 part_ptr->registerOnNewSubscriberMatchedCallback(pubMatch, &subMatched);
+  //Register callback to ensure that a publisher is matched to the writer before sending messages
+  part_ptr->registerOnNewPublisherMatchedCallback(subMatch, &pubMatched);
+  part_ptr->registerOnNewSubscriberMatchedCallback(pubMatch, &subMatched);
 
 
-	 domain.completeInit();
-	 CMSIS_IMPL_INFO("mROS2 init complete");
+  domain.completeInit();
+  CMSIS_IMPL_INFO("mROS2 init complete");
 
-	 //Wait for the subscriber on the Linux side to match
-	 while(!subMatched || !pubMatched){
-		 osDelay(1000);
-	 }
+  //Wait for the subscriber on the Linux side to match
+  while(!subMatched || !pubMatched) {
+    osDelay(1000);
+  }
 
-	 //BSP_LED_On(LED1);
-	 ret = osThreadTerminate(NULL);
-	 if (ret != osOK) {
-		 CMSIS_IMPL_INFO("mros2 init() task terminate error %d", ret);
-	 }
+  //BSP_LED_On(LED1);
+  ret = osThreadTerminate(NULL);
+  if (ret != osOK) {
+    CMSIS_IMPL_INFO("mros2 init() task terminate error %d", ret);
+  }
 }
 
 
