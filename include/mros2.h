@@ -4,6 +4,10 @@
 #include <string>
 #include "rtps/rtps.h"
 
+// To avoid link error
+#ifdef __cplusplus
+extern void* __dso_handle;
+#endif
 
 namespace mros2
 {
