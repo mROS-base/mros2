@@ -212,7 +212,6 @@ void mros2_init(void *args)
     osDelay(1000);
   }
 
-  //BSP_LED_On(LED1);
   ret = osThreadTerminate(NULL);
   if (ret != osOK) {
     CMSIS_IMPL_INFO("mros2 init() task terminate error %d", ret);
