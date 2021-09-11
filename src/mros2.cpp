@@ -180,10 +180,13 @@ void message_callback(void* callee, const rtps::ReaderCacheChange& cacheChange)
 void mros2_init(void *args)
 {
   osStatus_t ret;
+
+  MROS2_DEBUG("[MROS2LIB] mros2_init");
+  MX_LWIP_Init();
+
   int sub_msg_count;
   static rtps::Domain domain;
   domain_ptr = &domain;
-  MROS2_DEBUG("[MROS2LIB] mros2_init");
 
   sub_msg_count = mros2_get_submsg_count();
   subscriber_msg_gueue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
