@@ -3,6 +3,7 @@
 
 #include <string>
 #include "rtps/rtps.h"
+#include "mros2/logging.h"
 
 // To avoid link error
 #ifdef __cplusplus

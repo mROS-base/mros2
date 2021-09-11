@@ -54,18 +54,18 @@ typedef struct {
 Node Node::create_node()
 {
   Node node;
-  CMSIS_IMPL_INFO("create_node");
-  CMSIS_IMPL_INFO("start creating participant");
+  MROS2_DEBUG("[MROS2LIB] create_node");
+  MROS2_DEBUG("[MROS2LIB] start creating participant");
   while(domain_ptr == NULL) {
     osDelay(100);
   }
   node.part = domain_ptr->createParticipant();
   part_ptr = node.part;
   if(node.part == nullptr) {
-    CMSIS_IMPL_ERROR("NODE CREATION FAILED");
+    MROS2_ERROR("[MROS2LIB] ERROR: NODE CREATION FAILED");
     while(true) {}
   }
-  CMSIS_IMPL_INFO("successfully created participant");
+  MROS2_DEBUG("[MROS2LIB] successfully created participant");
   return node;
 }
 bool completeSubInit = false;
@@ -84,7 +84,7 @@ Subscriber Node::create_subscription(std::string node_name, int qos, void(*fp)(T
 
   SubscribeDataType *data_p;
   data_p = new SubscribeDataType;
-  CMSIS_IMPL_INFO("create subscription complete. data memory address=0x%x", data_p);
+  MROS2_DEBUG("[MROS2LIB] create subscription complete. data memory address=0x%x", data_p);
   data_p->cb_fp = (void (*)(intptr_t))fp;
   data_p->argp = (intptr_t)NULL;
 
@@ -150,7 +150,7 @@ void spin()
     SubscribeDataType* msg;
     ret = osMessageQueueGet(subscriber_msg_gueue_id, &msg, NULL, osWaitForever);
     if (ret != osOK) {
-      CMSIS_IMPL_INFO("mROS2 spin() wait error %d", ret);
+      MROS2_ERROR("[MROS2LIB] ERROR: mROS2 spin() wait error %d", ret);
     }
     //delete msg;
   }
@@ -163,18 +163,18 @@ void setTrue(void* args)
 }
 void pubMatch(void* args)
 {
-  CMSIS_IMPL_INFO("publisher matched with remote subscriber");
+  MROS2_DEBUG("[MROS2LIB] publisher matched with remote subscriber");
 }
 
 void subMatch(void* args)
 {
-  CMSIS_IMPL_INFO("subscriber matched with remote publisher");
+  MROS2_DEBUG("[MROS2LIB] subscriber matched with remote publisher");
 }
 
 
 void message_callback(void* callee, const rtps::ReaderCacheChange& cacheChange)
 {
-  CMSIS_IMPL_INFO("recv message");
+  MROS2_DEBUG("[MROS2LIB] recv message");
 }
 
 void mros2_init(void *args)
@@ -183,12 +183,12 @@ void mros2_init(void *args)
   int sub_msg_count;
   static rtps::Domain domain;
   domain_ptr = &domain;
-  CMSIS_IMPL_INFO("mROS2 init start");
+  MROS2_DEBUG("[MROS2LIB] mros2_init");
 
   sub_msg_count = mros2_get_submsg_count();
   subscriber_msg_gueue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
   if (subscriber_msg_gueue_id == NULL) {
-    CMSIS_IMPL_INFO("mROS2 init Error");
+    MROS2_ERROR("[MROS2LIB] ERROR: mROS2 init failed");
     return;
   }
 
@@ -205,7 +205,7 @@ void mros2_init(void *args)
 
 
   domain.completeInit();
-  CMSIS_IMPL_INFO("mROS2 init complete");
+  MROS2_DEBUG("[MROS2LIB] mROS2 init complete");
 
   //Wait for the subscriber on the Linux side to match
   while(!subMatched || !pubMatched) {
@@ -214,7 +214,7 @@ void mros2_init(void *args)
 
   ret = osThreadTerminate(NULL);
   if (ret != osOK) {
-    CMSIS_IMPL_INFO("mros2 init() task terminate error %d", ret);
+    MROS2_ERROR("[MROS2LIB] ERROR: mros2 init() task terminate error %d", ret);
   }
 }
 
