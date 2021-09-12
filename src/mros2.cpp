@@ -114,20 +114,25 @@ void mros2_init(void *args)
 /*
  *  Node functions
  */
-Node Node::create_node()
+Node Node::create_node(std::string node_name)
 {
-  Node node;
   MROS2_DEBUG("[MROS2LIB] create_node");
   MROS2_DEBUG("[MROS2LIB] start creating participant");
+
   while(domain_ptr == NULL) {
     osDelay(100);
   }
+
+  Node node;
   node.part = domain_ptr->createParticipant();
+  /* TODO: utilize node name */
+  node.node_name = node_name;
   part_ptr = node.part;
   if(node.part == nullptr) {
     MROS2_ERROR("[MROS2LIB] ERROR: NODE CREATION FAILED");
     while(true) {}
   }
+
   MROS2_DEBUG("[MROS2LIB] successfully created participant");
   return node;
 }

@@ -32,7 +32,9 @@ class Subscriber;
 class Node
 {
 public:
-  static Node create_node();
+  static Node create_node(
+    std::string node_name
+  );
 
   template <class T>
   Publisher create_publisher(
