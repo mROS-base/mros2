@@ -106,7 +106,7 @@ void mros2_init(void *args)
 
   ret = osThreadTerminate(NULL);
   if (ret != osOK) {
-    MROS2_ERROR("[MROS2LIB] ERROR: mros2 init() task terminate error %d", ret);
+    MROS2_ERROR("[MROS2LIB] ERROR: mros2_init() task terminate error %d", ret);
   }
 }
 
@@ -129,7 +129,7 @@ Node Node::create_node(std::string node_name)
   node.node_name = node_name;
   part_ptr = node.part;
   if(node.part == nullptr) {
-    MROS2_ERROR("[MROS2LIB] ERROR: NODE CREATION FAILED");
+    MROS2_ERROR("[MROS2LIB] ERROR: create_node() failed");
     while(true) {}
   }
 
@@ -145,6 +145,11 @@ template <class T>
 Publisher Node::create_publisher(std::string topic_name, int qos)
 {
   rtps::Writer* writer = domain_ptr->createWriter(*part_ptr, ("rt/"+topic_name).c_str(), message_traits::TypeName<T*>().value(), false);
+  if(writer == nullptr) {
+    MROS2_ERROR("[MROS2LIB] ERROR: failed to create writer in create_publisher()");
+    while(true) {}
+  }
+
   completePubInit = true;
   Publisher pub;
   pub_ptr = writer;
@@ -174,6 +179,11 @@ template <class T>
 Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(T))
 {
   rtps::Reader* reader = domain_ptr->createReader(*(this->part), ("rt/"+topic_name).c_str(), message_traits::TypeName<T>().value(), false);
+  if(reader == nullptr) {
+    MROS2_ERROR("[MROS2LIB] ERROR: failed to create reader in create_subscription()");
+    while(true) {}
+  }
+
   completeSubInit = true;
   Subscriber sub;
   sub.topic_name = topic_name;
