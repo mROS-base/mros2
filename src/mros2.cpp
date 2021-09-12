@@ -49,7 +49,7 @@ void subMatch(void* args)
 /*
  *  Initialization of mROS 2 environment
  */
-void init(int argc, char *argv)
+void init(int argc, char * argv[])
 {
   buf[0] = 0;
   buf[1] = 1;

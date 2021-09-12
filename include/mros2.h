@@ -14,7 +14,7 @@ extern void* __dso_handle;
 namespace mros2
 {
 
-void init(int argc, char *argv);
+void init(int argc, char * argv[]);
 
 #ifdef __cplusplus
 extern "C" {
