@@ -84,11 +84,11 @@ Subscriber Node::create_subscription(std::string node_name, int qos, void(*fp)(T
 
   SubscribeDataType *data_p;
   data_p = new SubscribeDataType;
-  MROS2_DEBUG("[MROS2LIB] create subscription complete. data memory address=0x%x", data_p);
   data_p->cb_fp = (void (*)(intptr_t))fp;
   data_p->argp = (intptr_t)NULL;
-
   reader->registerCallback(sub.callback_handler, (void *)data_p);
+
+  MROS2_DEBUG("[MROS2LIB] create_subscription complete. data memory address=0x%x", data_p);
   return sub;
 }
 
@@ -100,6 +100,8 @@ Publisher Node::create_publisher(std::string node_name, int qos)
   Publisher pub;
   pub_ptr = writer;
   pub.topic_name = node_name;
+
+  MROS2_DEBUG("[MROS2LIB] create_publisher complete.");
   return pub;
 }
 
