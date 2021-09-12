@@ -7,32 +7,9 @@
 #include "TEST.hpp"
 #include "std_msgs/msg/string.hpp"
 
-// To avoid link error
+/* Statement to avoid link error */
 void* __dso_handle=0;
 
-// Declaration for embeddedRTPS participants
-void *networkSubDriverPtr;
-void *networkPubDriverPtr;
-void (*hbPubFuncPtr)(void *);
-void (*hbSubFuncPtr)(void *);
-
-extern "C" void callHbPubFunc(void *arg)
-{
-  if(hbPubFuncPtr != NULL && networkPubDriverPtr != NULL) {
-    (*hbPubFuncPtr)(networkPubDriverPtr);
-  }
-}
-extern "C" void callHbSubFunc(void *arg)
-{
-  if(hbSubFuncPtr != NULL && networkSubDriverPtr != NULL) {
-    (*hbSubFuncPtr)(networkSubDriverPtr);
-  }
-}
-
-void setTrue(void* args)
-{
-  *static_cast<volatile bool*>(args) = true;
-}
 
 namespace mros2
 {
@@ -41,92 +18,38 @@ rtps::Domain *domain_ptr = NULL;
 rtps::Participant *part_ptr = NULL; //TODO: detele this
 rtps::Writer *pub_ptr = NULL;
 
-
 #define SUB_MSG_SIZE	4	// addr size
 osMessageQueueId_t subscriber_msg_gueue_id;
 
-typedef struct {
-  void (*cb_fp)(intptr_t);
-  intptr_t argp;
-} SubscribeDataType;
-
-
-Node Node::create_node()
-{
-  Node node;
-  MROS2_DEBUG("[MROS2LIB] create_node");
-  MROS2_DEBUG("[MROS2LIB] start creating participant");
-  while(domain_ptr == NULL) {
-    osDelay(100);
-  }
-  node.part = domain_ptr->createParticipant();
-  part_ptr = node.part;
-  if(node.part == nullptr) {
-    MROS2_ERROR("[MROS2LIB] ERROR: NODE CREATION FAILED");
-    while(true) {}
-  }
-  MROS2_DEBUG("[MROS2LIB] successfully created participant");
-  return node;
-}
-bool completeSubInit = false;
 bool completePubInit = false;
+bool completeSubInit = false;
 uint8_t endpointId = 0;
 uint32_t subCbArray[10];
-
-template <class T>
-Subscriber Node::create_subscription(std::string node_name, int qos, void(*fp)(T))
-{
-  rtps::Reader* reader = domain_ptr->createReader(*(this->part), ("rt/"+node_name).c_str(), message_traits::TypeName<T>().value(), false);
-  completeSubInit = true;
-  Subscriber sub;
-  sub.topic_name = node_name;
-  sub.cb_fp = (void (*)(intptr_t))fp;
-
-  SubscribeDataType *data_p;
-  data_p = new SubscribeDataType;
-  MROS2_DEBUG("[MROS2LIB] create subscription complete. data memory address=0x%x", data_p);
-  data_p->cb_fp = (void (*)(intptr_t))fp;
-  data_p->argp = (intptr_t)NULL;
-
-  reader->registerCallback(sub.callback_handler, (void *)data_p);
-  return sub;
-}
-
-template <class T>
-Publisher Node::create_publisher(std::string node_name, int qos)
-{
-  rtps::Writer* writer = domain_ptr->createWriter(*part_ptr, ("rt/"+node_name).c_str(), message_traits::TypeName<T*>().value(), false);
-  completePubInit = true;
-  Publisher pub;
-  pub_ptr = writer;
-  pub.topic_name = node_name;
-  return pub;
-}
-
-void Subscriber::callback_handler(void* callee, const rtps::ReaderCacheChange& cacheChange)
-{
-  //TODO: move this to msg header files
-  uint32_t msg_size;
-  memcpy(&msg_size, &cacheChange.data[4], 4);
-  std_msgs::msg::String msg;
-  msg.data.resize(msg_size);
-  memcpy(&msg.data[0], &cacheChange.data[8], msg_size);
-  SubscribeDataType *sub = (SubscribeDataType*)callee;
-  void (*fp)(intptr_t) = sub->cb_fp;
-  fp((intptr_t)&msg);
-}
 
 uint8_t buf[100];
 uint8_t buf_index = 4;
 
-template <class T>
-void Publisher::publish(T& msg)
+/* Callback function to set the boolean to true upon a match */
+void setTrue(void* args)
 {
-  msg.copyToBuf(&buf[4]);
-  pub_ptr->newChange(rtps::ChangeKind_t::ALIVE, buf, msg.getTotalSize() + 4);
+  *static_cast<volatile bool*>(args) = true;
 }
 
-void init(int argc, char *argv)
+void pubMatch(void* args)
+{
+  MROS2_DEBUG("[MROS2LIB] publisher matched with remote subscriber");
+}
+
+void subMatch(void* args)
+{
+  MROS2_DEBUG("[MROS2LIB] subscriber matched with remote publisher");
+}
+
+
+/*
+ *  Initialization of mROS 2 environment
+ */
+void init(int argc, char * argv[])
 {
   buf[0] = 0;
   buf[1] = 1;
@@ -141,40 +64,6 @@ void init(int argc, char *argv)
 
   osThreadNew(mros2_init, NULL, (const osThreadAttr_t*)&attributes);
 
-}
-
-void spin()
-{
-  while(true) {
-    osStatus_t ret;
-    SubscribeDataType* msg;
-    ret = osMessageQueueGet(subscriber_msg_gueue_id, &msg, NULL, osWaitForever);
-    if (ret != osOK) {
-      MROS2_ERROR("[MROS2LIB] ERROR: mROS2 spin() wait error %d", ret);
-    }
-    //delete msg;
-  }
-}
-
-//Callback function to set the boolean to true upon a match
-void setTrue(void* args)
-{
-  *static_cast<volatile bool*>(args) = true;
-}
-void pubMatch(void* args)
-{
-  MROS2_DEBUG("[MROS2LIB] publisher matched with remote subscriber");
-}
-
-void subMatch(void* args)
-{
-  MROS2_DEBUG("[MROS2LIB] subscriber matched with remote publisher");
-}
-
-
-void message_callback(void* callee, const rtps::ReaderCacheChange& cacheChange)
-{
-  MROS2_DEBUG("[MROS2LIB] recv message");
 }
 
 void mros2_init(void *args)
@@ -202,7 +91,7 @@ void mros2_init(void *args)
   bool subMatched = false;
   bool pubMatched = false;
 
-  //Register callback to ensure that a publisher is matched to the writer before sending messages
+  /* Register callback to ensure that a publisher is matched to the writer before sending messages */
   part_ptr->registerOnNewPublisherMatchedCallback(subMatch, &pubMatched);
   part_ptr->registerOnNewSubscriberMatchedCallback(pubMatch, &subMatched);
 
@@ -210,7 +99,7 @@ void mros2_init(void *args)
   domain.completeInit();
   MROS2_DEBUG("[MROS2LIB] mROS2 init complete");
 
-  //Wait for the subscriber on the Linux side to match
+  /* Wait for the subscriber on the Linux side to match */
   while(!subMatched || !pubMatched) {
     osDelay(1000);
   }
@@ -222,13 +111,151 @@ void mros2_init(void *args)
 }
 
 
-}//namespace mros2
+/*
+ *  Node functions
+ */
+Node Node::create_node(std::string node_name)
+{
+  MROS2_DEBUG("[MROS2LIB] create_node");
+  MROS2_DEBUG("[MROS2LIB] start creating participant");
 
-//specialize template functions
+  while(domain_ptr == NULL) {
+    osDelay(100);
+  }
 
-template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string node_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string node_name, int qos, void (*fp)(TEST*));
+  Node node;
+  node.part = domain_ptr->createParticipant();
+  /* TODO: utilize node name */
+  node.node_name = node_name;
+  part_ptr = node.part;
+  if(node.part == nullptr) {
+    MROS2_ERROR("[MROS2LIB] ERROR: NODE CREATION FAILED");
+    while(true) {}
+  }
 
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::String>(std::string node_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string node_name, int qos, void (*fp)(std_msgs::msg::String*));
+  MROS2_DEBUG("[MROS2LIB] successfully created participant");
+  return node;
+}
+
+
+/*
+ *  Publisher functions
+ */
+template <class T>
+Publisher Node::create_publisher(std::string topic_name, int qos)
+{
+  rtps::Writer* writer = domain_ptr->createWriter(*part_ptr, ("rt/"+topic_name).c_str(), message_traits::TypeName<T*>().value(), false);
+  completePubInit = true;
+  Publisher pub;
+  pub_ptr = writer;
+  pub.topic_name = topic_name;
+
+  MROS2_DEBUG("[MROS2LIB] create_publisher complete.");
+  return pub;
+}
+
+template <class T>
+void Publisher::publish(T& msg)
+{
+  msg.copyToBuf(&buf[4]);
+  pub_ptr->newChange(rtps::ChangeKind_t::ALIVE, buf, msg.getTotalSize() + 4);
+}
+
+
+/*
+ *  Subscriber functions
+ */
+typedef struct {
+  void (*cb_fp)(intptr_t);
+  intptr_t argp;
+} SubscribeDataType;
+
+template <class T>
+Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(T))
+{
+  rtps::Reader* reader = domain_ptr->createReader(*(this->part), ("rt/"+topic_name).c_str(), message_traits::TypeName<T>().value(), false);
+  completeSubInit = true;
+  Subscriber sub;
+  sub.topic_name = topic_name;
+  sub.cb_fp = (void (*)(intptr_t))fp;
+
+  SubscribeDataType *data_p;
+  data_p = new SubscribeDataType;
+  data_p->cb_fp = (void (*)(intptr_t))fp;
+  data_p->argp = (intptr_t)NULL;
+  reader->registerCallback(sub.callback_handler, (void *)data_p);
+
+  MROS2_DEBUG("[MROS2LIB] create_subscription complete. data memory address=0x%x", data_p);
+  return sub;
+}
+
+void Subscriber::callback_handler(void* callee, const rtps::ReaderCacheChange& cacheChange)
+{
+  /* TODO: move this to msg header files */
+  uint32_t msg_size;
+  memcpy(&msg_size, &cacheChange.data[4], 4);
+  std_msgs::msg::String msg;
+  msg.data.resize(msg_size);
+  memcpy(&msg.data[0], &cacheChange.data[8], msg_size);
+  SubscribeDataType *sub = (SubscribeDataType*)callee;
+  void (*fp)(intptr_t) = sub->cb_fp;
+  fp((intptr_t)&msg);
+}
+
+
+/*
+ *  Other utility functions
+ */
+void spin()
+{
+  while(true) {
+    osStatus_t ret;
+    SubscribeDataType* msg;
+    ret = osMessageQueueGet(subscriber_msg_gueue_id, &msg, NULL, osWaitForever);
+    if (ret != osOK) {
+      MROS2_ERROR("[MROS2LIB] ERROR: mROS2 spin() wait error %d", ret);
+    }
+  }
+}
+
+}  /* namespace mros2 */
+
+
+/*
+ *  Declaration for embeddedRTPS participants
+ */
+void *networkSubDriverPtr;
+void *networkPubDriverPtr;
+void (*hbPubFuncPtr)(void *);
+void (*hbSubFuncPtr)(void *);
+
+extern "C" void callHbPubFunc(void *arg)
+{
+  if(hbPubFuncPtr != NULL && networkPubDriverPtr != NULL) {
+    (*hbPubFuncPtr)(networkPubDriverPtr);
+  }
+}
+extern "C" void callHbSubFunc(void *arg)
+{
+  if(hbSubFuncPtr != NULL && networkSubDriverPtr != NULL) {
+    (*hbSubFuncPtr)(networkSubDriverPtr);
+  }
+}
+
+void setTrue(void* args)
+{
+  *static_cast<volatile bool*>(args) = true;
+}
+
+
+/*
+ *  specialize template functions
+ */
+template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::String>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::String*));
 template void mros2::Publisher::publish(std_msgs::msg::String& msg);
+
+// Work in Progress: for custom message
+template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(TEST*));
+//template void mros2::Publisher::publish(TEST& msg);
