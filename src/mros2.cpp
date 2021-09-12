@@ -137,13 +137,13 @@ Node Node::create_node()
  *  Publisher functions
  */
 template <class T>
-Publisher Node::create_publisher(std::string node_name, int qos)
+Publisher Node::create_publisher(std::string topic_name, int qos)
 {
-  rtps::Writer* writer = domain_ptr->createWriter(*part_ptr, ("rt/"+node_name).c_str(), message_traits::TypeName<T*>().value(), false);
+  rtps::Writer* writer = domain_ptr->createWriter(*part_ptr, ("rt/"+topic_name).c_str(), message_traits::TypeName<T*>().value(), false);
   completePubInit = true;
   Publisher pub;
   pub_ptr = writer;
-  pub.topic_name = node_name;
+  pub.topic_name = topic_name;
 
   MROS2_DEBUG("[MROS2LIB] create_publisher complete.");
   return pub;
@@ -166,12 +166,12 @@ typedef struct {
 } SubscribeDataType;
 
 template <class T>
-Subscriber Node::create_subscription(std::string node_name, int qos, void(*fp)(T))
+Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(T))
 {
-  rtps::Reader* reader = domain_ptr->createReader(*(this->part), ("rt/"+node_name).c_str(), message_traits::TypeName<T>().value(), false);
+  rtps::Reader* reader = domain_ptr->createReader(*(this->part), ("rt/"+topic_name).c_str(), message_traits::TypeName<T>().value(), false);
   completeSubInit = true;
   Subscriber sub;
-  sub.topic_name = node_name;
+  sub.topic_name = topic_name;
   sub.cb_fp = (void (*)(intptr_t))fp;
 
   SubscribeDataType *data_p;
@@ -246,11 +246,11 @@ void setTrue(void* args)
 /*
  *  specialize template functions
  */
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::String>(std::string node_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string node_name, int qos, void (*fp)(std_msgs::msg::String*));
+template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::String>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::String*));
 template void mros2::Publisher::publish(std_msgs::msg::String& msg);
 
 // Work in Progress: for custom message
-template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string node_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string node_name, int qos, void (*fp)(TEST*));
+template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(TEST*));
 //template void mros2::Publisher::publish(TEST& msg);

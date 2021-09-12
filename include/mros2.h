@@ -33,17 +33,20 @@ class Node
 {
 public:
   static Node create_node();
+
+  template <class T>
+  Publisher create_publisher(
+    std::string topic_name,
+    int qos
+  );
+
   template <class T>
   Subscriber create_subscription(
-    std::string node_name,
+    std::string topic_name,
     int qos,
     void (*fp)(T)
   );
-  template <class T>
-  Publisher create_publisher(
-    std::string node_name,
-    int qos
-  );
+
   std::string node_name;
   rtps::Participant* part;
 
