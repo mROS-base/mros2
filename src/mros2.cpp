@@ -21,8 +21,7 @@ rtps::Writer *pub_ptr = NULL;
 #define SUB_MSG_SIZE	4	// addr size
 osMessageQueueId_t subscriber_msg_gueue_id;
 
-bool completePubInit = false;
-bool completeSubInit = false;
+bool completeNodeInit = false;
 uint8_t endpointId = 0;
 uint32_t subCbArray[10];
 
@@ -84,25 +83,13 @@ void mros2_init(void *args)
     return;
   }
 
-  while(!completeSubInit || !completePubInit) {
+  /* wait until participant(node) is created */
+  while(!completeNodeInit) {
     osDelay(100);
   }
 
-  bool subMatched = false;
-  bool pubMatched = false;
-
-  /* Register callback to ensure that a publisher is matched to the writer before sending messages */
-  part_ptr->registerOnNewPublisherMatchedCallback(subMatch, &pubMatched);
-  part_ptr->registerOnNewSubscriberMatchedCallback(pubMatch, &subMatched);
-
-
   domain.completeInit();
   MROS2_DEBUG("[MROS2LIB] mROS2 init complete");
-
-  /* Wait for the subscriber on the Linux side to match */
-  while(!subMatched || !pubMatched) {
-    osDelay(1000);
-  }
 
   ret = osThreadTerminate(NULL);
   if (ret != osOK) {
@@ -132,6 +119,7 @@ Node Node::create_node(std::string node_name)
     MROS2_ERROR("[MROS2LIB] ERROR: create_node() failed");
     while(true) {}
   }
+  completeNodeInit = true;
 
   MROS2_DEBUG("[MROS2LIB] successfully created participant");
   return node;
@@ -150,10 +138,13 @@ Publisher Node::create_publisher(std::string topic_name, int qos)
     while(true) {}
   }
 
-  completePubInit = true;
   Publisher pub;
   pub_ptr = writer;
   pub.topic_name = topic_name;
+
+  /* Register callback to ensure that a publisher is matched to the writer before sending messages */
+  bool subMatched = false;
+  part_ptr->registerOnNewSubscriberMatchedCallback(pubMatch, &subMatched);
 
   MROS2_DEBUG("[MROS2LIB] create_publisher complete.");
   return pub;
@@ -184,7 +175,6 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(
     while(true) {}
   }
 
-  completeSubInit = true;
   Subscriber sub;
   sub.topic_name = topic_name;
   sub.cb_fp = (void (*)(intptr_t))fp;
@@ -194,6 +184,10 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(
   data_p->cb_fp = (void (*)(intptr_t))fp;
   data_p->argp = (intptr_t)NULL;
   reader->registerCallback(sub.callback_handler, (void *)data_p);
+
+  /* Register callback to ensure that a subscriber is matched to the reader before receiving messages */
+  bool pubMatched = false;
+  part_ptr->registerOnNewPublisherMatchedCallback(subMatch, &pubMatched);
 
   MROS2_DEBUG("[MROS2LIB] create_subscription complete. data memory address=0x%x", data_p);
   return sub;
