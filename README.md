@@ -1,9 +1,9 @@
 # mros2
 
 mROS 2 (formly `mros2`) realizes a agent-less and lightweight runtime environment compatible with ROS 2 for embedded devices.
-This repository contains the communication layer of mROS 2.
+It consists of communication library for pub/sub APIs, RTPS protocol, UDP/IP stack, and real-time kernel.
 
-mROS 2 mainly offers pub/sub APIs compatible with [rclcpp](https://docs.ros2.org/dashing/api/rclcpp/index.html) for embedded devices. 
+This repository maintains the communication layer of mROS 2, that mainly offers pub/sub APIs compatible with [rclcpp](https://docs.ros2.org/dashing/api/rclcpp/index.html) for embedded devices. 
 [ROS 2](https://docs.ros.org/en/dashing/) is a de-fact platform for the robot system development, and provides pub/sub communication infrastructure with the DDS/RTPS protocol.
 
 ## Features
