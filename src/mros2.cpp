@@ -34,6 +34,9 @@ void setTrue(void* args)
   *static_cast<volatile bool*>(args) = true;
 }
 
+bool subMatched = false;
+bool pubMatched = false;
+
 void pubMatch(void* args)
 {
   MROS2_DEBUG("[MROS2LIB] publisher matched with remote subscriber");
@@ -69,8 +72,10 @@ void mros2_init(void *args)
 {
   osStatus_t ret;
 
-  MROS2_DEBUG("[MROS2LIB] mros2_init");
+  MROS2_DEBUG("[MROS2LIB] mros2_init task start");
+
   MX_LWIP_Init();
+  MROS2_DEBUG("[MROS2LIB] Initilizing lwIP complete");
 
   int sub_msg_count;
   static rtps::Domain domain;
@@ -87,9 +92,14 @@ void mros2_init(void *args)
   while(!completeNodeInit) {
     osDelay(100);
   }
-
   domain.completeInit();
-  MROS2_DEBUG("[MROS2LIB] mROS2 init complete");
+  MROS2_DEBUG("[MROS2LIB] Initilizing Domain complete");
+
+  while(!subMatched && !pubMatched) {
+    osDelay(1000);
+  }
+
+  MROS2_DEBUG("[MROS2LIB] mros2_init task end");
 
   ret = osThreadTerminate(NULL);
   if (ret != osOK) {
@@ -143,7 +153,6 @@ Publisher Node::create_publisher(std::string topic_name, int qos)
   pub.topic_name = topic_name;
 
   /* Register callback to ensure that a publisher is matched to the writer before sending messages */
-  bool subMatched = false;
   part_ptr->registerOnNewSubscriberMatchedCallback(pubMatch, &subMatched);
 
   MROS2_DEBUG("[MROS2LIB] create_publisher complete.");
@@ -186,7 +195,6 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(
   reader->registerCallback(sub.callback_handler, (void *)data_p);
 
   /* Register callback to ensure that a subscriber is matched to the reader before receiving messages */
-  bool pubMatched = false;
   part_ptr->registerOnNewPublisherMatchedCallback(subMatch, &pubMatched);
 
   MROS2_DEBUG("[MROS2LIB] create_subscription complete. data memory address=0x%x", data_p);
