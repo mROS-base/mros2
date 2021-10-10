@@ -2,13 +2,22 @@
 #include "mros2_user_config.h"
 
 #include <rtps/rtps.h>
+
+#ifdef __MBED__
+#include "mbed.h"
+#define MROS2_DEBUG(...) do{ printf(__VA_ARGS__); printf("\r\n");}while(0)
+#define MROS2_ERROR(...) do{ printf(__VA_ARGS__); printf("\r\n");}while(0)
+#else  /* __MBED__ */
 #include "cmsis_os.h"
+#endif /* __MBED__ */
 
 #include "TEST.hpp"
 #include "std_msgs/msg/string.hpp"
 
+#ifndef __MBED__
 /* Statement to avoid link error */
 void* __dso_handle=0;
+#endif /* __MBED__ */
 
 
 namespace mros2
@@ -51,6 +60,9 @@ void subMatch(void* args)
 /*
  *  Initialization of mROS 2 environment
  */
+#ifdef __MBED__
+Thread *mros2_init_thread;
+#endif /* __MBED__ */
 void init(int argc, char * argv[])
 {
   buf[0] = 0;
@@ -58,6 +70,10 @@ void init(int argc, char * argv[])
   buf[2] = 0;
   buf[3] = 0;
 
+#ifdef __MBED__
+  mros2_init_thread =  new Thread(osPriorityAboveNormal, 2000, nullptr, "mROS2Thread");
+  mros2_init_thread->start(callback(mros2_init, (void *)NULL));
+#else /* __MBED__ */
   osThreadAttr_t attributes;
 
   attributes.name = "mROS2Thread",
@@ -65,6 +81,7 @@ void init(int argc, char * argv[])
   attributes.priority = (osPriority_t)24,
 
   osThreadNew(mros2_init, NULL, (const osThreadAttr_t*)&attributes);
+#endif /* __MBED__ */
 
 }
 
@@ -74,19 +91,23 @@ void mros2_init(void *args)
 
   MROS2_DEBUG("[MROS2LIB] mros2_init task start");
 
+#ifndef __MBED__
   MX_LWIP_Init();
   MROS2_DEBUG("[MROS2LIB] Initilizing lwIP complete");
+#endif /* __MBED__ */
 
   int sub_msg_count;
   static rtps::Domain domain;
   domain_ptr = &domain;
 
+#ifndef __MBED__
   sub_msg_count = mros2_get_submsg_count();
   subscriber_msg_gueue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
   if (subscriber_msg_gueue_id == NULL) {
     MROS2_ERROR("[MROS2LIB] ERROR: mROS2 init failed");
     return;
   }
+#endif /* __MBED__ */
 
   /* wait until participant(node) is created */
   while(!completeNodeInit) {
@@ -221,12 +242,17 @@ void Subscriber::callback_handler(void* callee, const rtps::ReaderCacheChange& c
 void spin()
 {
   while(true) {
+#ifndef __MBED__
     osStatus_t ret;
     SubscribeDataType* msg;
     ret = osMessageQueueGet(subscriber_msg_gueue_id, &msg, NULL, osWaitForever);
     if (ret != osOK) {
       MROS2_ERROR("[MROS2LIB] ERROR: mROS2 spin() wait error %d", ret);
     }
+#else /* __MBED__ */
+    // The queue above seems not to be pushed anywhere. So just sleep.
+    ThisThread::sleep_for(1000);
+#endif /* __MBED__ */
   }
 }
 
