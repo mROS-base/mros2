@@ -1,4 +1,4 @@
 [submodule "embeddedRTPS"]
 	path = embeddedRTPS
-	url = https://github.com/smoriemb/embeddedRTPS.git
-	branch = initial-porting-for-mbed
+	url = https://github.com/mROS-base/embeddedRTPS.git
+	branch = mros2
