@@ -1,7 +1,7 @@
 # Copyright (c) 2021 smorita_emb
 # SPDX-License-Identifier: Apache-2.0
 
-target_include_directories(mbed-mros2
+target_include_directories(mros2
   BEFORE INTERFACE
 	embeddedRTPS/thirdparty/Micro-CDR/include
 	embeddedRTPS/include
@@ -9,7 +9,7 @@ target_include_directories(mbed-mros2
         mros2_msgs
 )
 
-target_sources(mbed-mros2
+target_sources(mros2
   INTERFACE
         src/mros2.cpp
         embeddedRTPS/src/communication/UdpDriver.cpp
