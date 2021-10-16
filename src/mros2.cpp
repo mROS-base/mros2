@@ -5,8 +5,6 @@
 
 #ifdef __MBED__
 #include "mbed.h"
-#define MROS2_DEBUG(...) do{ printf(__VA_ARGS__); printf("\r\n");}while(0)
-#define MROS2_ERROR(...) do{ printf(__VA_ARGS__); printf("\r\n");}while(0)
 #else  /* __MBED__ */
 #include "cmsis_os.h"
 #endif /* __MBED__ */
