@@ -3,7 +3,9 @@
 
 #include <string>
 #include "rtps/rtps.h"
+#ifndef __MBED__
 #include "lwip.h"
+#endif /* __MBED__ */
 #include "mros2/logging.h"
 
 /* Statement to avoid link error */
