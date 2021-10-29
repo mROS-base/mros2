@@ -19,9 +19,10 @@ Since this repository itself only maintains the communication layer of mROS 2, w
 Please see each repository to learn how to use it.
 
 
-| name | board | kernel |
+| name | kernel | board |
 |:---|:---|:---|
-| [mros2-asp3-f767zi](https://github.com/mROS-base/mros2-asp3-f767zi) |[STM32 NUCLEO-F767ZI](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html) | [TOPPERS/ASP3](https://www.toppers.jp/en/project.html) |
+| [mros2-asp3-f767zi](https://github.com/mROS-base/mros2-asp3-f767zi) | [TOPPERS/ASP3](https://www.toppers.jp/en/project.html) | [STM32 NUCLEO-F767ZI](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html) |
+| [mros2-mbed](https://github.com/mROS-base/mros2-mbed) | [Mbed OS 6](https://github.com/ARMmbed/mbed-os) | Mbed enabled boards having an Ethernet port (See [detail](https://github.com/mROS-base/mros2-mbed#supported-environment)) |
 
 Please let us know if you have a request for a support of board/kernel, or if you could implement this layer on another platform.
 
