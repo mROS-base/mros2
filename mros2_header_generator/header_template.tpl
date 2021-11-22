@@ -16,7 +16,7 @@ public:
 
   u_int32_t getTotalSize(){
     return {%for def_data in msg.def %} 
-           def_data.size
+           {{def_data.size}}
            +
            {%endfor%};
            0;

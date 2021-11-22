@@ -5,7 +5,6 @@ import json
 import sys
 from jinja2 import Environment, FileSystemLoader
 from msg_data_generator import msgDataGenerator
-#from mros2_compute_message_type_size import computeMsgTypeSize
 
 # standard types for ROS2
 stdMsgs = {
@@ -57,14 +56,16 @@ def main():
 
     # generate header file for mros2
     for msg in msgs:
-        env = Environment(loader=FileSystemLoader('.'))
-        template = env.get_template('mros2_msg_header_template.tpl')
+        env = Environment(loader=FileSystemLoader(appDir + '/mros2_header_generator'))
+        template = env.get_template('header_template.tpl')
         datatext = template.render({"msg": msg})
+        print(datatext)
         msgPkgPath = msgIncludePath + msg['pkg']
         if not(os.path.isdir(msgPkgPath)):
             os.mkdir(msgPkgPath)
-        with open(os.path.join(msgPkgPath, "msg", msg['name'] + ".hpp"), "wb") as f:
-            f.write(datatext)
+            os.mkdir(msgPkgPath + "/msg")
+        with open(os.path.join(msgPkgPath, "msg", msg['name'].lower() + ".hpp"), "wb") as f:
+            f.write(datatext.encode('utf-8'))
 
 if __name__ == "__main__":
     main()
