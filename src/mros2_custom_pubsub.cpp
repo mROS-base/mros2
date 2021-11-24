@@ -195,7 +195,7 @@ typedef struct {
 } SubscribeDataType;
 
 template <class T>
-Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(T), T& msg)
+Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(T))
 {
   rtps::Reader* reader = domain_ptr->createReader(*(this->part), ("rt/"+topic_name).c_str(), message_traits::TypeName<T>().value(), false);
   if(reader == nullptr) {
@@ -222,6 +222,7 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(
 
 void Subscriber::callback_handler(void* callee, const rtps::ReaderCacheChange& cacheChange)
 {
+  health_msgs::msg::Health msg;
   msg.deserialize(&cacheChange[4])
 
   SubscribeDataType *sub = (SubscribeDataType*)callee;

@@ -75,9 +75,9 @@ public:
 
 
 private:
-  std::string type_name = "";
+  std::string type_name = "{{msg.pkg}}::msg::dds_::{{msg.name}}";
 };
-}
+};
 }
 
 namespace message_traits
@@ -87,7 +87,7 @@ template<>
 struct TypeName<*> {
   static const char* value()
   {
-    return "";
+    return "{{msg.pkg}}::msg::dds_::{{msg.name}}";
   }
 };
 
