@@ -87,10 +87,10 @@ namespace message_traits
 {
 
 template<>
-struct TypeName<{{msg.pkg}}::msg::{{msg.name}}> {
+struct TypeName<{{msg.pkg}}::msg::{{msg.name}}*> {
   static const char* value()
   {
-    return "{{msg.pkg}}::msg::dds_::{{msg.name}}";
+    return "{{msg.pkg}}::msg::dds_::{{msg.name}}_";
   }
 };
 

@@ -223,7 +223,7 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(
 void Subscriber::callback_handler(void* callee, const rtps::ReaderCacheChange& cacheChange)
 {
   health_msgs::msg::Health msg;
-  msg.deserialize(&cacheChange[4])
+  msg.deserialize(&cacheChange[4]);
 
   SubscribeDataType *sub = (SubscribeDataType*)callee;
   void (*fp)(intptr_t) = sub->cb_fp;
