@@ -10,7 +10,7 @@ namespace {{msg.pkg}}
 {
 namespace msg
 {
-namespace {{msg.name}}
+class {{msg.name}}
 {
 public:
   {%for def_data in msg.def %}  
