@@ -2,6 +2,9 @@
 #define _{{msg.PKG}}_MSG_{{msg.NAME}}_H
 
 #include <iostream>
+#include <string>
+
+using namespace std;
 
 namespace {{msg.pkg}}
 {
