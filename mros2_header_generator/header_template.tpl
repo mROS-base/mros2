@@ -11,14 +11,14 @@ namespace {{msg.name}}
 {
 public:
   {%for def_data in msg.def %}  
-  {%if def_data.isArray %}std::vector<{{def_data.cppType}}>{% else %}{{def_data.cppType}}{% endif %} {{def_data.typeName}};
+  {%if def_data.isArray %}std::vector<{{def_data.cppType}}>{% else %}{{def_data.cppType}}{% endif %}{{def_data.typeName}};
   {% endfor %}
 
   u_int32_t getTotalSize(){
     return {%for def_data in msg.def %} 
            {{def_data.size}}
            +
-           {%endfor%};
+           {%endfor%}
            0;
   }
 
@@ -84,7 +84,7 @@ namespace message_traits
 {
 
 template<>
-struct TypeName<*> {
+struct TypeName<{{msg.pkg}}::msg::{{msg.name}}> {
   static const char* value()
   {
     return "{{msg.pkg}}::msg::dds_::{{msg.name}}";
