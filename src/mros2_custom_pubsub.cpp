@@ -292,3 +292,11 @@ template void mros2::Publisher::publish(std_msgs::msg::String& msg);
 template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(TEST*));
 //template void mros2::Publisher::publish(TEST& msg);
+
+/* TODO 
+move description of tmplate functions to header file
+*/
+#include "health_msgs/msg/health.hpp"
+template mros2::Publisher mros2::Node::create_publisher<health_msgs::msg::Health>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(health_msgs::msg::Health*));
+template void mros2::Publisher::publish(health_msgs::msg::Health& msg);
