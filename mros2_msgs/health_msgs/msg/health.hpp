@@ -66,7 +66,7 @@ public:
     
   }
 
-  void deserialize(uint8_t *rbuf) {
+  void deserialize(const uint8_t *rbuf) {
     uint32_t size;
     
 
