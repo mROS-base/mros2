@@ -25,7 +25,7 @@ public:
            0;
   }
 
-  void serializeCopy(uint8_t *addrPtr)
+  void copyToBuf(uint8_t *addrPtr)
   {
     uint32_t size;
     {%for def_data in msg.def %}

@@ -9,9 +9,9 @@ target_include_directories(mros2
   mros2_msgs
 )
 
-target_sources(mros2_custom_pubsub
+target_sources(mros2
   INTERFACE
-  src/mros2_custom_pubsub.cpp
+  src/mros2.cpp
   embeddedRTPS/src/communication/UdpDriver.cpp
   embeddedRTPS/src/messages/MessageTypes.cpp
   embeddedRTPS/src/messages/MessageReceiver.cpp
