@@ -57,9 +57,9 @@ public:
 
   void deserialize(const uint8_t *rbuf) {
     uint32_t size;
-    {% for def_str in msg.def %}
+    {% for def_data in msg.def %}
 
-    {% if def_str.isArray%}{
+    {% if def_data.isArray%}{
       uint32_t size;
       memcpy(&size,rbuf,4);
       rbuf += 4;
