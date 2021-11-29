@@ -79,7 +79,8 @@ public:
 
     {% elif def_data.cppType == "string"%}
     int stringSize = {{def_data.typeName}}.size();
-    memcpy(&{{def_data.typeName}},rbuf,stringSize);
+    {{def_data.typeName}}.resize(stringSize)
+    memcpy(&{{def_data.typeName}}[0],rbuf,stringSize);
     rbuf += stringSize;
 
     {% else %}
