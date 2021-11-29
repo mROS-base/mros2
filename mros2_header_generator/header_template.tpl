@@ -14,7 +14,7 @@ class {{msg.name}}
 {
 public:
   {%for def_data in msg.def %}  
-  {%if def_data.isArray %}std::vector<{{def_data.cppType}}>{% else %}{{def_data.cppType}}{% endif %} {{def_data.typeName}}{%if {{def_data.cppType}}=="string"%}="Hibara"{%elif {{def_data.cppType}}=="int8_t"%}=170{%elif {{def_data.cppType}}=="float"%}=63.5{% else %}=416{% endif %};
+  {%if def_data.isArray %}std::vector<{{def_data.cppType}}>{% else %}{{def_data.cppType}}{% endif %} {{def_data.typeName}};
   {% endfor %}
 
   uint32_t getTotalSize(){
