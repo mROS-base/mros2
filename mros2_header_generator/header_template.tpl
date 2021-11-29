@@ -41,7 +41,7 @@ public:
       }
     }
 
-    {% else if def_data.cppType == 'string'%}
+    {% elif def_data.cppType == 'string'%}
     int stringSize = {{def_data.typeName}}.size();
     memcpy(addrPtr,&{{def_data.typeName}},stringSize*{{def_data.size}});
     addrPtr += {{def_data.size}};
@@ -72,7 +72,7 @@ public:
       }
     }
 
-    {% else if def_data.cppType == 'string'%}
+    {% elif def_data.cppType == 'string'%}
     int stringSize = {{def_data.typeName}}.size();
     memcpy(&{{def_data.typeName}},rbuf,stringSize*{{def_data.size}});
     rbuf += {{def_data.size}};
