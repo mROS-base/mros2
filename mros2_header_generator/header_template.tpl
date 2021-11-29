@@ -49,7 +49,7 @@ public:
     {% elif def_data.cppType == "string"%}
     int stringSize = {{def_data.typeName}}.size();
     memcpy(addrPtr,&{{def_data.typeName}},stringSize);
-    addrPtr += {{def_data.size}};
+    addrPtr += stringSize;
 
     {% else %}
     memcpy(addrPtr,&{{def_data.typeName}},{{def_data.size}});
@@ -68,19 +68,19 @@ public:
       uint32_t size;
       memcpy(&size,rbuf,4);
       rbuf += 4;
-      {{def_str.typeName}}.reserve(size);
+      {{def_data.typeName}}.reserve(size);
       for(int i=0;i<size;i++){
-        {{def_str.cppType}} buf;
-        memcpy(&buf,rbuf,{{def_str.size}});
-        {{def_str.typeName}}.push_back(buf);
-        rbuf += {{def_str.size}};
+        {{def_data.cppType}} buf;
+        memcpy(&buf,rbuf,{{def_data.size}});
+        {{def_data.typeName}}.push_back(buf);
+        rbuf += {{def_data.size}};
       }
     }
 
     {% elif def_data.cppType == "string"%}
     int stringSize = {{def_data.typeName}}.size();
     memcpy(&{{def_data.typeName}},rbuf,stringSize);
-    rbuf += {{def_data.size}};
+    rbuf += stringSize;
 
     {% else %}
     memcpy(&{{def_data.typeName}},rbuf,{{def_data.size}});
