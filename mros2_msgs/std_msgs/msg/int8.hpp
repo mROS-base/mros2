@@ -16,7 +16,7 @@ public:
   }
   uint8_t getTotalSize()
   {
-    return (1 + 1);
+    return 1;
   }
 private:
   std::string type_name = "std_msgs::msg::dds_::Int8";

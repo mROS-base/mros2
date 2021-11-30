@@ -47,9 +47,7 @@ def main():
         for line in jsonData['includingMsgs']:
             line = line.strip()
             print(line)
-            if line in stdMsgs:  # when standard type of ROS2
-                includedStdMsgs.append( {'pkgName': line, 'id': stdMsgs[line]} )
-            else:  # when custom type
+            if line not in stdMsgs:  # when custom type
                 msgs.append(msgDataGenerator(line))  # generate message data of the custom type
 
     #os.chdir(fileDir)
