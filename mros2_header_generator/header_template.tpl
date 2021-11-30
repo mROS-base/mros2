@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -14,12 +15,15 @@ class {{msg.name}}
 {
 public:
   {%for def_data in msg.def %}  
-  {%if def_data.isArray %}std::vector<{{def_data.cppType}}>{% else %}{{def_data.cppType}}{% endif %} {{def_data.typeName}}{%if def_data.cppType=="string"%}="Hibara"{%elif def_data.cppType=="uint16_t"%}=170{%elif def_data.cppType=="float"%}=63.5{% else %}=1{% endif %};
+  {%if def_data.isArray %}std::vector<{{def_data.cppType}}>{% else %}{{def_data.cppType}}{% endif %} {{def_data.typeName}};
   {% endfor %}
 
-  uint32_t getTotalSize(){
-    return ({%for def_data in msg.def %} 
-             {%if def_data.cppType=="string"%}
+  uint8_t getTotalSize(){
+    return ({%for def_data in msg.def %}
+             {%if def_data.isArray %}
+             {{def_data.size}}*({{def_data.typeName}}.size())
+             +
+             {%elif def_data.cppType=="string"%}
              {{def_data.typeName}}.size()
              +
              {%else%}
@@ -32,23 +36,24 @@ public:
 
   void copyToBuf(uint8_t *addrPtr)
   {
-    uint32_t size;
     {%for def_data in msg.def %}
 
     {% if def_data.isArray%}{
-      size = {{def_data.typeName}}.size();
-      memcpy(addrPtr,&size,4);
+      uint32_t arraySize = {{def_data.typeName}}.size();
+      memcpy(addrPtr,&arraySize,4);
       addrPtr += 4;
       const {{def_data.cppType}}* ptr = {{def_data.typeName}}.data();
-      for(int i=0; i<size ; i++){
+      for(int i=0; i<arraySize ; i++){
         memcpy(addrPtr, &(ptr[i]),{{def_data.size}});
         addrPtr += {{def_data.size}};
       }
     }
 
     {% elif def_data.cppType == "string"%}
-    int stringSize = {{def_data.typeName}}.size();
-    memcpy(addrPtr,&{{def_data.typeName}},stringSize);
+    uint32_t stringSize = {{def_data.typeName}}.size();
+    memcpy(addrPtr,&stringSize,4);
+    addrPtr += 4;
+    memcpy(addrPtr,{{def_data.typeName}}.c_str(),stringSize);
     addrPtr += stringSize;
 
     {% else %}
@@ -61,15 +66,14 @@ public:
   }
 
   void deserialize(const uint8_t *rbuf) {
-    uint32_t size;
     {% for def_data in msg.def %}
 
     {% if def_data.isArray%}{
-      uint32_t size;
-      memcpy(&size,rbuf,4);
+      uint32_t arraySize;
+      memcpy(&arraySize,rbuf,4);
       rbuf += 4;
-      {{def_data.typeName}}.reserve(size);
-      for(int i=0;i<size;i++){
+      {{def_data.typeName}}.reserve({{def_data.size}}*arraySize);
+      for(int i=0;i<arraySize;i++){
         {{def_data.cppType}} buf;
         memcpy(&buf,rbuf,{{def_data.size}});
         {{def_data.typeName}}.push_back(buf);
@@ -78,7 +82,9 @@ public:
     }
 
     {% elif def_data.cppType == "string"%}
-    int stringSize = {{def_data.typeName}}.size();
+    uint32_t stringSize;
+    memcpy(&stringSize, rbuf, 4);
+    rbuf += 4;
     {{def_data.typeName}}.resize(stringSize);
     memcpy(&{{def_data.typeName}}[0],rbuf,stringSize);
     rbuf += stringSize;

@@ -242,7 +242,7 @@ namespace mros2
     */
 
     health_msgs::msg::Health msg;
-    msg.deserialize(&cacheChange.data[8]);
+    msg.deserialize(&cacheChange.data[4]);
 
     SubscribeDataType *sub = (SubscribeDataType *)callee;
     void (*fp)(intptr_t) = sub->cb_fp;

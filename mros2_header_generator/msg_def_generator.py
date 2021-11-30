@@ -27,9 +27,11 @@ msgSizes = {
 
 # generate detail data of type definition
 
+
 def msgDefGenerator(msgDefStr):
-    
-    msgDefArr = msgDefStr.split(' ')  # split the type def and name of the type ('string name' -> ['string', 'name'])
+
+    # split the type def and name of the type ('string name' -> ['string', 'name'])
+    msgDefArr = msgDefStr.split(' ')
     print(msgDefArr)
     msgType = msgDefArr[0]  # each type (ex. string, int8, float32, ...)
     msgName = msgDefArr[1]  # name of each type (ex. name, height, weight, ...)
@@ -38,6 +40,7 @@ def msgDefGenerator(msgDefStr):
     # when array (ex. int8[], float32[], ...)msgType = msgType[:-2]
     if msgType[-2:] == "[]":
         isArray = True
+        msgType = msgType[:-2]
 
     if msgType in msgCppTypes:  # when primitive type of ROS2
         return {
@@ -48,6 +51,6 @@ def msgDefGenerator(msgDefStr):
             'isArray': isArray,
             'isCustomType': False
         }
-    
-    else: 
+
+    else:
         print('type is not found')
