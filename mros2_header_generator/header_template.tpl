@@ -72,7 +72,7 @@ public:
       uint32_t arraySize;
       memcpy(&arraySize,rbuf,4);
       rbuf += 4;
-      {{def_data.typeName}}.reserve({{def_data.size}}*arraySize);
+      {{def_data.typeName}}.reserve(arraySize);
       for(int i=0;i<arraySize;i++){
         {{def_data.cppType}} buf;
         memcpy(&buf,rbuf,{{def_data.size}});
