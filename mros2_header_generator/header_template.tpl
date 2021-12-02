@@ -21,10 +21,10 @@ public:
   uint8_t getTotalSize(){
     return ({%for def_data in msg.def %}
              {%if def_data.isArray %}
-             {{def_data.size}}*({{def_data.typeName}}.size())
+             4+{{def_data.size}}*({{def_data.typeName}}.size())
              +
              {%elif def_data.cppType=="string"%}
-             {{def_data.typeName}}.size()
+             5+{{def_data.typeName}}.size()
              +
              {%else%}
              {{def_data.size}}
@@ -85,8 +85,9 @@ public:
     uint32_t stringSize;
     memcpy(&stringSize, rbuf, 4);
     rbuf += 4;
-    {{def_data.typeName}}.resize(stringSize);
+    {{def_data.typeName}}.resize(stringSize+1);
     memcpy(&{{def_data.typeName}}[0],rbuf,stringSize);
+    {{def_data.typeName}}[stringSize] = '\0';
     rbuf += stringSize;
 
     {% else %}
