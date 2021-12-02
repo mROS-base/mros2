@@ -12,6 +12,7 @@
 #include "TEST.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "health_msgs/msg/health.hpp"
+#include "location_msgs/msg/location.hpp"
 
 #ifndef __MBED__
 /* Statement to avoid link error */
@@ -316,3 +317,7 @@ template mros2::Subscriber mros2::Node::create_subscription(std::string topic_na
 template mros2::Publisher mros2::Node::create_publisher<health_msgs::msg::Health>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(health_msgs::msg::Health *));
 template void mros2::Publisher::publish(health_msgs::msg::Health &msg);
+
+template mros2::Publisher mros2::Node::create_publisher<location_msgs::msg::Location>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(location_msgs::msg::Location *));
+template void mros2::Publisher::publish(location_msgs::msg::Location &msg);
