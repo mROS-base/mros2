@@ -242,7 +242,7 @@ namespace mros2
     memcpy(&msg.data[0], &cacheChange.data[8], msg_size);
     */
 
-    health_msgs::msg::Health msg;
+    location_msgs::msg::Location msg;
     msg.deserialize(&cacheChange.data[4]);
 
     SubscribeDataType *sub = (SubscribeDataType *)callee;
