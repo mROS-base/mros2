@@ -242,11 +242,10 @@ namespace mros2
     */
 
     std_msgs::msg::Float32 msg;
-    MROS2_DEBUG("aaaaa: %f", msg.data);
+    MROS2_DEBUG("aaaaa: %f", cacheChange.data[4]);
     memcpy(&msg.data, &cacheChange.data[4], 4);
-    MROS2_DEBUG("aaaaa: %f", msg.data);
+    MROS2_DEBUG("aaaaa: %f", cacheChange.data[8]);
     memcpy(&msg.data, &cacheChange.data[8], 4);
-    MROS2_DEBUG("aaaaa: %f", msg.data);
     //msg.copyFromBuf(&cacheChange.data[4]);
 
     SubscribeDataType *sub = (SubscribeDataType *)callee;
