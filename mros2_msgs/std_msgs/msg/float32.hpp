@@ -8,7 +8,7 @@ class Float32
 {
 public:
   std::string getTypeName();
-  std::int8_t data;
+  float data;
   void copyToBuf(uint8_t *addrPtr)
   {
     memcpy(addrPtr, &data, 4);
