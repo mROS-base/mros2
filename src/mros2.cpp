@@ -12,7 +12,6 @@
 #include "TEST.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "std_msgs/msg/float32.hpp"
-#include "health_msgs/msg/health.hpp"
 
 #ifndef __MBED__
 /* Statement to avoid link error */
@@ -242,7 +241,6 @@ namespace mros2
     memcpy(&msg.data[0], &cacheChange.data[8], msg_size);
     */
 
-    //health_msgs::msg::Health msg;
     std_msgs::msg::Float32 msg;
     msg.deserialize(&cacheChange.data[4]);
 
@@ -318,7 +316,3 @@ template void mros2::Publisher::publish(sstd_msgs::msg::Float32 &msg);
 template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(TEST *));
 //template void mros2::Publisher::publish(TEST& msg);
-
-template mros2::Publisher mros2::Node::create_publisher<health_msgs::msg::Health>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(health_msgs::msg::Health *));
-template void mros2::Publisher::publish(health_msgs::msg::Health &msg);
