@@ -8,7 +8,7 @@ class Int8
 {
 public:
   std::string getTypeName();
-  std::int8_t data;
+  int8_t data;
   void copyToBuf(uint8_t *addrPtr)
   {
     memcpy(addrPtr, &data, 1);
