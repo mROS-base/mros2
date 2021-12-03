@@ -310,7 +310,7 @@ template void mros2::Publisher::publish(std_msgs::msg::String &msg);
 
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Float32>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Float32 *));
-template void mros2::Publisher::publish(sstd_msgs::msg::Float32 &msg);
+template void mros2::Publisher::publish(std_msgs::msg::Float32 &msg);
 
 // Work in Progress: for custom message
 template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
