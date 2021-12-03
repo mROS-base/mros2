@@ -234,16 +234,16 @@ namespace mros2
   void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
   {
     /* TODO: move this to msg header files */
-    /*
+    
     uint32_t msg_size;
     memcpy(&msg_size, &cacheChange.data[4], 4);
     std_msgs::msg::String msg;
     msg.data.resize(msg_size);
     memcpy(&msg.data[0], &cacheChange.data[8], msg_size);
-    */
+    
 
-    std_msgs::msg::Float32 msg;
-    msg.copyFromBuf(&cacheChange.data[4]);
+    //std_msgs::msg::Float32 msg;
+    //smsg.copyFromBuf(&cacheChange.data[4]);
 
     SubscribeDataType *sub = (SubscribeDataType *)callee;
     void (*fp)(intptr_t) = sub->cb_fp;
