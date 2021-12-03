@@ -11,6 +11,7 @@
 
 #include "TEST.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "std_msgs/msg/int8.hpp"
 #include "std_msgs/msg/float32.hpp"
 
 #ifndef __MBED__
@@ -241,12 +242,8 @@ namespace mros2
     memcpy(&msg.data[0], &cacheChange.data[8], msg_size);
     */
 
-    std_msgs::msg::Float32 msg;
-    MROS2_DEBUG("aaaaa: %f", cacheChange.data[4]);
-    memcpy(&msg.data, &cacheChange.data[4], 4);
-    MROS2_DEBUG("aaaaa: %f", cacheChange.data[8]);
-    memcpy(&msg.data, &cacheChange.data[8], 4);
-    //msg.copyFromBuf(&cacheChange.data[4]);
+    std_msgs::msg::Int8 msg;
+    msg.copyFromBuf(&cacheChange.data[4]);
 
     SubscribeDataType *sub = (SubscribeDataType *)callee;
     void (*fp)(intptr_t) = sub->cb_fp;
@@ -311,6 +308,10 @@ void setTrue(void *args)
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::String>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::String *));
 template void mros2::Publisher::publish(std_msgs::msg::String &msg);
+
+template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int8>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int8 *));
+template void mros2::Publisher::publish(std_msgs::msg::Int8 &msg);
 
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Float32>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Float32 *));
