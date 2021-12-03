@@ -14,6 +14,12 @@ public:
     memcpy(addrPtr, &data, 4);
     addrPtr += 4;
   }
+
+  void copyFromBuf(uint8_t *addrPtr)
+  {
+    memcpy(&data, addrPtr, 4);
+    addrPtr += 4;
+  }
   uint8_t getTotalSize()
   {
     return 4;
