@@ -8,7 +8,7 @@ class Float32
 {
 public:
   std::string getTypeName();
-  float data=0.416;
+  float data;
   void copyToBuf(uint8_t *addrPtr)
   {
     memcpy(addrPtr, &data, 4);
@@ -26,7 +26,7 @@ public:
     return 4;
   }
 private:
-  std::string type_name = "std_msgs::msg::dds_::Float32";
+  std::string type_name = "std_msgs::msg::dds_::Float";
 };
 }//namspace msg
 }//namespace std_msgs
@@ -38,7 +38,7 @@ template<>
 struct TypeName<std_msgs::msg::Float32*> {
   static const char* value()
   {
-    return "std_msgs::msg::dds_::Float32_";
+    return "std_msgs::msg::dds_::Float_";
   }
 };
 
