@@ -26,7 +26,7 @@ public:
     return 4;
   }
 private:
-  std::string type_name = "std_msgs::msg::dds_::Float";
+  std::string type_name = "std_msgs::msg::dds_::Float32";
 };
 }//namspace msg
 }//namespace std_msgs
@@ -38,7 +38,7 @@ template<>
 struct TypeName<std_msgs::msg::Float32*> {
   static const char* value()
   {
-    return "std_msgs::msg::dds_::Float_";
+    return "std_msgs::msg::dds_::Float32_";
   }
 };
 
