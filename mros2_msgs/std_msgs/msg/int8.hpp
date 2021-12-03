@@ -15,7 +15,7 @@ public:
     addrPtr += 1;
   }
 
-  void copyFromBuf(uint8_t *addrPtr)
+  void copyFromBuf(const uint8_t *addrPtr)
   {
     memcpy(&data, addrPtr, 1);
     addrPtr += 1;
