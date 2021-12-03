@@ -242,7 +242,8 @@ namespace mros2
     memcpy(&msg.data[0], &cacheChange.data[8], msg_size);
     */
 
-    health_msgs::msg::Health msg;
+    //health_msgs::msg::Health msg;
+    std_msgs::msg::Float32 msg;
     msg.deserialize(&cacheChange.data[4]);
 
     SubscribeDataType *sub = (SubscribeDataType *)callee;
