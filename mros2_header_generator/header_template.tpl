@@ -65,7 +65,7 @@ public:
     {% endfor %}
   }
 
-  void deserialize(const uint8_t *rbuf) {
+  void copyFromBuf(const uint8_t *rbuf) {
     {% for def_data in msg.def %}
 
     {% if def_data.isArray%}{
