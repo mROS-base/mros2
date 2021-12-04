@@ -13,6 +13,7 @@
 #include "std_msgs/msg/string.hpp"
 #include "std_msgs/msg/int8.hpp"
 #include "std_msgs/msg/float32.hpp"
+#include "location_msgs/msg/location.hpp"
 
 #ifndef __MBED__
 /* Statement to avoid link error */
@@ -242,8 +243,8 @@ namespace mros2
     memcpy(&msg.data[0], &cacheChange.data[8], msg_size);
     */
 
-    std_msgs::msg::Float32 msg;
-    msg.copyFromBuf(&cacheChange.data[0]);
+    location_msgs::msg::Location msg;
+    msg.copyFromBuf(&cacheChange.data[4]);
 
     SubscribeDataType *sub = (SubscribeDataType *)callee;
     void (*fp)(intptr_t) = sub->cb_fp;
@@ -316,6 +317,10 @@ template void mros2::Publisher::publish(std_msgs::msg::Int8 &msg);
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Float32>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Float32 *));
 template void mros2::Publisher::publish(std_msgs::msg::Float32 &msg);
+
+template mros2::Publisher mros2::Node::create_publisher<location_msgs::msg::Location>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(location_msgs::msg::Location *));
+template void mros2::Publisher::publish(location_msgs::msg::Location &msg);
 
 // Work in Progress: for custom message
 template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
