@@ -4,7 +4,7 @@ namespace std_msgs
 {
 namespace msg
 {
-class Unt32
+class UInt32
 {
 public:
   std::string getTypeName();
