@@ -4,18 +4,18 @@ namespace std_msgs
 {
 namespace msg
 {
-class String
+class WString
 {
 public:
   std::string getTypeName();
-  std::string data;
+  std::u16string data;
   void copyToBuf(uint8_t *addrPtr)
   {
     uint32_t size = data.size();
     memcpy(addrPtr, &size, 4);
     addrPtr += 4;
-    memcpy(addrPtr, data.c_str(),size);
-    addrPtr += size;
+    memcpy(addrPtr, data.c_str(),2*size);
+    addrPtr += 2*size;
     *addrPtr = 0;
   }
 
@@ -24,17 +24,17 @@ public:
     uint32_t msg_size;
     memcpy(&msg_size, addrPtr, 4);
     addrPtr += 4;
-    data.resize(msg_size);
-    memcpy(&data[0], addrPtr, msg_size);
+    data.resize(2*msg_size);
+    memcpy(&data[0], addrPtr, 2*msg_size);
 
   }
 
   uint8_t getTotalSize()
   {
-    return (5 + data.size());
+    return (5 + 2*data.size());
   }
 private:
-  std::string type_name = "std_msgs::msg::dds_::String";
+  std::string type_name = "std_msgs::msg::dds_::WString";
 };
 }//namspace msg
 }//namespace std_msgs
@@ -43,10 +43,10 @@ namespace message_traits
 {
 
 template<>
-struct TypeName<std_msgs::msg::String*> {
+struct TypeName<std_msgs::msg::WString*> {
   static const char* value()
   {
-    return "std_msgs::msg::dds_::String_";
+    return "std_msgs::msg::dds_::WString_";
   }
 };
 
