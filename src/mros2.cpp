@@ -11,8 +11,9 @@
 
 #include "TEST.hpp"
 #include "std_msgs/msg/string.hpp"
-#include "health_msgs/msg/health.hpp"
-#include "location_msgs/msg/location.hpp"
+#include "std_msgs/msg/int8.hpp"
+#include "std_msgs/msg/u_int32.hpp"
+#include "std_msgs/msg/float32.hpp"
 
 #ifndef __MBED__
 /* Statement to avoid link error */
@@ -242,8 +243,8 @@ namespace mros2
     memcpy(&msg.data[0], &cacheChange.data[8], msg_size);
     */
 
-    location_msgs::msg::Location msg;
-    msg.deserialize(&cacheChange.data[4]);
+    std_msgs::msg::UInt32 msg;
+    msg.copyFromBuf(&cacheChange.data[4]);
 
     SubscribeDataType *sub = (SubscribeDataType *)callee;
     void (*fp)(intptr_t) = sub->cb_fp;
@@ -309,15 +310,19 @@ template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::String>(s
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::String *));
 template void mros2::Publisher::publish(std_msgs::msg::String &msg);
 
+template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int8>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int8 *));
+template void mros2::Publisher::publish(std_msgs::msg::Int8 &msg);
+
+template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::UInt32>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::UInt32 *));
+template void mros2::Publisher::publish(std_msgs::msg::UInt32 &msg);
+
+template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Float32>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Float32 *));
+template void mros2::Publisher::publish(std_msgs::msg::Float32 &msg);
+
 // Work in Progress: for custom message
 template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(TEST *));
 //template void mros2::Publisher::publish(TEST& msg);
-
-template mros2::Publisher mros2::Node::create_publisher<health_msgs::msg::Health>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(health_msgs::msg::Health *));
-template void mros2::Publisher::publish(health_msgs::msg::Health &msg);
-
-template mros2::Publisher mros2::Node::create_publisher<location_msgs::msg::Location>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(location_msgs::msg::Location *));
-template void mros2::Publisher::publish(location_msgs::msg::Location &msg);

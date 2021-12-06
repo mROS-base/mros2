@@ -4,30 +4,29 @@ namespace std_msgs
 {
 namespace msg
 {
-class Int8
+class Float32
 {
 public:
   std::string getTypeName();
-  int8_t data;
+  float data;
   void copyToBuf(uint8_t *addrPtr)
   {
-    memcpy(addrPtr, &data, 1);
-    addrPtr += 1;
+    memcpy(addrPtr, &data, 4);
+    addrPtr += 4;
     *addrPtr = 0;
   }
 
   void copyFromBuf(const uint8_t *addrPtr)
   {
-    memcpy(&data, addrPtr, 1);
-    addrPtr += 1;
+    memcpy(&data, addrPtr, 4);
+    addrPtr += 4;
   }
-
   uint8_t getTotalSize()
   {
-    return 1;
+    return 4;
   }
 private:
-  std::string type_name = "std_msgs::msg::dds_::Int8";
+  std::string type_name = "std_msgs::msg::dds_::Float32";
 };
 }//namspace msg
 }//namespace std_msgs
@@ -36,10 +35,10 @@ namespace message_traits
 {
 
 template<>
-struct TypeName<std_msgs::msg::Int8*> {
+struct TypeName<std_msgs::msg::Float32*> {
   static const char* value()
   {
-    return "std_msgs::msg::dds_::Int8_";
+    return "std_msgs::msg::dds_::Float32_";
   }
 };
 

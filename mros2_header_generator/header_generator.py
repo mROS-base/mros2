@@ -9,13 +9,13 @@ from msg_data_generator import msgDataGenerator
 # standard types for ROS2
 stdMsgs = {
     "std_msgs/msg/int8.hpp": 1,
-    "std_msgs/msg/uint8.hpp": 2,
+    "std_msgs/msg/u_int8.hpp": 2,
     "std_msgs/msg/int16.hpp": 3,
-    "std_msgs/msg/uint16.hpp": 4,
+    "std_msgs/msg/u_int16.hpp": 4,
     "std_msgs/msg/int32.hpp": 5,
-    "std_msgs/msg/uint32.hpp": 6,
+    "std_msgs/msg/u_int32.hpp": 6,
     "std_msgs/msg/int64.hpp": 7,
-    "std_msgs/msg/uint64.hpp": 8,
+    "std_msgs/msg/u_int64.hpp": 8,
     "std_msgs/msg/float32.hpp": 9,
     "std_msgs/msg/float64.hpp": 10,
     "std_msgs/msg/string.hpp": 11,
