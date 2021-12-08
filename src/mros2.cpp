@@ -247,8 +247,8 @@ namespace mros2
   {
     /** TODO : make "std_msgs::msg::XX" below change automatically according to the type */
     // std_msgs::msg::String msg;
-    // std_msgs::msg::Float32 msg;
-    std_msgs::msg::Int16 msg;
+    std_msgs::msg::Float32 msg;
+    // std_msgs::msg::Int16 msg;
     msg.copyFromBuf(&cacheChange.data[4]);
 
     SubscribeDataType *sub = (SubscribeDataType *)callee;
