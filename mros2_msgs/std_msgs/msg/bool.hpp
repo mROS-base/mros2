@@ -9,20 +9,20 @@ class Bool
 public:
   std::string getTypeName();
   bool data;
-  void copyToBuf(uBool_t *addrPtr)
+  void copyToBuf(uint8_t *addrPtr)
   {
     memcpy(addrPtr, &data, 1);
     addrPtr += 1;
     *addrPtr = 0;
   }
 
-  void copyFromBuf(const uBool_t *addrPtr)
+  void copyFromBuf(const uint8_t *addrPtr)
   {
     memcpy(&data, addrPtr, 1);
     addrPtr += 1;
   }
 
-  uBool_t getTotalSize()
+  uint8_t getTotalSize()
   {
     return 1;
   }
