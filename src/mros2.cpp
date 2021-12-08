@@ -199,9 +199,11 @@ void Publisher::publish(T& msg)
 /*
 *  Subscriber functions
 */
+template <class T>
 typedef struct {
   void (*cb_fp)(intptr_t);
   intptr_t argp;
+  T msg;
 } SubscribeDataType;
 
 template <class T>
@@ -222,7 +224,7 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
   data_p = new SubscribeDataType;
   data_p->cb_fp = (void (*)(intptr_t))fp;
   data_p->argp = (intptr_t)NULL;
-  T msg;
+  data_p->msg = (T)msg;
   reader->registerCallback(sub.callback_handler, (void *)data_p);
 
   /* Register callback to ensure that a subscriber is matched to the reader before receiving messages */
