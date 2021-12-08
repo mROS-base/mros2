@@ -235,7 +235,7 @@ template <class T>
 void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
   T msg;
-  msg.copyFromBuf(&cacheChange.data[4]);
+  msg->copyFromBuf(&cacheChange.data[4]);
 
   SubscribeDataType *sub = (SubscribeDataType *)callee;
   void (*fp)(intptr_t) = sub->cb_fp;
