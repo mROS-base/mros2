@@ -199,14 +199,13 @@ void Publisher::publish(T& msg)
 /*
 *  Subscriber functions
 */
-template <class T>
 typedef struct {
   void (*cb_fp)(intptr_t);
   intptr_t argp;
 } SubscribeDataType;
 
 template <class T>
-Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)(T), T msg)
+Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)(T))
 {
   rtps::Reader *reader = domain_ptr->createReader(*(this->part), ("rt/" + topic_name).c_str(), message_traits::TypeName<T>().value(), false);
   if (reader == nullptr) {
@@ -218,7 +217,6 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
   Subscriber sub;
   sub.topic_name = topic_name;
   sub.cb_fp = (void (*)(intptr_t))fp;
-  sub.msg = (T)msg;
 
   SubscribeDataType *data_p;
   data_p = new SubscribeDataType;
@@ -233,13 +231,15 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
   return sub;
 }
 
+template <class T>
 void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
-  (sub->msg).copyFromBuf(&cacheChange.data[4]);
+  T msg;
+  msg.copyFromBuf(&cacheChange.data[4]);
 
   SubscribeDataType *sub = (SubscribeDataType *)callee;
   void (*fp)(intptr_t) = sub->cb_fp;
-  fp((intptr_t)&(sub->msg));
+  fp((intptr_t)&msg);
 }
 
 /*
@@ -317,6 +317,7 @@ template void mros2::Publisher::publish(std_msgs::msg::Int8 &msg);*/
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int16>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int16 *));
 template void mros2::Publisher::publish(std_msgs::msg::Int16 &msg);
+template void mros2::Subscriber::callback_handler<std_msgs::msg::Int16>(void *callee, const rtps::ReaderCacheChange &cacheChange);
 /*
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int32>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int32 *));
