@@ -232,9 +232,8 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
 }
 
 template <class T>
-void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
+void Subscriber::callback_handler(T msg, void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
-  T msg;
   msg.copyFromBuf(&cacheChange.data[4]);
 
   SubscribeDataType *sub = (SubscribeDataType *)callee;
@@ -317,7 +316,7 @@ template void mros2::Publisher::publish(std_msgs::msg::Int8 &msg);*/
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int16>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int16 *));
 template void mros2::Publisher::publish(std_msgs::msg::Int16 &msg);
-template void mros2::Subscriber::callback_handler();
+template void mros2::Subscriber::callback_handler(std_msgs::msg::Int16 &msg, void *callee, const rtps::ReaderCacheChange &cacheChange);
 /*
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int32>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int32 *));
