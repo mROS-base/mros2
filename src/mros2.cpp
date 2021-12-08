@@ -200,14 +200,13 @@ void Publisher::publish(T& msg)
 *  Subscriber functions
 */
 template <class T>
-struct SubscribeDataType{
+typedef struct {
   void (*cb_fp)(intptr_t);
   intptr_t argp;
-  T msg;
-};
+} SubscribeDataType;
 
 template <class T>
-Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)(T))
+Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)(T), T msg)
 {
   rtps::Reader *reader = domain_ptr->createReader(*(this->part), ("rt/" + topic_name).c_str(), message_traits::TypeName<T>().value(), false);
   if (reader == nullptr) {
@@ -219,12 +218,12 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
   Subscriber sub;
   sub.topic_name = topic_name;
   sub.cb_fp = (void (*)(intptr_t))fp;
+  sub.msg = (T)msg;
 
-  SubscribeDataType<T> *data_p;
+  SubscribeDataType *data_p;
   data_p = new SubscribeDataType;
   data_p->cb_fp = (void (*)(intptr_t))fp;
   data_p->argp = (intptr_t)NULL;
-  data_p->msg = (T)msg;
   reader->registerCallback(sub.callback_handler, (void *)data_p);
 
   /* Register callback to ensure that a subscriber is matched to the reader before receiving messages */
@@ -236,11 +235,11 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
 
 void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
-  msg.copyFromBuf(&cacheChange.data[4]);
+  (sub->msg).copyFromBuf(&cacheChange.data[4]);
 
   SubscribeDataType *sub = (SubscribeDataType *)callee;
   void (*fp)(intptr_t) = sub->cb_fp;
-  fp((intptr_t)&msg);
+  fp((intptr_t)&(sub->msg));
 }
 
 /*

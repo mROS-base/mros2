@@ -48,7 +48,8 @@ public:
   Subscriber create_subscription(
     std::string topic_name,
     int qos,
-    void (*fp)(T)
+    void (*fp)(T),
+    T msg
   );
 
   std::string node_name;
