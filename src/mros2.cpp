@@ -352,6 +352,6 @@ template mros2::Subscriber mros2::Node::create_subscription(std::string topic_na
 template void mros2::Publisher::publish(std_msgs::msg::WString &msg);*/
 
 // Work in Progress: for custom message
-template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(TEST*));
+//template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
+//template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(TEST*));
 //template void mros2::Publisher::publish(TEST& msg);
