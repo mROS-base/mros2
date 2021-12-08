@@ -190,7 +190,7 @@ Publisher Node::create_publisher(std::string topic_name, int qos)
 }
 
 template <class T>
-void Publisher::publish(T &msg)
+void Publisher::publish(T& msg)
 {
   msg.copyToBuf(&buf[4]);
   pub_ptr->newChange(rtps::ChangeKind_t::ALIVE, buf, msg.getTotalSize() + 4);
@@ -231,12 +231,10 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
   return sub;
 }
 
+template <class T>
 void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
-  /** TODO : make "std_msgs::msg::XX" below change automatically according to the type */
-  // std_msgs::msg::String msg;
-  //std_msgs::msg::Float32 msg;
-  std_msgs::msg::Int16 msg;
+  T msg;
   msg.copyFromBuf(&cacheChange.data[4]);
 
   SubscribeDataType *sub = (SubscribeDataType *)callee;
@@ -295,7 +293,7 @@ void setTrue(void *args)
 /*
  *  specialize template functions
  */
-
+/*
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Bool>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Bool *));
 template void mros2::Publisher::publish(std_msgs::msg::Bool &msg);
@@ -314,12 +312,13 @@ template void mros2::Publisher::publish(std_msgs::msg::Float64 &msg);
 
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int8>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int8 *));
-template void mros2::Publisher::publish(std_msgs::msg::Int8 &msg);
+template void mros2::Publisher::publish(std_msgs::msg::Int8 &msg);*/
 
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int16>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int16 *));
+template mros2::Subscriber mros2::Node::create_subscription<std_msgs::msg::Int16>(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int16 *));
 template void mros2::Publisher::publish(std_msgs::msg::Int16 &msg);
-
+template void mros2::Subscriber::callback_handler();
+/*
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int32>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int32 *));
 template void mros2::Publisher::publish(std_msgs::msg::Int32 &msg);
@@ -350,7 +349,7 @@ template void mros2::Publisher::publish(std_msgs::msg::UInt64 &msg);
 
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::WString>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::WString *));
-template void mros2::Publisher::publish(std_msgs::msg::WString &msg);
+template void mros2::Publisher::publish(std_msgs::msg::WString &msg);*/
 
 // Work in Progress: for custom message
 template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
