@@ -200,11 +200,11 @@ void Publisher::publish(T& msg)
 *  Subscriber functions
 */
 template <class T>
-typedef struct {
+struct SubscribeDataType{
   void (*cb_fp)(intptr_t);
   intptr_t argp;
   T msg;
-} SubscribeDataType;
+};
 
 template <class T>
 Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)(T))
