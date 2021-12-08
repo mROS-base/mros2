@@ -220,7 +220,7 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
   sub.topic_name = topic_name;
   sub.cb_fp = (void (*)(intptr_t))fp;
 
-  SubscribeDataType *data_p;
+  SubscribeDataType<T> *data_p;
   data_p = new SubscribeDataType;
   data_p->cb_fp = (void (*)(intptr_t))fp;
   data_p->argp = (intptr_t)NULL;
