@@ -24,7 +24,7 @@ public:
              4+{{def_data.size}}*({{def_data.typeName}}.size())
              +
              {%elif def_data.cppType=="string"%}
-             4+{{def_data.typeName}}.size()
+             5+{{def_data.typeName}}.size()
              +
              {%else%}
              {{def_data.size}}
@@ -55,6 +55,7 @@ public:
     addrPtr += 4;
     memcpy(addrPtr,{{def_data.typeName}}.c_str(),stringSize);
     addrPtr += stringSize;
+    *addrPtr = 0;
 
     {% else %}
     memcpy(addrPtr,&{{def_data.typeName}},{{def_data.size}});
