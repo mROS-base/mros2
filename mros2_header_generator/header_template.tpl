@@ -24,7 +24,7 @@ public:
              4+{{def_data.size}}*({{def_data.typeName}}.size())
              +
              {%elif def_data.cppType=="string"%}
-             5+{{def_data.typeName}}.size()
+             4+{{def_data.typeName}}.size()
              +
              {%else%}
              {{def_data.size}}
@@ -54,7 +54,7 @@ public:
     memcpy(addrPtr,&stringSize,4);
     addrPtr += 4;
     memcpy(addrPtr,{{def_data.typeName}}.c_str(),stringSize);
-    addrPtr += stringSize+1;
+    addrPtr += stringSize;
 
     {% else %}
     memcpy(addrPtr,&{{def_data.typeName}},{{def_data.size}});
@@ -85,7 +85,7 @@ public:
     rbuf += 4;
     {{def_data.typeName}}.resize(stringSize);
     memcpy(&{{def_data.typeName}}[0],rbuf,stringSize);
-    rbuf += stringSize+1;
+    rbuf += stringSize;
     {% else %}
     memcpy(&{{def_data.typeName}},rbuf,{{def_data.size}});
     rbuf += {{def_data.size}};
