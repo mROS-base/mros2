@@ -70,7 +70,6 @@ class Subscriber
 {
 public:
   std::string topic_name;
-  template <class T> 
   static void callback_handler(
     void* callee,
     const rtps::ReaderCacheChange& cacheChange

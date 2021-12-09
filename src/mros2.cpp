@@ -24,6 +24,7 @@
 #include "std_msgs/msg/u_int64.hpp"
 #include "std_msgs/msg/w_string.hpp"
 
+#include "std_msgs/msg/health.hpp"
 #include "TEST.hpp"
 
 #ifndef __MBED__
@@ -222,7 +223,7 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
   data_p = new SubscribeDataType;
   data_p->cb_fp = (void (*)(intptr_t))fp;
   data_p->argp = (intptr_t)NULL;
-  reader->registerCallback(sub.callback_handler<T>, (void *)data_p);
+  reader->registerCallback(sub.callback_handler, (void *)data_p);
 
   /* Register callback to ensure that a subscriber is matched to the reader before receiving messages */
   part_ptr->registerOnNewPublisherMatchedCallback(subMatch, &pubMatched);
@@ -231,10 +232,9 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
   return sub;
 }
 
-template <class T>
 void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
-  T msg;
+  std_msgs::msg::Health msg;
   msg.copyFromBuf(&cacheChange.data[4]);
 
   SubscribeDataType *sub = (SubscribeDataType *)callee;
@@ -293,7 +293,7 @@ void setTrue(void *args)
 /*
  *  specialize template functions
  */
-/*
+
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Bool>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Bool *));
 template void mros2::Publisher::publish(std_msgs::msg::Bool &msg);
@@ -312,13 +312,13 @@ template void mros2::Publisher::publish(std_msgs::msg::Float64 &msg);
 
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int8>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int8 *));
-template void mros2::Publisher::publish(std_msgs::msg::Int8 &msg);*/
+template void mros2::Publisher::publish(std_msgs::msg::Int8 &msg);
 
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int16>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int16 *));
 template void mros2::Publisher::publish(std_msgs::msg::Int16 &msg);
 template void mros2::Subscriber::callback_handler<std_msgs::msg::Int16>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-/*
+
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int32>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int32 *));
 template void mros2::Publisher::publish(std_msgs::msg::Int32 &msg);
@@ -349,7 +349,11 @@ template void mros2::Publisher::publish(std_msgs::msg::UInt64 &msg);
 
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::WString>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::WString *));
-template void mros2::Publisher::publish(std_msgs::msg::WString &msg);*/
+template void mros2::Publisher::publish(std_msgs::msg::WString &msg);
+
+template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Health>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Health *));
+template void mros2::Publisher::publish(std_msgs::msg::Health &msg);
 
 // Work in Progress: for custom message
 //template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
