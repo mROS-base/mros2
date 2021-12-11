@@ -24,7 +24,7 @@ public:
              4+{{def_data.size}}*({{def_data.typeName}}.size())
              +
              {%elif def_data.cppType=="string"%}
-             5+{{def_data.typeName}}.capacity()
+             5+{{def_data.typeName}}.size()
              +
              {%else%}
              {{def_data.size}}
@@ -50,7 +50,7 @@ public:
     }
 
     {% elif def_data.cppType == "string"%}
-    uint32_t stringSize = {{def_data.typeName}}.capacity();
+    uint32_t stringSize = {{def_data.typeName}}.size();
     memcpy(addrPtr,&stringSize,4);
     addrPtr += 4;
     memcpy(addrPtr,{{def_data.typeName}}.c_str(),stringSize);
@@ -82,7 +82,10 @@ public:
     }
     {% elif def_data.cppType == "string"%}
     uint32_t stringSize;
-    memcpy(&stringSize, rbuf, 4);
+    char buf_char[stringSize+1];
+    memcpy(&buf_char,rbuf,stringSize);
+    buf_char[stringSize] = '\0';
+    {{def_data.typeName}} = buf_char;
     rbuf += 4;
     {{def_data.typeName}}.resize(stringSize);
     memcpy(&{{def_data.typeName}}[0],rbuf,stringSize);
