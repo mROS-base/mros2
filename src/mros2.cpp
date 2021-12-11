@@ -25,7 +25,7 @@
 #include "std_msgs/msg/w_string.hpp"
 
 #include "health_msgs/msg/health.hpp"
-#include "location_msgs/msg/location.hpp"
+//#include "location_msgs/msg/location.hpp"
 #include "TEST.hpp"
 
 #ifndef __MBED__
@@ -235,7 +235,7 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
 
 void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
-  location_msgs::msg::Location msg;
+  health_msgs::msg::Health msg;
   msg.copyFromBuf(&cacheChange.data[4]);
 
   SubscribeDataType *sub = (SubscribeDataType *)callee;
@@ -355,9 +355,9 @@ template mros2::Publisher mros2::Node::create_publisher<health_msgs::msg::Health
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(health_msgs::msg::Health *));
 template void mros2::Publisher::publish(health_msgs::msg::Health &msg);
 
-template mros2::Publisher mros2::Node::create_publisher<location_msgs::msg::Location>(std::string topic_name, int qos);
+/*template mros2::Publisher mros2::Node::create_publisher<location_msgs::msg::Location>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(location_msgs::msg::Location *));
-template void mros2::Publisher::publish(location_msgs::msg::Location &msg);
+template void mros2::Publisher::publish(location_msgs::msg::Location &msg);*/
 
 
 // Work in Progress: for custom message
