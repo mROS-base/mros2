@@ -85,7 +85,7 @@ public:
     memcpy(&stringSize, rbuf, 4);
     rbuf += 4;
     std::string buf_char;
-    memcpy(&buf_char[0],rbuf,stringSize);
+    memcpy(&buf_char[0],rbuf,stringSize+1);
     {{def_data.typeName}}=buf_char;
     rbuf += stringSize;
     {% else %}
