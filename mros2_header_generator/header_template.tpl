@@ -82,9 +82,8 @@ public:
     }
     {% elif def_data.cppType == "string"%}
     uint32_t stringSize;
-    char buf_char[stringSize+1];
+    std::string buf_char;
     memcpy(&buf_char,rbuf,stringSize);
-    buf_char[stringSize] = '\0';
     {{def_data.typeName}} = buf_char;
     rbuf += 4;
     {{def_data.typeName}}.resize(stringSize);
