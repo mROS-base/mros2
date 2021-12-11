@@ -83,10 +83,11 @@ public:
     {% elif def_data.cppType == "string"%}
     uint32_t stringSize;
     memcpy(&stringSize, rbuf, 4);
+    cout << stringSize << endl;
     rbuf += 4;
-    {{def_data.typeName}}.resize(2);
-    memcpy(&{{def_data.typeName}}[0],rbuf,2);
-    rbuf += 2;
+    {{def_data.typeName}}.resize(stringSize);
+    memcpy(&{{def_data.typeName}}[0],rbuf,stringSize);
+    rbuf += stringSize;
     {% else %}
     memcpy(&{{def_data.typeName}},rbuf,{{def_data.size}});
     rbuf += {{def_data.size}};
