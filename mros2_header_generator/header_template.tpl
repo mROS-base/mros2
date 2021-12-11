@@ -84,10 +84,9 @@ public:
     uint32_t stringSize;
     memcpy(&stringSize, rbuf, 4);
     rbuf += 4;
-    std::string buf_char;
-    memcpy(&buf_char[0],rbuf,stringSize+1);
-    {{def_data.typeName}}=buf_char;
-    rbuf += stringSize;
+    {{def_data.typeName}}.resize(2);
+    memcpy(&{{def_data.typeName}}[0],rbuf,2);
+    rbuf += 2;
     {% else %}
     memcpy(&{{def_data.typeName}},rbuf,{{def_data.size}});
     rbuf += {{def_data.size}};
