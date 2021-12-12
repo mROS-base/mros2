@@ -327,7 +327,7 @@ template void mros2::Subscriber::callback_handler<std_msgs::msg::Int16>(void *ca
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int32>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int32*));
 template void mros2::Publisher::publish(std_msgs::msg::Int32 &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::In32>(void *callee, const rtps::ReaderCacheChange &cacheChange);
+template void mros2::Subscriber::callback_handler<std_msgs::msg::Int32>(void *callee, const rtps::ReaderCacheChange &cacheChange);
 
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int64>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int64*));
