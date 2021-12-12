@@ -31,6 +31,7 @@
 void* __dso_handle=0;
 #endif /* __MBED__ */
 
+
 namespace mros2
 {
 
@@ -141,8 +142,8 @@ void mros2_init(void *args)
 
 
 /*
-*  Node functions
-*/
+ *  Node functions
+ */
 Node Node::create_node(std::string node_name)
 {
   MROS2_DEBUG("[MROS2LIB] create_node");
@@ -169,8 +170,8 @@ Node Node::create_node(std::string node_name)
 
 
 /*
-*  Publisher functions
-*/
+ *  Publisher functions
+ */
 template <class T>
 Publisher Node::create_publisher(std::string topic_name, int qos)
 {
@@ -200,8 +201,8 @@ void Publisher::publish(T& msg)
 
 
 /*
-*  Subscriber functions
-*/
+ *  Subscriber functions
+ */
 typedef struct {
   void (*cb_fp)(intptr_t);
   intptr_t argp;
@@ -246,8 +247,8 @@ void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &c
 
 
 /*
-*  Other utility functions
-*/
+ *  Other utility functions
+ */
 void spin()
 {
   while(true) {
