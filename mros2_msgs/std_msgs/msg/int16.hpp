@@ -9,10 +9,6 @@ class Int16
 public:
   std::string getTypeName();
   int16_t data;
-  
-  Int16() {
-    data = 0;
-  }
 
   void copyToBuf(uint8_t *addrPtr)
   {

@@ -13,7 +13,6 @@ public:
   {
     memcpy(addrPtr, &data, 4);
     addrPtr += 4;
-    *addrPtr = 0;
   }
 
   void copyFromBuf(const uint8_t *addrPtr)
