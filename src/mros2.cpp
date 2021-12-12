@@ -204,7 +204,7 @@ typedef struct {
   intptr_t argp;
 } SubscribeDataType;
 
-template <class T>
+template <class T, class U>
 Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)(T))
 {
   rtps::Reader *reader = domain_ptr->createReader(*(this->part), ("rt/" + topic_name).c_str(), message_traits::TypeName<T>().value(), false);
@@ -222,7 +222,7 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
   data_p = new SubscribeDataType;
   data_p->cb_fp = (void (*)(intptr_t))fp;
   data_p->argp = (intptr_t)NULL;
-  reader->registerCallback(sub.callback_handler<T>, (void *)data_p);
+  reader->registerCallback(sub.callback_handler<U>, (void *)data_p);
 
   /* Register callback to ensure that a subscriber is matched to the reader before receiving messages */
   part_ptr->registerOnNewPublisherMatchedCallback(subMatch, &pubMatched);
@@ -234,7 +234,7 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
 template <class T>
 void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
-  *T msg;
+  T msg;
   msg.copyFromBuf(&cacheChange.data[4]);
 
   SubscribeDataType *sub = (SubscribeDataType *)callee;
@@ -315,9 +315,9 @@ template mros2::Subscriber mros2::Node::create_subscription(std::string topic_na
 template void mros2::Publisher::publish(std_msgs::msg::Int8 &msg);*/
 
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int16>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int16*));
+template mros2::Subscriber mros2::Node::create_subscription<std_msgs::msg::Int16>(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int16*));
 template void mros2::Publisher::publish(std_msgs::msg::Int16 &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::Int16 *>(void *callee, const rtps::ReaderCacheChange &cacheChange);
+template void mros2::Subscriber::callback_handler<std_msgs::msg::Int16>(void *callee, const rtps::ReaderCacheChange &cacheChange);
 /*
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int32>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int32*));

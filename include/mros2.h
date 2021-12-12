@@ -44,7 +44,7 @@ public:
     int qos
   );
 
-  template <class T>
+  template <class T, class U>
   Subscriber create_subscription(
     std::string topic_name,
     int qos,
