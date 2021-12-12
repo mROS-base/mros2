@@ -204,8 +204,8 @@ typedef struct {
   intptr_t argp;
 } SubscribeDataType;
 
-template <class T, class U>
-Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)(T))
+template <class T>
+Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)(T*))
 {
   rtps::Reader *reader = domain_ptr->createReader(*(this->part), ("rt/" + topic_name).c_str(), message_traits::TypeName<T>().value(), false);
   if (reader == nullptr) {
@@ -222,7 +222,7 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
   data_p = new SubscribeDataType;
   data_p->cb_fp = (void (*)(intptr_t))fp;
   data_p->argp = (intptr_t)NULL;
-  reader->registerCallback(sub.callback_handler<U>, (void *)data_p);
+  reader->registerCallback(sub.callback_handler<T>, (void *)data_p);
 
   /* Register callback to ensure that a subscriber is matched to the reader before receiving messages */
   part_ptr->registerOnNewPublisherMatchedCallback(subMatch, &pubMatched);
