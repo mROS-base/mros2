@@ -84,9 +84,6 @@ public:
     uint32_t stringSize;
     memcpy(&stringSize, rbuf, 4);
     rbuf += 4;
-    if (stringSize % 4 == 2){
-      stringSize += 1;
-    }
     {{def_data.typeName}}.resize(stringSize);
     memcpy(&{{def_data.typeName}}[0],rbuf,stringSize);
     rbuf += stringSize;
