@@ -234,7 +234,7 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)
 template <class T>
 void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
-  T msg;
+  *T msg;
   msg.copyFromBuf(&cacheChange.data[4]);
 
   SubscribeDataType *sub = (SubscribeDataType *)callee;
