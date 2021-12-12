@@ -207,7 +207,7 @@ typedef struct {
 template <class T>
 Subscriber Node::create_subscription(std::string topic_name, int qos, void (*fp)(T*))
 {
-  rtps::Reader *reader = domain_ptr->createReader(*(this->part), ("rt/" + topic_name).c_str(), message_traits::TypeName<T>().value(), false);
+  rtps::Reader *reader = domain_ptr->createReader(*(this->part), ("rt/" + topic_name).c_str(), message_traits::TypeName<T*>().value(), false);
   if (reader == nullptr) {
     MROS2_ERROR("[MROS2LIB] ERROR: failed to create reader in create_subscription()");
     while (true) {
