@@ -379,5 +379,5 @@ template void mros2::Publisher::publish(TEST& msg);
 
 template mros2::Publisher mros2::Node::create_publisher<health_msgs::msg::Health>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(health_msgs::msg::Health*));
-template void mros2::Publisher::publish(health_msgs::msg::Healthg &msg);
+template void mros2::Publisher::publish(health_msgs::msg::Health &msg);
 template void mros2::Subscriber::callback_handler<health_msgs::msg::Health>(void *callee, const rtps::ReaderCacheChange &cacheChange);
