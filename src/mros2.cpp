@@ -9,6 +9,22 @@
 #include "cmsis_os.h"
 #endif /* __MBED__ */
 
+#include "std_msgs/msg/bool.hpp"
+#include "std_msgs/msg/byte.hpp"
+#include "std_msgs/msg/char.hpp"
+#include "std_msgs/msg/float32.hpp"
+#include "std_msgs/msg/float64.hpp"
+#include "std_msgs/msg/int8.hpp"
+#include "std_msgs/msg/int16.hpp"
+#include "std_msgs/msg/int32.hpp"
+#include "std_msgs/msg/int64.hpp"
+#include "std_msgs/msg/string.hpp"
+#include "std_msgs/msg/u_int8.hpp"
+#include "std_msgs/msg/u_int16.hpp"
+#include "std_msgs/msg/u_int32.hpp"
+#include "std_msgs/msg/u_int64.hpp"
+#include "std_msgs/msg/w_string.hpp"
+
 #include "TEST.hpp"
 
 #ifndef __MBED__
@@ -280,23 +296,3 @@ void setTrue(void* args)
   *static_cast<volatile bool*>(args) = true;
 }
 
-
-/*
- *  specialize template functions
- */
-
-#include "std_msgs/msg/bool.hpp"
-#include "std_msgs/msg/byte.hpp"
-#include "std_msgs/msg/char.hpp"
-#include "std_msgs/msg/float32.hpp"
-#include "std_msgs/msg/float64.hpp"
-#include "std_msgs/msg/int8.hpp"
-#include "std_msgs/msg/int16.hpp"
-#include "std_msgs/msg/int32.hpp"
-#include "std_msgs/msg/int64.hpp"
-#include "std_msgs/msg/string.hpp"
-#include "std_msgs/msg/u_int8.hpp"
-#include "std_msgs/msg/u_int16.hpp"
-#include "std_msgs/msg/u_int32.hpp"
-#include "std_msgs/msg/u_int64.hpp"
-#include "std_msgs/msg/w_string.hpp"
