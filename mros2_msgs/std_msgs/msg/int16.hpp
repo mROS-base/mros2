@@ -9,6 +9,7 @@ class Int16
 public:
   std::string getTypeName();
   int16_t data;
+
   void copyToBuf(uint8_t *addrPtr)
   {
     memcpy(addrPtr, &data, 2);

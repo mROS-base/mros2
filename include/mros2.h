@@ -48,7 +48,7 @@ public:
   Subscriber create_subscription(
     std::string topic_name,
     int qos,
-    void (*fp)(T)
+    void (*fp)(T*)
   );
 
   std::string node_name;
@@ -70,6 +70,7 @@ class Subscriber
 {
 public:
   std::string topic_name;
+  template <class T> 
   static void callback_handler(
     void* callee,
     const rtps::ReaderCacheChange& cacheChange
