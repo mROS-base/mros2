@@ -1,4 +1,3 @@
-#include "mros2.h"
 #include <string>
 
 namespace std_msgs
@@ -52,8 +51,3 @@ struct TypeName<std_msgs::msg::WString*> {
 };
 
 }
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::WString>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::WString*));
-template void mros2::Publisher::publish(std_msgs::msg::WString &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::WString>(void *callee, const rtps::ReaderCacheChange &cacheChange);
