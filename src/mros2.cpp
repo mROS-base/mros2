@@ -27,7 +27,7 @@
 //#include "TEST.hpp"
 #include "health_msgs/msg/health.hpp"
 #include "location_msgs/msg/location.hpp"
-#include "float_location_msgs/msg/float_location.hpp"
+#include "float_location_msgs/msg/floatlocation.hpp"
 
 #ifndef __MBED__
 /* Statement to avoid link error */
