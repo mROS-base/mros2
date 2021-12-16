@@ -3,6 +3,7 @@
 import os
 import json
 import sys
+import re
 from jinja2 import Environment, FileSystemLoader
 from msg_data_generator import msgDataGenerator
 
@@ -36,6 +37,9 @@ appDir = '../../mros2'
 msgIncludePath = appDir + "/" + "mros2_msgs" + "/"
 fileDir = os.getcwd()
 
+def camel_to_snake(s: str) -> str:
+    return re.sub("((?<=[a-z0-9])[A-Z]|(?!^)[A-Z](?=[a-z]))", r"_\1", s).lower()
+
 def main():
     #if not(os.path.isdir(msgIncludePath)):
         #os.mkdir(msgIncludePath)
@@ -62,7 +66,7 @@ def main():
         if not(os.path.isdir(msgPkgPath)):
             os.mkdir(msgPkgPath)
             os.mkdir(msgPkgPath + "/msg")
-        with open(os.path.join(msgPkgPath, "msg", msg['name'].lower() + ".hpp"), "wb") as f:
+        with open(os.path.join(msgPkgPath, "msg", camel_to_snake(msg['name']) + ".hpp"), "wb") as f:
             f.write(datatext.encode('utf-8'))
 
 if __name__ == "__main__":
