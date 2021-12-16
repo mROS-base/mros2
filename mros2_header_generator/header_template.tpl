@@ -59,7 +59,7 @@ public:
 
     {% else %}
     memcpy(addrPtr,&{{def_data.typeName}},{{def_data.size}});
-    addrPtr += {{def_data.size}};
+    addrPtr += 4;
 
     {% endif %}
 
