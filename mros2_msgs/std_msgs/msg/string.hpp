@@ -17,8 +17,18 @@ public:
     memcpy(addrPtr, data.c_str(),size);
     addrPtr += size;
     *addrPtr = 0;
-    //buf_index += size;
   }
+
+  void copyFromBuf(const uint8_t *addrPtr)
+  {
+    uint32_t msg_size;
+    memcpy(&msg_size, addrPtr, 4);
+    addrPtr += 4;
+    data.resize(msg_size);
+    memcpy(&data[0], addrPtr, msg_size);
+
+  }
+
   uint8_t getTotalSize()
   {
     return (5 + data.size());
