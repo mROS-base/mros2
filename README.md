@@ -13,6 +13,18 @@ This repository maintains the communication layer of mROS 2, that mainly offers 
 - **Lightweight**: mROS 2 APIs are implemented by C++ to be operated on the embedded devices. All software stacks are also implemented only in C/C++.
 - **Real-time**: mROS 2 employs the real-time kernel (e.g., [TOPPERS kernel](https://www.toppers.jp/en/project.html)) as the runtime platform in order to enhance the real-time capability.
 
+## Functionalities and limitations
+
+Here are functionalities that mROS 2 offers for you, and current limitations (a.k.a call for your contibutions!).
+
+- Pub/Sub communication via Topic is supported
+  - [Built-in-types](https://docs.ros.org/en/foxy/Concepts/About-ROS-Interfaces.html#field-types) except for `wstring` (UTF-16)
+    - Please check [mros2-asp3-f767zi#exapmle-applications](https://github.com/mROS-base/mros2-asp3-f767zi#example-applications) for more details.
+    - `array` types are not supported
+  - Custom message is not supported (but ongoing work)
+- Service, Actions, and Parameters are not supported
+  - Please let us know if you want to use them as soon as possible. We can consider of raising the priority of these supports.
+
 ## Supported platform
 
 Since this repository itself only maintains the communication layer of mROS 2, we also publish the implementation on the embedded board using this layer and the embedded kernel.
