@@ -54,7 +54,7 @@ public:
     memcpy(addrPtr,&stringSize,4);
     addrPtr += 4;
     memcpy(addrPtr,{{def_data.typeName}}.c_str(),stringSize);
-    addrPtr += stringSize;
+    addrPtr += stringSize+1;
     *addrPtr = 0;
 
     {% else %}
