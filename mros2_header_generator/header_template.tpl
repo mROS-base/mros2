@@ -86,10 +86,10 @@ public:
     rbuf += 4;
     {{def_data.typeName}}.resize(stringSize);
     memcpy(&{{def_data.typeName}}[0],rbuf,stringSize);
-    rbuf += stringSize;
+    rbuf += stringSize+1;
     {% else %}
     memcpy(&{{def_data.typeName}},rbuf,{{def_data.size}});
-    rbuf += {{def_data.size}};
+    rbuf += 4;
     {% endif %}
     {% endfor %}
   }
