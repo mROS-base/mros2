@@ -27,7 +27,7 @@ public:
              5+{{def_data.typeName}}.size()
              +
              {%else%}
-             {{def_data.size}}
+             4
              +
              {%endif%}
            {%endfor%}
@@ -89,7 +89,7 @@ public:
     rbuf += stringSize+1;
     {% else %}
     memcpy(&{{def_data.typeName}},rbuf,{{def_data.size}});
-    rbuf += {{def_data.size}};
+    rbuf += 4;
     {% endif %}
     {% endfor %}
   }
