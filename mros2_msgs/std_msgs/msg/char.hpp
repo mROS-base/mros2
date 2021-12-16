@@ -4,11 +4,11 @@ namespace std_msgs
 {
 namespace msg
 {
-class Int8
+class Char
 {
 public:
   std::string getTypeName();
-  int8_t data;
+  char data;
   void copyToBuf(uint8_t *addrPtr)
   {
     memcpy(addrPtr, &data, 1);
@@ -26,7 +26,7 @@ public:
     return 1;
   }
 private:
-  std::string type_name = "std_msgs::msg::dds_::Int8";
+  std::string type_name = "std_msgs::msg::dds_::Char";
 };
 }//namspace msg
 }//namespace std_msgs
@@ -35,10 +35,10 @@ namespace message_traits
 {
 
 template<>
-struct TypeName<std_msgs::msg::Int8*> {
+struct TypeName<std_msgs::msg::Char*> {
   static const char* value()
   {
-    return "std_msgs::msg::dds_::Int8_";
+    return "std_msgs::msg::dds_::Char_";
   }
 };
 
