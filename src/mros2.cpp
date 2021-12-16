@@ -27,6 +27,7 @@
 //#include "TEST.hpp"
 #include "health_msgs/msg/health.hpp"
 #include "location_msgs/msg/location.hpp"
+#include "float_location_msgs/msg/float_location.hpp"
 
 #ifndef __MBED__
 /* Statement to avoid link error */
@@ -387,3 +388,8 @@ template mros2::Publisher mros2::Node::create_publisher<location_msgs::msg::Loca
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(location_msgs::msg::Location*));
 template void mros2::Publisher::publish(location_msgs::msg::Location &msg);
 template void mros2::Subscriber::callback_handler<location_msgs::msg::Location>(void *callee, const rtps::ReaderCacheChange &cacheChange);
+
+template mros2::Publisher mros2::Node::create_publisher<float_location_msgs::msg::FloatLocation>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(float_location_msgs::msg::FloatLocation*));
+template void mros2::Publisher::publish(float_location_msgs::msg::FloatLocation &msg);
+template void mros2::Subscriber::callback_handler<float_location_msgs::msg::FloatLocation>(void *callee, const rtps::ReaderCacheChange &cacheChange);
