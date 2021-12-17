@@ -29,10 +29,10 @@
 #include "location_msgs/msg/location.hpp"
 #include "flocation_msgs/msg/flocation.hpp"
 
-#ifndef __MBED__
+#ifdef USE_ASP3_FOR_STM
 /* Statement to avoid link error */
 void* __dso_handle=0;
-#endif /* __MBED__ */
+#endif /* USE_ASP3_FOR_STM */
 
 
 namespace mros2
@@ -241,7 +241,7 @@ template <class T>
 void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
   T msg;
-  msg.copyFromBuf(&cacheChange.data[4]);
+  msg.copyFromBuf(&cacheChange.getData()[4]);
 
   SubscribeDataType *sub = (SubscribeDataType *)callee;
   void (*fp)(intptr_t) = sub->cb_fp;
