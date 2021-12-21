@@ -81,3 +81,4 @@ APPL_COBJS  += stm32f7xx_hal_pcd.o
 APPL_COBJS  += stm32f7xx_hal_pcd_ex.o
 APPL_COBJS  += stm32f7xx_ll_usb.o
 APPL_COBJS  += syscalls.o
+APPL_COBJS  += dso_handle.o
