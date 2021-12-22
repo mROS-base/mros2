@@ -24,12 +24,11 @@
 #include "std_msgs/msg/u_int32.hpp"
 #include "std_msgs/msg/u_int64.hpp"
 
-#include "u_int32_msgs/msg/u_int32_array.hpp"
-
 //#include "TEST.hpp"
 #include "health_msgs/msg/health.hpp"
 #include "location_msgs/msg/location.hpp"
-#include "float_location_msgs/msg/float_location.hpp"
+//#include "float_location_msgs/msg/float_location.hpp"
+#include "u_int32_array_msgs/msg/u_int32_array.hpp"
 
 #ifndef __MBED__
 /* Statement to avoid link error */
@@ -391,12 +390,12 @@ template mros2::Subscriber mros2::Node::create_subscription(std::string topic_na
 template void mros2::Publisher::publish(location_msgs::msg::Location &msg);
 template void mros2::Subscriber::callback_handler<location_msgs::msg::Location>(void *callee, const rtps::ReaderCacheChange &cacheChange);
 
-template mros2::Publisher mros2::Node::create_publisher<float_location_msgs::msg::FloatLocation>(std::string topic_name, int qos);
+/*template mros2::Publisher mros2::Node::create_publisher<float_location_msgs::msg::FloatLocation>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(float_location_msgs::msg::FloatLocation*));
 template void mros2::Publisher::publish(float_location_msgs::msg::FloatLocation &msg);
-template void mros2::Subscriber::callback_handler<float_location_msgs::msg::FloatLocation>(void *callee, const rtps::ReaderCacheChange &cacheChange);
+template void mros2::Subscriber::callback_handler<float_location_msgs::msg::FloatLocation>(void *callee, const rtps::ReaderCacheChange &cacheChange);*/
 
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::UInt32Array>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::UInt32Array*));
-template void mros2::Publisher::publish(std_msgs::msg::UInt32Array &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::UInt32Array>(void *callee, const rtps::ReaderCacheChange &cacheChange);
+template mros2::Publisher mros2::Node::create_publisher<u_int32_array_msgs::msg::UInt32Array>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::u_int32_array_msgs::msg::UInt32Array*));
+template void mros2::Publisher::publish(u_int32_array_msgs::msg::UInt32Array &msg);
+template void mros2::Subscriber::callback_handler<u_int32_array_msgs::msg::UInt32Array>(void *callee, const rtps::ReaderCacheChange &cacheChange);
