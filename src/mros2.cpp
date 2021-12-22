@@ -27,6 +27,7 @@
 //#include "TEST.hpp"
 #include "health_msgs/msg/health.hpp"
 #include "location_msgs/msg/location.hpp"
+#include "geometry_msgs/msg/vector3.hpp"
 #include "mix_msgs/msg/mix.hpp"
 
 #ifndef __MBED__
@@ -388,6 +389,11 @@ template mros2::Publisher mros2::Node::create_publisher<location_msgs::msg::Loca
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(location_msgs::msg::Location*));
 template void mros2::Publisher::publish(location_msgs::msg::Location &msg);
 template void mros2::Subscriber::callback_handler<location_msgs::msg::Location>(void *callee, const rtps::ReaderCacheChange &cacheChange);
+
+template mros2::Publisher mros2::Node::create_publisher<geometry_msgs::msg::Vector3>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(geometry_msgs::msg::Vector3*));
+template void mros2::Publisher::publish(geometry_msgs::msg::Vector3 &msg);
+template void mros2::Subscriber::callback_handler<geometry_msgs::msg::Vector3>(void *callee, const rtps::ReaderCacheChange &cacheChange);
 
 template mros2::Publisher mros2::Node::create_publisher<mix_msgs::msg::Mix>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(mix_msgs::msg::Mix*));

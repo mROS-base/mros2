@@ -26,7 +26,7 @@ public:
   float weight
 ;
     
-  std::vector<uint32_t> array;
+  std::vector<uint16_t> array;
   
 
   void copyToBuf(uint8_t *addrPtr)
@@ -110,11 +110,11 @@ public:
     memcpy(addrPtr,&arraySize,4);
     addrPtr += 4;
     cntPub += 4;
-    const uint32_t* ptr = array.data();
+    const uint16_t* ptr = array.data();
     for(int i=0; i<arraySize ; i++){
-      memcpy(addrPtr, &(ptr[i]),4);
-      addrPtr += 4;
-      cntPub += 4;
+      memcpy(addrPtr, &(ptr[i]),2);
+      addrPtr += 2;
+      cntPub += 2;
     }
 
     
@@ -204,11 +204,11 @@ public:
     cntSub += 4;
     array.reserve(arraySize);
     for(int i=0;i<arraySize;i++){
-      uint32_t buf;
-      memcpy(&buf,rbuf,4);
+      uint16_t buf;
+      memcpy(&buf,rbuf,2);
       array.push_back(buf);
-      rbuf += 4;
-      cntSub += 4;
+      rbuf += 2;
+      cntSub += 2;
     }
 
     
