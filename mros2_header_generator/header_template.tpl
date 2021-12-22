@@ -17,13 +17,33 @@ public:
   uint8_t cntPub = 0;
   uint8_t cntSub = 0;
   {%for def_data in msg.def %}  
-  {{def_data.cppType}} {{def_data.typeName}};
+  {%if def_data.isArray %}std::vector<{{def_data.cppType}}>{% else %}{{def_data.cppType}}{% endif %} {{def_data.typeName}};
   {% endfor %}
 
   void copyToBuf(uint8_t *addrPtr)
   {
     {%for def_data in msg.def %}
-    {% if def_data.cppType == "string"%}
+    {% if def_data.isArray%}{
+    if (cntPub%4 >0){
+      for(int i=0; i<(4-(cntPub%4)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+      }
+      cntPub += 4-(cntPub%4);
+    }
+    uint32_t arraySize = {{def_data.typeName}}.size();
+    memcpy(addrPtr,&arraySize,4);
+    addrPtr += 4;
+    cntPub += 4;
+    const {{def_data.cppType}}* ptr = {{def_data.typeName}}.data();
+    for(int i=0; i<arraySize ; i++){
+      memcpy(addrPtr, &(ptr[i]),{{def_data.size}});
+      addrPtr += {{def_data.size}};
+      cntPub += {{def_data.size}};
+    }
+    }
+    
+    {% elif def_data.cppType == "string"%}
     if (cntPub%4 >0){
       for(int i=0; i<(4-(cntPub%4)) ; i++){
         *addrPtr = 0;
@@ -73,7 +93,27 @@ public:
 
   void copyFromBuf(const uint8_t *rbuf) {
     {% for def_data in msg.def %}
-    {% if def_data.cppType == "string"%}
+    {% if def_data.isArray%}{
+    if (cntSub%4 >0){
+      for(int i=0; i<(4-(cntSub%4)) ; i++){
+        rbuf += 1;
+      }
+      cntSub += 4-(cntSub%4);
+    }
+    uint32_t arraySize;
+    memcpy(&arraySize,rbuf,4);
+    rbuf += 4;    
+    cntSub += 4;
+    {{def_data.typeName}}.reserve(arraySize);
+    for(int i=0;i<arraySize;i++){
+      {{def_data.cppType}} buf;
+      memcpy(&buf,rbuf,{{def_data.size}});
+      {{def_data.typeName}}.push_back(buf);
+      rbuf += {{def_data.size}};
+      cntSub += {{def_data.size}};
+    }
+
+    {% elif def_data.cppType == "string"%}
     if (cntSub%4 >0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
         rbuf += 1;
