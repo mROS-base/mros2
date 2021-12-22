@@ -27,8 +27,7 @@
 //#include "TEST.hpp"
 #include "health_msgs/msg/health.hpp"
 #include "location_msgs/msg/location.hpp"
-//#include "float_location_msgs/msg/float_location.hpp"
-#include "u_int32_array_msgs/msg/u_int32_array.hpp"
+#include "mix_msgs/msg/mix.hpp"
 
 #ifndef __MBED__
 /* Statement to avoid link error */
@@ -390,12 +389,8 @@ template mros2::Subscriber mros2::Node::create_subscription(std::string topic_na
 template void mros2::Publisher::publish(location_msgs::msg::Location &msg);
 template void mros2::Subscriber::callback_handler<location_msgs::msg::Location>(void *callee, const rtps::ReaderCacheChange &cacheChange);
 
-template mros2::Publisher mros2::Node::create_publisher<u_int32_array_msgs::msg::UInt32Array>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(u_int32_array_msgs::msg::UInt32Array*));
-template void mros2::Publisher::publish(u_int32_array_msgs::msg::UInt32Array &msg);
-template void mros2::Subscriber::callback_handler<u_int32_array_msgs::msg::UInt32Array>(void *callee, const rtps::ReaderCacheChange &cacheChange);
+template mros2::Publisher mros2::Node::create_publisher<mix_msgs::msg::Mix>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(mix_msgs::msg::Mix*));
+template void mros2::Publisher::publish(mix_msgs::msg::Mix &msg);
+template void mros2::Subscriber::callback_handler<mix_msgs::msg::Mix>(void *callee, const rtps::ReaderCacheChange &cacheChange);
 
-/*template mros2::Publisher mros2::Node::create_publisher<float_location_msgs::msg::FloatLocation>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(float_location_msgs::msg::FloatLocation*));
-template void mros2::Publisher::publish(float_location_msgs::msg::FloatLocation &msg);
-template void mros2::Subscriber::callback_handler<float_location_msgs::msg::FloatLocation>(void *callee, const rtps::ReaderCacheChange &cacheChange);*/
