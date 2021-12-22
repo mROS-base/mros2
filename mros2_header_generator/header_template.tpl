@@ -23,7 +23,7 @@ public:
   void copyToBuf(uint8_t *addrPtr)
   {
     {%for def_data in msg.def %}
-    {% if def_data.isArray%}{
+    {% if def_data.isArray%}
     if (cntPub%4 >0){
       for(int i=0; i<(4-(cntPub%4)) ; i++){
         *addrPtr = 0;
@@ -41,8 +41,7 @@ public:
       addrPtr += {{def_data.size}};
       cntPub += {{def_data.size}};
     }
-    }
-    
+
     {% elif def_data.cppType == "string"%}
     if (cntPub%4 >0){
       for(int i=0; i<(4-(cntPub%4)) ; i++){
@@ -93,7 +92,7 @@ public:
 
   void copyFromBuf(const uint8_t *rbuf) {
     {% for def_data in msg.def %}
-    {% if def_data.isArray%}{
+    {% if def_data.isArray%}
     if (cntSub%4 >0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
         rbuf += 1;

@@ -23,7 +23,7 @@ public:
   void copyToBuf(uint8_t *addrPtr)
   {
     
-    {
+    
     if (cntPub%4 >0){
       for(int i=0; i<(4-(cntPub%4)) ; i++){
         *addrPtr = 0;
@@ -41,8 +41,7 @@ public:
       addrPtr += 4;
       cntPub += 4;
     }
-    }
-    
+
     
     
 
@@ -57,7 +56,7 @@ public:
 
   void copyFromBuf(const uint8_t *rbuf) {
     
-    {
+    
     if (cntSub%4 >0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
         rbuf += 1;
