@@ -54,10 +54,10 @@ def msgDefGenerator(msgDefStr, dependingMsgs):
         
     elif msgType in dependingMsgs:
         return {
-            'rosType': msgType,
-            'cppType': msgType,
+            'rosType': dependingMsgs[msgType],
+            'cppType': dependingMsgs[msgType],
             'typeName': msgName,
-            'size': msgSizes[msgType],
+            'size': 0,
             'isArray': isArray,
             'isCustomType': True
         }    

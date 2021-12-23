@@ -9,7 +9,8 @@ from msg_data_generator import msgDataGenerator
 
 msgs = []
 deps = []
-dependingMsgs = []
+dependingFileNames = []
+dependingMsgs = {}
 
 arg = sys.argv
 if(len(arg) == 1):
@@ -33,13 +34,15 @@ def main():
         jsonData = json.load(f)
         
         for dep in jsonData['dependingMsgs']:
-            dep = toSnakeCase(dep.strip()[:-4].replace('/','::')) + '.hpp'
-            deps.append(dep)
+            dep = toSnakeCase(dep.strip()[:-4]) + '.hpp'
+            depArr = dep.split('/')
+            depArr[-1] = depArr[-1][1:]
+            dependingFileNames.append('/'.join(depArr))
             
         for dep in jsonData['dependingMsgs']:
             depArr = dep.strip().split('/')
             depArr[2] = depArr[2].rstrip('.msg')
-            dependingMsgs.append(depArr[2])
+            dependingMsgs[depArr[2]] = '::'.join(depArr)
             
         for line in jsonData['includingMsgs']:
             line = line.strip()
@@ -49,7 +52,7 @@ def main():
     for msg in msgs:
         env = Environment(loader=FileSystemLoader(appDir + '/mros2_header_generator'))
         template = env.get_template('header_template.tpl')
-        datatext = template.render({"msg": msg, "deps": deps})
+        datatext = template.render({"msg": msg, "dependingFileNames": dependingFileNames})
         print(datatext)
         msgPkgPath = msgIncludePath + msg['pkg']
         if not(os.path.isdir(msgPkgPath)):

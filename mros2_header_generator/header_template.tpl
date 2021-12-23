@@ -5,9 +5,9 @@
 #include <string>
 #include <vector>
 
-{%for dep in deps%}
-#include {{dep}}
-{%endfor}
+{%for dependingFileName in dependingFileNames%}
+#include "{{dependingFileName}}"
+{%endfor%}
 
 using namespace std;
 
@@ -27,7 +27,7 @@ public:
   uint8_t copyToBuf(uint8_t *addrPtr)
   {
     {%for def_data in msg.def %}
-    {% if def_data.isCustom%}
+    {% if def_data.isCustomType%}
     cntPub += {{def_data.typeName}}.copyToBuf(addrPtr);
 
     {% elif def_data.isArray%}
@@ -101,7 +101,7 @@ public:
 
   uint8_t copyFromBuf(const uint8_t *rbuf) {
     {% for def_data in msg.def %}
-    {% if def_data.isCustom%}
+    {% if def_data.isCustomType%}
     cntSub += {{def_data.typeName}}.copyFromBuf(rbuf);
 
     {% elif def_data.isArray%}
