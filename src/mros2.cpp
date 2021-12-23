@@ -26,11 +26,6 @@
 
 #include "TEST.hpp"
 
-#ifdef USE_ASP3_FOR_STM
-/* Statement to avoid link error */
-void* __dso_handle=0;
-#endif /* USE_ASP3_FOR_STM */
-
 
 namespace mros2
 {
