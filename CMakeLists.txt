@@ -15,7 +15,6 @@ target_sources(mros2
   embeddedRTPS/src/communication/UdpDriver.cpp
   embeddedRTPS/src/messages/MessageTypes.cpp
   embeddedRTPS/src/messages/MessageReceiver.cpp
-  embeddedRTPS/src/rtps.cpp
   embeddedRTPS/src/discovery/TopicData.cpp
   embeddedRTPS/src/discovery/ParticipantProxyData.cpp
   embeddedRTPS/src/discovery/SEDPAgent.cpp

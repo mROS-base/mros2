@@ -36,7 +36,6 @@ APPL_CXXOBJS += MessageTypes.o
 APPL_CXXOBJS += HistoryCache.o
 APPL_CXXOBJS += PBufWrapper.o
 APPL_CXXOBJS += SimpleHistoryCache.o
-APPL_CXXOBJS += rtps.o
 APPL_CXXOBJS += ThreadPool.o
 
 APPL_COBJS += array.o
