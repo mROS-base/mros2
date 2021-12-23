@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+
+
 using namespace std;
 
 namespace geometry_msgs
@@ -26,7 +28,7 @@ public:
   double z;
   
 
-  void copyToBuf(uint8_t *addrPtr)
+  uint8_t copyToBuf(uint8_t *addrPtr)
   {
     
     
@@ -105,9 +107,11 @@ public:
       }  
       cntPub += 4-(cntPub%4);
     }
+
+    return cntPub;
   }
 
-  void copyFromBuf(const uint8_t *rbuf) {
+  uint8_t copyFromBuf(const uint8_t *rbuf) {
     
     
     if (cntSub%4 >0 && 8 > 1){
@@ -168,6 +172,8 @@ public:
     cntSub += 8;
     
     
+
+    return cntSub;
   }
 
   uint8_t getTotalSize(){
