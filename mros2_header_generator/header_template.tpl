@@ -5,6 +5,10 @@
 #include <string>
 #include <vector>
 
+{%for dep in deps%}
+#include {{dep}}
+{%endfor}
+
 using namespace std;
 
 namespace {{msg.pkg}}
@@ -20,10 +24,13 @@ public:
   {%if def_data.isArray %}std::vector<{{def_data.cppType}}>{% else %}{{def_data.cppType}}{% endif %} {{def_data.typeName}};
   {% endfor %}
 
-  void copyToBuf(uint8_t *addrPtr)
+  uint8_t copyToBuf(uint8_t *addrPtr)
   {
     {%for def_data in msg.def %}
-    {% if def_data.isArray%}
+    {% if def_data.isCustom%}
+    cntPub += {{def_data.typeName}}.copyToBuf(addrPtr);
+
+    {% elif def_data.isArray%}
     if (cntPub%4 >0){
       for(int i=0; i<(4-(cntPub%4)) ; i++){
         *addrPtr = 0;
@@ -88,11 +95,16 @@ public:
       }  
       cntPub += 4-(cntPub%4);
     }
+
+    return cntPub;
   }
 
-  void copyFromBuf(const uint8_t *rbuf) {
+  uint8_t copyFromBuf(const uint8_t *rbuf) {
     {% for def_data in msg.def %}
-    {% if def_data.isArray%}
+    {% if def_data.isCustom%}
+    cntSub += {{def_data.typeName}}.copyFromBuf(rbuf);
+
+    {% elif def_data.isArray%}
     if (cntSub%4 >0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
         rbuf += 1;
@@ -147,6 +159,8 @@ public:
     cntSub += {{def_data.size}};
     {% endif %}
     {% endfor %}
+
+    return cntSub;
   }
 
   uint8_t getTotalSize(){

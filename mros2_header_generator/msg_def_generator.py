@@ -28,7 +28,7 @@ msgSizes = {
 # generate detail data of type definition
 
 
-def msgDefGenerator(msgDefStr):
+def msgDefGenerator(msgDefStr, dependingMsgs):
 
     # split the type def and name of the type ('string name' -> ['string', 'name'])
     msgDefArr = msgDefStr.split(' ')
@@ -51,6 +51,16 @@ def msgDefGenerator(msgDefStr):
             'isArray': isArray,
             'isCustomType': False
         }
-
+        
+    elif msgType in dependingMsgs:
+        return {
+            'rosType': msgType,
+            'cppType': msgType,
+            'typeName': msgName,
+            'size': msgSizes[msgType],
+            'isArray': isArray,
+            'isCustomType': True
+        }    
+        
     else:
         print('type is not found')
