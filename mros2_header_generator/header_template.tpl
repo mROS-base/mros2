@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-{%for dependingFileName in dependingFileNames%}
+{%for dependingFileName in msg.dependingFileNames%}
 #include "{{dependingFileName}}"
 {%endfor%}
 

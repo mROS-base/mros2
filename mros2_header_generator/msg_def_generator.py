@@ -28,11 +28,10 @@ msgSizes = {
 # generate detail data of type definition
 
 
-def msgDefGenerator(msgDefStr, dependingMsgs):
+def msgDefGenerator(msgDefStr, dependingDict):
 
     # split the type def and name of the type ('string name' -> ['string', 'name'])
     msgDefArr = msgDefStr.split(' ')
-    print(msgDefArr)
     msgType = msgDefArr[0]  # each type (ex. string, int8, float32, ...)
     msgName = msgDefArr[1]  # name of each type (ex. name, height, weight, ...)
     isArray = False
@@ -52,10 +51,10 @@ def msgDefGenerator(msgDefStr, dependingMsgs):
             'isCustomType': False
         }
         
-    elif msgType in dependingMsgs:
+    elif msgType in dependingDict:
         return {
-            'rosType': dependingMsgs[msgType],
-            'cppType': dependingMsgs[msgType],
+            'rosType': dependingDict[msgType],
+            'cppType': dependingDict[msgType],
             'typeName': msgName,
             'size': 0,
             'isArray': isArray,

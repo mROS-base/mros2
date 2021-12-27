@@ -14,6 +14,7 @@
 #include "std_msgs/msg/char.hpp"
 #include "std_msgs/msg/float32.hpp"
 #include "std_msgs/msg/float64.hpp"
+#include "std_msgs/msg/header.hpp"
 #include "std_msgs/msg/int8.hpp"
 #include "std_msgs/msg/int16.hpp"
 #include "std_msgs/msg/int32.hpp"
@@ -25,11 +26,6 @@
 #include "std_msgs/msg/u_int64.hpp"
 
 //#include "TEST.hpp"
-#include "health_msgs/msg/health.hpp"
-#include "location_msgs/msg/location.hpp"
-#include "geometry_msgs/msg/vector3.hpp"
-#include "geometry_msgs/msg/twist.hpp"
-#include "mix_msgs/msg/mix.hpp"
 
 #ifndef __MBED__
 /* Statement to avoid link error */
@@ -330,6 +326,11 @@ template mros2::Subscriber mros2::Node::create_subscription(std::string topic_na
 template void mros2::Publisher::publish(std_msgs::msg::Float64 &msg);
 template void mros2::Subscriber::callback_handler<std_msgs::msg::Float64>(void *callee, const rtps::ReaderCacheChange &cacheChange);
 
+template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Header>(std::string topic_name, int qos);
+template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Header*));
+template void mros2::Publisher::publish(std_msgs::msg::Header &msg);
+template void mros2::Subscriber::callback_handler<std_msgs::msg::Header>(void *callee, const rtps::ReaderCacheChange &cacheChange);
+
 template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int8>(std::string topic_name, int qos);
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int8*));
 template void mros2::Publisher::publish(std_msgs::msg::Int8 &msg);
@@ -374,35 +375,3 @@ template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::UInt64>(s
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::UInt64*));
 template void mros2::Publisher::publish(std_msgs::msg::UInt64 &msg);
 template void mros2::Subscriber::callback_handler<std_msgs::msg::UInt64>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-/* Work in Progress: for custom message
-template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(TEST*));
-template void mros2::Publisher::publish(TEST& msg);
-*/
-
-template mros2::Publisher mros2::Node::create_publisher<health_msgs::msg::Health>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(health_msgs::msg::Health*));
-template void mros2::Publisher::publish(health_msgs::msg::Health &msg);
-template void mros2::Subscriber::callback_handler<health_msgs::msg::Health>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<location_msgs::msg::Location>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(location_msgs::msg::Location*));
-template void mros2::Publisher::publish(location_msgs::msg::Location &msg);
-template void mros2::Subscriber::callback_handler<location_msgs::msg::Location>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<geometry_msgs::msg::Vector3>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(geometry_msgs::msg::Vector3*));
-template void mros2::Publisher::publish(geometry_msgs::msg::Vector3 &msg);
-template void mros2::Subscriber::callback_handler<geometry_msgs::msg::Vector3>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<geometry_msgs::msg::Twist>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(geometry_msgs::msg::Twist*));
-template void mros2::Publisher::publish(geometry_msgs::msg::Twist &msg);
-template void mros2::Subscriber::callback_handler<geometry_msgs::msg::Twist>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<mix_msgs::msg::Mix>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(mix_msgs::msg::Mix*));
-template void mros2::Publisher::publish(mix_msgs::msg::Mix &msg);
-template void mros2::Subscriber::callback_handler<mix_msgs::msg::Mix>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
