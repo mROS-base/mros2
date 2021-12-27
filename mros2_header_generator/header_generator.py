@@ -22,7 +22,7 @@ def main():
             dependingFileNames = []
             dependingDict = {}
             dependingLst = []
-            includingMsgs = msgLst[0]
+            generatingMsg = msgLst[0]
             if len(msgLst) > 1:
                 dependingLst = msgLst[1:]
                 
@@ -38,8 +38,8 @@ def main():
                 depArr[2] = depArr[2].rstrip('.msg')
                 dependingDict[depArr[2]] = '::'.join(depArr)
                 
-            line = includingMsgs.strip()
-            msgs.append(msgDataGenerator(line, appDir, dependingDict, dependingFileNames))
+            generatingMsg = generatingMsg.strip()
+            msgs.append(msgDataGenerator(generatingMsg, appDir, dependingDict, dependingFileNames))
 
     # generate header file for mros2
     for msg in msgs:

@@ -36,12 +36,12 @@ def msgDefGenerator(msgDefStr, dependingDict):
     msgName = msgDefArr[1]  # name of each type (ex. name, height, weight, ...)
     isArray = False
 
-    # when array (ex. int8[], float32[], ...)msgType = msgType[:-2]
+    # when array (ex. int8[], float32[], ...)
     if msgType[-2:] == "[]":
         isArray = True
         msgType = msgType[:-2]
 
-    if msgType in msgCppTypes:  # when primitive type of ROS2
+    if msgType in msgCppTypes:  # when standard type of ROS2
         return {
             'rosType': msgType,
             'cppType': msgCppTypes[msgType],
@@ -51,7 +51,7 @@ def msgDefGenerator(msgDefStr, dependingDict):
             'isCustomType': False
         }
         
-    elif msgType in dependingDict:
+    elif msgType in dependingDict:  # when custom type
         return {
             'rosType': dependingDict[msgType],
             'cppType': dependingDict[msgType],
