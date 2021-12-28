@@ -25,7 +25,6 @@
 #include "std_msgs/msg/u_int32.hpp"
 #include "std_msgs/msg/u_int64.hpp"
 
-//#include "TEST.hpp"
 
 #ifndef __MBED__
 /* Statement to avoid link error */
@@ -375,3 +374,5 @@ template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::UInt64>(s
 template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::UInt64*));
 template void mros2::Publisher::publish(std_msgs::msg::UInt64 &msg);
 template void mros2::Subscriber::callback_handler<std_msgs::msg::UInt64>(void *callee, const rtps::ReaderCacheChange &cacheChange);
+
+#include "../../header_includer/header_includer.hpp"

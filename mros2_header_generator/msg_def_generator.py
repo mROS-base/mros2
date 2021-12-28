@@ -11,18 +11,20 @@ msgCppTypes = {
     "float32": "float",
     "float64": "double",
     "string": "string",
+    "header": "header",
     "bool": "uint8_t",
-    "byte": "uint8_t",
+    "byte": "uint8_t"
 }
 
 # size of each type
 msgSizes = {
-    "string": 1, "bool": 1,
+    "string": -1, "bool": 1,
     "int8": 1, "uint8": 1,
     "int16": 2, "uint16": 2,
     "int32": 4, "uint32": 4,
     "int64": 8, "uint64": 8,
-    "float32": 4, "float64": 8
+    "float32": 4, "float64": 8,
+    "header": -1
 }
 
 # generate detail data of type definition
@@ -36,10 +38,11 @@ def msgDefGenerator(msgDefStr, dependingDict):
     msgName = msgDefArr[1]  # name of each type (ex. name, height, weight, ...)
     isArray = False
 
-    # when array (ex. int8[], float32[], ...)
-    if msgType[-2:] == "[]":
+    # when array (ex. int8[], float32[], float64[36], ...)
+    if msgType[-1] == "]":
         isArray = True
-        msgType = msgType[:-2]
+        idx = msgType.index("[")
+        msgType = msgType[:idx]
 
     if msgType in msgCppTypes:  # when standard type of ROS2
         return {
@@ -62,4 +65,4 @@ def msgDefGenerator(msgDefStr, dependingDict):
         }    
         
     else:
-        print('type is not found')
+        print(msgType+' is not found')

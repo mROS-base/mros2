@@ -6,7 +6,7 @@
 #include <vector>
 
 {%for dependingFileName in msg.dependingFileNames%}
-#include "{{dependingFileName}}"
+#include "../../{{dependingFileName}}"
 {%endfor%}
 
 using namespace std;
@@ -21,7 +21,7 @@ public:
   uint8_t cntPub = 0;
   uint8_t cntSub = 0;
   {%for def_data in msg.def %}  
-  {%if def_data.isArray %}std::vector<{{def_data.cppType}}>{% else %}{{def_data.cppType}}{% endif %} {{def_data.typeName}};
+  {%if def_data.isArray %}std::vector<{{def_data.cppType}}>{% elif def_data.cppType == "header" %}int32_t sec; uint32_t nanosec; string frame_id;{% else %}{{def_data.cppType}}{% endif %} {%if def_data.cppType != "header" %}{{def_data.typeName}};{%endif%}
   {% endfor %}
 
   uint8_t copyToBuf(uint8_t *addrPtr)
@@ -50,20 +50,49 @@ public:
     }
 
     {% elif def_data.cppType == "string"%}
-    if (cntPub%4 >0){
-      for(int i=0; i<(4-(cntPub%4)) ; i++){
-        *addrPtr = 0;
-        addrPtr += 1;
+    {
+      if (cntPub%4 >0){
+        for(int i=0; i<(4-(cntPub%4)) ; i++){
+          *addrPtr = 0;
+          addrPtr += 1;
+        }
+        cntPub += 4-(cntPub%4);
       }
-      cntPub += 4-(cntPub%4);
+      uint32_t stringSize = {{def_data.typeName}}.size();
+      memcpy(addrPtr,&stringSize,4);
+      addrPtr += 4;
+      cntPub += 4;
+      memcpy(addrPtr,{{def_data.typeName}}.c_str(),stringSize);
+      addrPtr += stringSize;
+      cntPub += stringSize;
     }
-    uint32_t stringSize = {{def_data.typeName}}.size();
-    memcpy(addrPtr,&stringSize,4);
-    addrPtr += 4;
-    cntPub += 4;
-    memcpy(addrPtr,{{def_data.typeName}}.c_str(),stringSize);
-    addrPtr += stringSize;
-    cntPub += stringSize;
+
+    {% elif def_data.cppType == "header"%}
+    {
+      if (cntPub%4 >0){
+        for(int i=0; i<(4-(cntPub%4)) ; i++){
+          *addrPtr = 0;
+          addrPtr += 1;
+        }
+        cntPub += 4-(cntPub%4);
+      }
+
+      memcpy(addrPtr,&sec,4);
+      addrPtr += 4;
+      cntPub += 4;
+
+      memcpy(addrPtr,&nanosec,4);
+      addrPtr += 4;
+      cntPub += 4;
+
+      uint32_t stringSize = frame_id.size();
+      memcpy(addrPtr,&stringSize,4);
+      addrPtr += 4;
+      cntPub += 4;
+      memcpy(addrPtr,frame_id.c_str(),stringSize);
+      addrPtr += stringSize;
+      cntPub += stringSize;
+    }
 
     {% else %}
     if (cntPub%4 >0 && {{def_data.size}} > 1){
@@ -125,20 +154,48 @@ public:
     }
 
     {% elif def_data.cppType == "string"%}
-    if (cntSub%4 >0){
-      for(int i=0; i<(4-(cntSub%4)) ; i++){
-        rbuf += 1;
+    {
+      if (cntSub%4 >0){
+        for(int i=0; i<(4-(cntSub%4)) ; i++){
+          rbuf += 1;
+        } 
+        cntSub += 4-(cntSub%4);
       }
-      cntSub += 4-(cntSub%4);
+      uint32_t stringSize;
+      memcpy(&stringSize, rbuf, 4);
+      rbuf += 4;
+      cntSub += 4;
+      {{def_data.typeName}}.resize(stringSize);
+      memcpy(&{{def_data.typeName}}[0],rbuf,stringSize);
+      rbuf += stringSize;
+      cntSub += stringSize;
     }
-    uint32_t stringSize;
-    memcpy(&stringSize, rbuf, 4);
-    rbuf += 4;
-    cntSub += 4;
-    {{def_data.typeName}}.resize(stringSize);
-    memcpy(&{{def_data.typeName}}[0],rbuf,stringSize);
-    rbuf += stringSize;
-    cntSub += stringSize;
+
+    {% elif def_data.cppType == "header"%}
+    {
+      if (cntSub%4 >0){
+        for(int i=0; i<(4-(cntSub%4)) ; i++){
+          rbuf += 1;
+        } 
+        cntSub += 4-(cntSub%4);
+      }
+      memcpy(&sec,rbuf,4);
+      rbuf += 4;
+      cntSub += 4;
+
+      memcpy(&nanosec,rbuf,4);
+      rbuf += 4;
+      cntSub += 4;
+
+      uint32_t stringSize;
+      memcpy(&stringSize, rbuf, 4);
+      rbuf += 4;
+      cntSub += 4;
+      frame_id.resize(stringSize);
+      memcpy(&frame_id[0],rbuf,stringSize);
+      rbuf += stringSize;
+      cntSub += stringSize;
+    }
 
     {% else %}
     if (cntSub%4 >0 && {{def_data.size}} > 1){

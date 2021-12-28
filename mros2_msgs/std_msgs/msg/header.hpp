@@ -8,9 +8,15 @@ class Header
 {
 public:
   std::string getTypeName();
+  int32_t sec;
+  uint32_t nanosec;
   std::string frame_id;
   void copyToBuf(uint8_t *addrPtr)
   {
+    memcpy(addrPtr, &sec, 4);
+    addrPtr += 4;
+    memcpy(addrPtr, &nanosec, 4);
+    addrPtr += 4;
     uint32_t size = frame_id.size();
     memcpy(addrPtr, &size, 4);
     addrPtr += 4;
@@ -21,6 +27,10 @@ public:
 
   void copyFromBuf(const uint8_t *addrPtr)
   {
+    memcpy(&sec, addrPtr, 4);
+    addrPtr += 4;
+    memcpy(&nanosec, addrPtr, 4);
+    addrPtr += 4;
     uint32_t msg_size;
     memcpy(&msg_size, addrPtr, 4);
     addrPtr += 4;
