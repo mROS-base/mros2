@@ -196,6 +196,7 @@ template <class T>
 void Publisher::publish(T& msg)
 {
   msg.copyToBuf(&buf[4]);
+  msg.memAlign(&buf[4]);
   pub_ptr->newChange(rtps::ChangeKind_t::ALIVE, buf, msg.getTotalSize() + 4);
 }
 

@@ -12,6 +12,8 @@ public:
   uint32_t nanosec;
   std::string frame_id;
   uint8_t cntPub = 0;
+  uint32_t pubSize;
+  uint32_t subSize;
 
   void copyToBuf(uint8_t *addrPtr)
   {
@@ -21,20 +23,13 @@ public:
     memcpy(addrPtr, &nanosec, 4);
     addrPtr += 4;
     cntPub += 4;
-    uint32_t size = frame_id.size();
-    memcpy(addrPtr, &size, 4);
+    pubSize = frame_id.size();
+    memcpy(addrPtr, &pubSize, 4);
     addrPtr += 4;
     cntPub += 4;
-    memcpy(addrPtr, frame_id.c_str(),size);
-    addrPtr += size;
-    cntPub += size;
-    if (cntPub%4 > 0){
-      for(int i=0; i<(4-(size%4)) ; i++){
-        *addrPtr = 0;
-        addrPtr += 1;
-        cntPub += 1;
-      }
-    }
+    memcpy(addrPtr, frame_id.c_str(),pubSize);
+    addrPtr += pubSize;
+    cntPub += pubSize;
   }
 
   void copyFromBuf(const uint8_t *addrPtr)
@@ -43,11 +38,21 @@ public:
     addrPtr += 4;
     memcpy(&nanosec, addrPtr, 4);
     addrPtr += 4;
-    uint32_t msg_size;
-    memcpy(&msg_size, addrPtr, 4);
+    memcpy(&subSize, addrPtr, 4);
     addrPtr += 4;
-    frame_id.resize(msg_size);
-    memcpy(&frame_id[0], addrPtr, msg_size);
+    frame_id.resize(subSize);
+    memcpy(&frame_id[0], addrPtr, subSize);
+  }
+
+  void memAlign(uint8_t *addrPtr){
+    if (cntPub%4 > 0){
+      for(int i=0; i<(4-(pubSize%4)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+        cntPub += 1;
+      }
+    }
+    return;
   }
 
   uint8_t getTotalSize()

@@ -10,33 +10,38 @@ public:
   std::string getTypeName();
   std::string data;
   uint8_t cntPub = 0;
+  uint32_t pubSize;
+  uint32_t subSize;
   void copyToBuf(uint8_t *addrPtr)
   {
-    uint32_t size = data.size();
-    memcpy(addrPtr, &size, 4);
+    pubSize = data.size();
+    memcpy(addrPtr, &pubSize, 4);
     addrPtr += 4;
     cntPub += 4 ;
-    memcpy(addrPtr, data.c_str(),size);
-    addrPtr += size;
-    cntPub += size;
-    if (cntPub%4 > 0){
-      for(int i=0; i<(4-(size%4)) ; i++){
-        *addrPtr = 0;
-        addrPtr += 1;
-        cntPub += 1;
-      }
-    }  
+    memcpy(addrPtr, data.c_str(),pubSize);
+    addrPtr += pubSize;
+    cntPub += pubSize;  
     
   }
 
   void copyFromBuf(const uint8_t *addrPtr)
   {
-    uint32_t msg_size;
-    memcpy(&msg_size, addrPtr, 4);
+    memcpy(&subSize, addrPtr, 4);
     addrPtr += 4;
-    data.resize(msg_size);
-    memcpy(&data[0], addrPtr, msg_size);
+    data.resize(subSize);
+    memcpy(&data[0], addrPtr, subSize);
 
+  }
+
+   void memAlign(uint8_t *addrPtr){
+    if (cntPub%4 > 0){
+      for(int i=0; i<(4-(pubSize%4)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+        cntPub += 1;
+      }
+    }
+    return;
   }
 
   uint8_t getTotalSize()
