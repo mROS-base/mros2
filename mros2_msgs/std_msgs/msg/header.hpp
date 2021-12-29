@@ -11,18 +11,30 @@ public:
   int32_t sec;
   uint32_t nanosec;
   std::string frame_id;
+  uint8_t cntPub = 0;
+
   void copyToBuf(uint8_t *addrPtr)
   {
     memcpy(addrPtr, &sec, 4);
     addrPtr += 4;
+    cntPub += 4;
     memcpy(addrPtr, &nanosec, 4);
     addrPtr += 4;
+    cntPub += 4;
     uint32_t size = frame_id.size();
     memcpy(addrPtr, &size, 4);
     addrPtr += 4;
+    cntPub += 4;
     memcpy(addrPtr, frame_id.c_str(),size);
     addrPtr += size;
-    *addrPtr = 0;
+    cntPub += size;
+    if (cntPub%4 > 0){
+      for(int i=0; i<(4-(size%4)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+        cntPub += 1;
+      }
+    }
   }
 
   void copyFromBuf(const uint8_t *addrPtr)
@@ -36,12 +48,11 @@ public:
     addrPtr += 4;
     frame_id.resize(msg_size);
     memcpy(&frame_id[0], addrPtr, msg_size);
-
   }
 
   uint8_t getTotalSize()
   {
-    return (5 + frame_id.size());
+    return cntPub;
   }
 private:
   std::string type_name = "std_msgs::msg::dds_::Header";

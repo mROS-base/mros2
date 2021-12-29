@@ -9,14 +9,24 @@ class String
 public:
   std::string getTypeName();
   std::string data;
+  uint8_t cntPub = 0;
   void copyToBuf(uint8_t *addrPtr)
   {
     uint32_t size = data.size();
     memcpy(addrPtr, &size, 4);
     addrPtr += 4;
+    cntPub += 4 ;
     memcpy(addrPtr, data.c_str(),size);
     addrPtr += size;
-    *addrPtr = 0;
+    cntPub += size;
+    if (cntPub%4 > 0){
+      for(int i=0; i<(4-(size%4)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+        cntPub += 1;
+      }
+    }  
+    
   }
 
   void copyFromBuf(const uint8_t *addrPtr)
@@ -31,7 +41,7 @@ public:
 
   uint8_t getTotalSize()
   {
-    return (5 + data.size());
+    return cntPub;
   }
 private:
   std::string type_name = "std_msgs::msg::dds_::String";

@@ -37,12 +37,18 @@ def msgDefGenerator(msgDefStr, dependingDict):
     msgType = msgDefArr[0]  # each type (ex. string, int8, float32, ...)
     msgName = msgDefArr[1]  # name of each type (ex. name, height, weight, ...)
     isArray = False
+    boundedArray = 0
 
     # when array (ex. int8[], float32[], float64[36], ...)
     if msgType[-1] == "]":
         isArray = True
-        idx = msgType.index("[")
-        msgType = msgType[:idx]
+        right_idx = msgType.index("]")
+        left_idx = msgType.index("[")
+        if right_idx - left_idx > 1:
+            boundedArray = int(msgType[left_idx+1:right_idx])
+            msgType = msgType[:left_idx]
+        else:
+            msgType = msgType[:left_idx]
 
     if msgType in msgCppTypes:  # when standard type of ROS2
         return {
@@ -51,6 +57,7 @@ def msgDefGenerator(msgDefStr, dependingDict):
             'typeName': msgName,
             'size': msgSizes[msgType],
             'isArray': isArray,
+            'boundedArray': boundedArray,
             'isCustomType': False
         }
         
@@ -61,6 +68,7 @@ def msgDefGenerator(msgDefStr, dependingDict):
             'typeName': msgName,
             'size': 0,
             'isArray': isArray,
+            'boundedArray': boundedArray,
             'isCustomType': True
         }    
         
