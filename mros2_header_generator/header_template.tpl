@@ -51,37 +51,37 @@ public:
     addrPtr += tmpPub;
 
     {% elif def_data.boundedArray%}
-    if ({{def_data.size}}==2){
-      if (cntPub%4 >0 && 2 <= (4-(cntPub%4))){
-        for (int i=0; i<(4-(cntPub%4))-2; i++){
-          *addrPtr = 0;
-          addrPtr += 1;
-        }
-        cntPub += (4-(cntPub%4))-2; 
-      } else if (cntPub%4 >0){
-        for(int i=0; i<(4-(cntPub%4)) ; i++){
-            *addrPtr = 0;
-            addrPtr += 1;
-        }   
-        cntPub += 4-(cntPub%4);
+    {%if def_data.size==2%}
+    if (cntPub%4 >0 && 2 <= (4-(cntPub%4))){
+      for (int i=0; i<(4-(cntPub%4))-2; i++){
+      *addrPtr = 0;
+      addrPtr += 1;
       }
-    } else if ({{def_data.size}}==4){
-      if (cntPub%4 > 0){
-        for(int i=0; i<(4-(cntPub%4)) ; i++){
-          *addrPtr = 0;
-          addrPtr += 1;
-        }   
-        cntPub += 4-(cntPub%4);
-      }
-    } else if ({{def_data.size}}==8){
-      if (cntPub%8 > 0){
-        for(int i=0; i<(8-(cntPub%8)) ; i++){
-          *addrPtr = 0;
-          addrPtr += 1;
-        }   
-        cntPub += 8-(cntPub%8);
-      }
+      cntPub += (4-(cntPub%4))-2; 
+    } else if (cntPub%4 >0){
+      for(int i=0; i<(4-(cntPub%4)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+      }   
+      cntPub += 4-(cntPub%4);
     }
+    {% elif def_data.size==4 %}
+    if (cntPub%4 > 0){
+      for(int i=0; i<(4-(cntPub%4)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+      }   
+      cntPub += 4-(cntPub%4);
+    }
+    {% elif def_data.size==8 %}
+    if (cntPub%8 > 0){
+      for(int i=0; i<(8-(cntPub%8)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+      }   
+      cntPub += 8-(cntPub%8);
+    }
+    {% endif %}
     const {{def_data.cppType}}* ptr = {{def_data.typeName}}.data();
     for(int i=0; i<{{def_data.boundedArray}} ; i++){
       memcpy(addrPtr, &(ptr[i]),{{def_data.size}});
@@ -101,15 +101,15 @@ public:
     addrPtr += 4;
     cntPub += 4;
 
-    if ({{def_data.size}}==8){
-      if (cntPub%8 > 0){
-        for(int i=0; i<(8-(cntPub%8)) ; i++){
-          *addrPtr = 0;
-          addrPtr += 1;
-        }   
-        cntPub += 8-(cntPub%8);
-      }
+    {% if def_data.size==8 %}
+    if (cntPub%8 > 0){
+      for(int i=0; i<(8-(cntPub%8)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+      }   
+      cntPub += 8-(cntPub%8);
     }
+    {% endif %}
 
     const {{def_data.cppType}}* ptr = {{def_data.typeName}}.data();
     for(int i=0; i<arraySize ; i++){
@@ -159,37 +159,37 @@ public:
     cntPub += stringSize;
   
     {% else %}
-    if ({{def_data.size}}==2){
-      if (cntPub%4 >0 && 2 <= (4-(cntPub%4))){
-        for (int i=0; i<(4-(cntPub%4))-2; i++){
-          *addrPtr = 0;
-          addrPtr += 1;
-        }
-        cntPub += (4-(cntPub%4))-2; 
-      } else if (cntPub%4 >0){
-        for(int i=0; i<(4-(cntPub%4)) ; i++){
-            *addrPtr = 0;
-            addrPtr += 1;
-        }   
-        cntPub += 4-(cntPub%4);
+    {%if def_data.size==2%}
+    if (cntPub%4 >0 && 2 <= (4-(cntPub%4))){
+      for (int i=0; i<(4-(cntPub%4))-2; i++){
+      *addrPtr = 0;
+      addrPtr += 1;
       }
-    } else if ({{def_data.size}}==4){
-      if (cntPub%4 > 0){
-        for(int i=0; i<(4-(cntPub%4)) ; i++){
-          *addrPtr = 0;
-          addrPtr += 1;
-        }   
-        cntPub += 4-(cntPub%4);
-      }
-    } else if ({{def_data.size}}==8){
-      if (cntPub%8 > 0){
-        for(int i=0; i<(8-(cntPub%8)) ; i++){
-          *addrPtr = 0;
-          addrPtr += 1;
-        }   
-        cntPub += 8-(cntPub%8);
-      }
+      cntPub += (4-(cntPub%4))-2; 
+    } else if (cntPub%4 >0){
+      for(int i=0; i<(4-(cntPub%4)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+      }   
+      cntPub += 4-(cntPub%4);
     }
+    {% elif def_data.size==4 %}
+    if (cntPub%4 > 0){
+      for(int i=0; i<(4-(cntPub%4)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+      }   
+      cntPub += 4-(cntPub%4);
+    }
+    {% elif def_data.size==8 %}
+    if (cntPub%8 > 0){
+      for(int i=0; i<(8-(cntPub%8)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+      }   
+      cntPub += 8-(cntPub%8);
+    }
+    {% endif %}
     memcpy(addrPtr,&{{def_data.typeName}},{{def_data.size}});
     addrPtr += {{def_data.size}};
     cntPub += {{def_data.size}};
@@ -212,33 +212,33 @@ public:
     rbuf += tmpSub;
 
     {% elif def_data.boundedArray%}
-    if ({{def_data.size}}==2){
-      if (cntSub%4 >0 && 2 <= (4-(cntSub%4))){
-        for (int i=0; i<(4-(cntSub%4))-{{def_data.size}}; i++){
-          rbuf += 1;
-        }
-        cntSub += (4-(cntSub%4))-{{def_data.size}}; 
-      } else if (cntSub%4 >0){
-        for(int i=0; i<(4-(cntSub%4)) ; i++){
-            rbuf += 1;
-        }   
-        cntSub += 4-(cntSub%4);
+    {%if def_data.size==2 %}
+    if (cntSub%4 >0 and 2 <= (4-(cntSub%4))){
+      for (int i=0; i<(4-(cntSub%4))-{{def_data.size}}; i++){
+        rbuf += 1;
       }
-    } else if ({{def_data.size}}==4){
-      if (cntSub%4 > 0){
-        for(int i=0; i<(4-(cntSub%4)) ; i++){
+      cntSub += (4-(cntSub%4))-{{def_data.size}}; 
+    }else if (cntSub%4 >0){
+      for(int i=0; i<(4-(cntSub%4)) ; i++){
           rbuf += 1;
-        }   
-        cntSub += 4-(cntSub%4);
-      }
-    } else if ({{def_data.size}}==8){
-      if (cntSub%8 > 0){
-        for(int i=0; i<(8-(cntSub%8)) ; i++){
-          rbuf += 1;
-        }   
-        cntSub += 8-(cntSub%8);
-      }
+      }   
+      cntSub += 4-(cntSub%4);
     }
+    {% elif def_data.size==4 %}
+    if (cntSub%4 > 0){
+      for(int i=0; i<(4-(cntSub%4)) ; i++){
+        rbuf += 1;
+      }   
+      cntSub += 4-(cntSub%4);
+    }
+    {% elif def_data.size==8 %}
+    if (cntSub%8 > 0){
+      for(int i=0; i<(8-(cntSub%8)) ; i++){
+        rbuf += 1;
+      }   
+      cntSub += 8-(cntSub%8);
+    }
+    {% endif %}
     for(int i=0;i<{{def_data.boundedArray}};i++){
       {{def_data.cppType}} buf;
       memcpy(&buf,rbuf,{{def_data.size}});
@@ -253,19 +253,18 @@ public:
       }
       cntSub += 4-(cntSub%4);
     }
-
     memcpy(&arraySize,rbuf,4);
     rbuf += 4;    
     cntSub += 4;
 
-    if ({{def_data.size}}==8){
-      if (cntSub%8 > 0){
-        for(int i=0; i<(8-(cntSub%8)) ; i++){
-          rbuf += 1;
-        }   
-        cntSub += 8-(cntSub%8);
-      }
+    {%if def_data.size==8 %}
+    if (cntSub%8 > 0){
+      for(int i=0; i<(8-(cntSub%8)) ; i++){
+        rbuf += 1;
+      }   
+      cntSub += 8-(cntSub%8);
     }
+    {% endif %}
     
     {{def_data.typeName}}.reserve(arraySize);
     for(int i=0;i<arraySize;i++){
@@ -279,7 +278,7 @@ public:
     if (cntSub%4 >0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
         rbuf += 1;
-      } 
+      }
       cntSub += 4-(cntSub%4);
     }
     memcpy(&stringSize, rbuf, 4);
@@ -294,7 +293,7 @@ public:
     if (cntSub%4 >0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
         rbuf += 1;
-      } 
+      }
       cntSub += 4-(cntSub%4);
     }
     memcpy(&sec,rbuf,4);
@@ -314,33 +313,33 @@ public:
     cntSub += stringSize;
 
     {% else %}
-    if ({{def_data.size}}==2){
-      if (cntSub%4 >0 && 2 <= (4-(cntSub%4))){
-        for (int i=0; i<(4-(cntSub%4))-{{def_data.size}}; i++){
-          rbuf += 1;
-        }
-        cntSub += (4-(cntSub%4))-{{def_data.size}}; 
-      } else if (cntSub%4 >0){
-        for(int i=0; i<(4-(cntSub%4)) ; i++){
-            rbuf += 1;
-        }   
-        cntSub += 4-(cntSub%4);
+    {%if def_data.size==2 %}
+    if (cntSub%4 >0 and 2 <= (4-(cntSub%4))){
+      for (int i=0; i<(4-(cntSub%4))-{{def_data.size}}; i++){
+        rbuf += 1;
       }
-    } else if ({{def_data.size}}==4){
-      if (cntSub%4 > 0){
-        for(int i=0; i<(4-(cntSub%4)) ; i++){
+      cntSub += (4-(cntSub%4))-{{def_data.size}}; 
+    }else if (cntSub%4 >0){
+      for(int i=0; i<(4-(cntSub%4)) ; i++){
           rbuf += 1;
-        }   
-        cntSub += 4-(cntSub%4);
-      }
-    } else if ({{def_data.size}}==8){
-      if (cntSub%8 > 0){
-        for(int i=0; i<(8-(cntSub%8)) ; i++){
-          rbuf += 1;
-        }   
-        cntSub += 8-(cntSub%8);
-      }
+      }   
+      cntSub += 4-(cntSub%4);
     }
+    {% elif def_data.size==4 %}
+    if (cntSub%4 > 0){
+      for(int i=0; i<(4-(cntSub%4)) ; i++){
+        rbuf += 1;
+      }   
+      cntSub += 4-(cntSub%4);
+    }
+    {% elif def_data.size==8 %}
+    if (cntSub%8 > 0){
+      for(int i=0; i<(8-(cntSub%8)) ; i++){
+        rbuf += 1;
+      }   
+      cntSub += 8-(cntSub%8);
+    }
+    {% endif %}
     memcpy(&{{def_data.typeName}},rbuf,{{def_data.size}});
     rbuf += {{def_data.size}};
     cntSub += {{def_data.size}};
