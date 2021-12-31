@@ -3,25 +3,31 @@
 
 #include <iostream>
 #include <string>
-{% set break = false %}
-{% for def_data in msg.def if not break%}
-{%if def_data.isArray and not def_data.boundedArray%}
+{%- set break = 0 %}
+{%- for def_data in msg.def %}
+{%- if def_data.isArray %}
+{%- if def_data.boundedArray == 0 %}
+{%- if break == 0 %}
 #include <vector>
-{% set break = true %}
-{% endif %}
-{% endfor %}
+{%- set break = 1 %}
+{%- endif %}
+{%- endif %}
+{%- endif %}
+{%- endfor %}
 
-{% set break = false %}
-{% for def_data in msg.def if not break%}
-{%if def_data.boundedArray %}
+{%- set break = 0 %}
+{%- for def_data in msg.def%}
+{%- if def_data.boundedArray %}
+{%- if break == 0 %}
 #include <array>
-{% set break = true %}
-{% endif %}
-{% endfor %}
+{%- set break = 1 %}
+{%- endif %}
+{%- endif %}
+{%- endfor %}
 
-{%for dependingFileName in msg.dependingFileNames%}
+{%- for dependingFileName in msg.dependingFileNames%}
 #include "../../{{dependingFileName}}"
-{%endfor%}
+{%- endfor%}
 
 using namespace std;
 
@@ -51,6 +57,7 @@ public:
     addrPtr += tmpPub;
 
     {% elif def_data.boundedArray%}
+    {
     {%if def_data.size==2%}
     if (cntPub%4 >0 && 2 <= (4-(cntPub%4))){
       for (int i=0; i<(4-(cntPub%4))-2; i++){
@@ -88,7 +95,9 @@ public:
       addrPtr += {{def_data.size}};
       cntPub += {{def_data.size}};
     }
+    }
     {% elif def_data.isArray %}
+    {
     if (cntPub%4 >0){
       for(int i=0; i<(4-(cntPub%4)) ; i++){
         *addrPtr = 0;
@@ -111,11 +120,35 @@ public:
     }
     {% endif %}
 
+    {% if def_data.cppType == "string"%}
+    const string* ptr = {{def_data.typeName}}.data();
+
+    for(int i=0; i<arraySize ; i++){
+      if (cntPub%4 >0){
+      for(int j=0; j<(4-(cntPub%4)) ; j++){
+        *addrPtr = 0;
+        addrPtr += 1;
+      }
+      cntPub += 4-(cntPub%4);
+      }
+      stringSize = (ptr[i]).size();
+      memcpy(addrPtr,&stringSize,4);
+      addrPtr += 4;
+      cntPub += 4;
+      memcpy(addrPtr,(ptr[i]).c_str(),stringSize);
+      addrPtr += stringSize;
+      cntPub += stringSize;
+    }
+
+    {% else %}
     const {{def_data.cppType}}* ptr = {{def_data.typeName}}.data();
+
     for(int i=0; i<arraySize ; i++){
       memcpy(addrPtr, &(ptr[i]),{{def_data.size}});
       addrPtr += {{def_data.size}};
       cntPub += {{def_data.size}};
+    }
+    {% endif %}
     }
     {% elif def_data.cppType == "string"%}
     if (cntPub%4 >0){
@@ -212,6 +245,7 @@ public:
     rbuf += tmpSub;
 
     {% elif def_data.boundedArray%}
+    {
     {%if def_data.size==2 %}
     if (cntSub%4 >0 and 2 <= (4-(cntSub%4))){
       for (int i=0; i<(4-(cntSub%4))-{{def_data.size}}; i++){
@@ -246,7 +280,9 @@ public:
       rbuf += {{def_data.size}};
       cntSub += {{def_data.size}};
     }
+    }
     {% elif def_data.isArray %}
+    {
     if (cntSub%4 >0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
         rbuf += 1;
@@ -265,14 +301,37 @@ public:
       cntSub += 8-(cntSub%8);
     }
     {% endif %}
-    
+
     {{def_data.typeName}}.reserve(arraySize);
+    
+    {% if def_data.cppType == "string" %}
+    for(int i=0;i<arraySize;i++){
+      if (cntSub%4 >0){
+        for(int j=0; j<(4-(cntSub%4)) ; j++){
+          rbuf += 1;
+        }
+        cntSub += 4-(cntSub%4);
+      }
+      memcpy(&stringSize, rbuf, 4);
+      rbuf += 4;
+      cntSub += 4;
+      string buf;
+      buf.resize(stringSize);
+      memcpy(&buf[0],rbuf,stringSize);
+      {{def_data.typeName}}.push_back(buf);
+      rbuf += stringSize;
+      cntSub += stringSize;
+    }
+
+    {% else %}
     for(int i=0;i<arraySize;i++){
       {{def_data.cppType}} buf;
       memcpy(&buf,rbuf,{{def_data.size}});
       {{def_data.typeName}}.push_back(buf);
       rbuf += {{def_data.size}};
       cntSub += {{def_data.size}};
+    }
+    {% endif %}
     }
     {% elif def_data.cppType == "string"%}
     if (cntSub%4 >0){
