@@ -44,13 +44,14 @@ public:
     memcpy(&frame_id[0], addrPtr, subSize);
   }
 
-  void memAlign(uint8_t *addrPtr){
+   void memAlign(uint8_t *addrPtr){
     if (cntPub%4 > 0){
-      for(int i=0; i<(4-(pubSize%4)) ; i++){
+      addrPtr += cntPub;
+      for(int i=0; i<(4-(cntPub%4)) ; i++){
         *addrPtr = 0;
         addrPtr += 1;
-        cntPub += 1;
       }
+      cntPub += 4-(cntPub%4);
     }
     return;
   }

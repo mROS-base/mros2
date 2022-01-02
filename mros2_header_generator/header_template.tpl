@@ -408,15 +408,16 @@ public:
     return cntSub;
   }
 
-  void memAlign(uint8_t *addrPtr){
-    if (cntPub%4 >0){
+   void memAlign(uint8_t *addrPtr){
+    if (cntPub%4 > 0){
+      addrPtr += cntPub;
       for(int i=0; i<(4-(cntPub%4)) ; i++){
         *addrPtr = 0;
         addrPtr += 1;
-      }  
+      }
       cntPub += 4-(cntPub%4);
     }
-    return ;
+    return;
   }
 
   uint32_t getTotalSize(){
