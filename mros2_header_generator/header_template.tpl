@@ -3,24 +3,24 @@
 
 #include <iostream>
 #include <string>
-{%- set break = 0 %}
+{%- set ns = namespace(break=0) -%}
 {%- for def_data in msg.def %}
 {%- if def_data.isArray %}
 {%- if def_data.boundedArray == 0 %}
-{%- if break == 0 %}
+{%- if ns.break == 0 %}
 #include <vector>
-{%- set break = 1 %}
+{%- set ns.break = ns.break + 1 -%}
 {%- endif %}
 {%- endif %}
 {%- endif %}
 {%- endfor %}
 
-{%- set break = 0 %}
+{%- set ns = namespace(break=0) -%}
 {%- for def_data in msg.def%}
 {%- if def_data.boundedArray %}
-{%- if break == 0 %}
+{%- if ns.break == 0 %}
 #include <array>
-{%- set break = 1 %}
+{%- set ns.break = ns.break + 1 -%}
 {%- endif %}
 {%- endif %}
 {%- endfor %}
