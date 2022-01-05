@@ -233,51 +233,51 @@ public:
     return cntPub;
   }
 
-  uint32_t copyFromBuf(const uint8_t *rbuf) {
+  uint32_t copyFromBuf(const uint8_t *addrPtr) {
     uint32_t tmpSub = 0;
     uint32_t arraySize;
     uint32_t stringSize;
 
     {% for def_data in msg.def %}
     {% if def_data.isCustomType%}
-    tmpSub = {{def_data.typeName}}.copyFromBuf(rbuf);
+    tmpSub = {{def_data.typeName}}.copyFromBuf(addrPtr);
     cntSub += tmpSub;
-    rbuf += tmpSub;
+    addrPtr += tmpSub;
 
     {% elif def_data.boundedArray%}
     {
     {%if def_data.size==2 %}
     if (cntSub%4 >0 and 2 <= (4-(cntSub%4))){
       for (int i=0; i<(4-(cntSub%4))-{{def_data.size}}; i++){
-        rbuf += 1;
+        addrPtr += 1;
       }
       cntSub += (4-(cntSub%4))-{{def_data.size}}; 
     }else if (cntSub%4 >0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
-          rbuf += 1;
+          addrPtr += 1;
       }   
       cntSub += 4-(cntSub%4);
     }
     {% elif def_data.size==4 %}
     if (cntSub%4 > 0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
-        rbuf += 1;
+        addrPtr += 1;
       }   
       cntSub += 4-(cntSub%4);
     }
     {% elif def_data.size==8 %}
     if (cntSub%8 > 0){
       for(int i=0; i<(8-(cntSub%8)) ; i++){
-        rbuf += 1;
+        addrPtr += 1;
       }   
       cntSub += 8-(cntSub%8);
     }
     {% endif %}
     for(int i=0;i<{{def_data.boundedArray}};i++){
       {{def_data.cppType}} buf;
-      memcpy(&buf,rbuf,{{def_data.size}});
+      memcpy(&buf,addrPtr,{{def_data.size}});
       {{def_data.typeName}}[i] = buf;
-      rbuf += {{def_data.size}};
+      addrPtr += {{def_data.size}};
       cntSub += {{def_data.size}};
     }
     }
@@ -285,18 +285,18 @@ public:
     {
     if (cntSub%4 >0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
-        rbuf += 1;
+        addrPtr += 1;
       }
       cntSub += 4-(cntSub%4);
     }
-    memcpy(&arraySize,rbuf,4);
-    rbuf += 4;    
+    memcpy(&arraySize,addrPtr,4);
+    addrPtr += 4;    
     cntSub += 4;
 
     {%if def_data.size==8 %}
     if (cntSub%8 > 0){
       for(int i=0; i<(8-(cntSub%8)) ; i++){
-        rbuf += 1;
+        addrPtr += 1;
       }   
       cntSub += 8-(cntSub%8);
     }
@@ -308,27 +308,27 @@ public:
     for(int i=0;i<arraySize;i++){
       if (cntSub%4 >0){
         for(int j=0; j<(4-(cntSub%4)) ; j++){
-          rbuf += 1;
+          addrPtr += 1;
         }
         cntSub += 4-(cntSub%4);
       }
-      memcpy(&stringSize, rbuf, 4);
-      rbuf += 4;
+      memcpy(&stringSize, addrPtr, 4);
+      addrPtr += 4;
       cntSub += 4;
       string buf;
       buf.resize(stringSize);
-      memcpy(&buf[0],rbuf,stringSize);
+      memcpy(&buf[0],addrPtr,stringSize);
       {{def_data.typeName}}.push_back(buf);
-      rbuf += stringSize;
+      addrPtr += stringSize;
       cntSub += stringSize;
     }
 
     {% else %}
     for(int i=0;i<arraySize;i++){
       {{def_data.cppType}} buf;
-      memcpy(&buf,rbuf,{{def_data.size}});
+      memcpy(&buf,addrPtr,{{def_data.size}});
       {{def_data.typeName}}.push_back(buf);
-      rbuf += {{def_data.size}};
+      addrPtr += {{def_data.size}};
       cntSub += {{def_data.size}};
     }
     {% endif %}
@@ -336,71 +336,71 @@ public:
     {% elif def_data.cppType == "string"%}
     if (cntSub%4 >0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
-        rbuf += 1;
+        addrPtr += 1;
       }
       cntSub += 4-(cntSub%4);
     }
-    memcpy(&stringSize, rbuf, 4);
-    rbuf += 4;
+    memcpy(&stringSize, addrPtr, 4);
+    addrPtr += 4;
     cntSub += 4;
     {{def_data.typeName}}.resize(stringSize);
-    memcpy(&{{def_data.typeName}}[0],rbuf,stringSize);
-    rbuf += stringSize;
+    memcpy(&{{def_data.typeName}}[0],addrPtr,stringSize);
+    addrPtr += stringSize;
     cntSub += stringSize;
 
     {% elif def_data.cppType == "header"%}
     if (cntSub%4 >0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
-        rbuf += 1;
+        addrPtr += 1;
       }
       cntSub += 4-(cntSub%4);
     }
-    memcpy(&sec,rbuf,4);
-    rbuf += 4;
+    memcpy(&sec,addrPtr,4);
+    addrPtr += 4;
     cntSub += 4;
 
-    memcpy(&nanosec,rbuf,4);
-    rbuf += 4;
+    memcpy(&nanosec,addrPtr,4);
+    addrPtr += 4;
     cntSub += 4;
 
-    memcpy(&stringSize, rbuf, 4);
-    rbuf += 4;
+    memcpy(&stringSize, addrPtr, 4);
+    addrPtr += 4;
     cntSub += 4;
     frame_id.resize(stringSize);
-    memcpy(&frame_id[0],rbuf,stringSize);
-    rbuf += stringSize;
+    memcpy(&frame_id[0],addrPtr,stringSize);
+    addrPtr += stringSize;
     cntSub += stringSize;
 
     {% else %}
     {%if def_data.size==2 %}
     if (cntSub%4 >0 and 2 <= (4-(cntSub%4))){
       for (int i=0; i<(4-(cntSub%4))-{{def_data.size}}; i++){
-        rbuf += 1;
+        addrPtr += 1;
       }
       cntSub += (4-(cntSub%4))-{{def_data.size}}; 
     }else if (cntSub%4 >0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
-          rbuf += 1;
+          addrPtr += 1;
       }   
       cntSub += 4-(cntSub%4);
     }
     {% elif def_data.size==4 %}
     if (cntSub%4 > 0){
       for(int i=0; i<(4-(cntSub%4)) ; i++){
-        rbuf += 1;
+        addrPtr += 1;
       }   
       cntSub += 4-(cntSub%4);
     }
     {% elif def_data.size==8 %}
     if (cntSub%8 > 0){
       for(int i=0; i<(8-(cntSub%8)) ; i++){
-        rbuf += 1;
+        addrPtr += 1;
       }   
       cntSub += 8-(cntSub%8);
     }
     {% endif %}
-    memcpy(&{{def_data.typeName}},rbuf,{{def_data.size}});
-    rbuf += {{def_data.size}};
+    memcpy(&{{def_data.typeName}},addrPtr,{{def_data.size}});
+    addrPtr += {{def_data.size}};
     cntSub += {{def_data.size}};
     {% endif %}
     {% endfor %}
