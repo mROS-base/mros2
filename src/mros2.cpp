@@ -225,7 +225,6 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(
   /* Register callback to ensure that a subscriber is matched to the reader before receiving messages */
   part_ptr->registerOnNewPublisherMatchedCallback(subMatch, &pubMatched);
 
-  MROS2_DEBUG("[MROS2LIB] create_subscription complete. data memory address=0x%x", data_p);
   return sub;
 }
 
