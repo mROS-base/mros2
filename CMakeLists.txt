@@ -1,6 +1,16 @@
 # Copyright (c) 2021 smorita_emb
 # SPDX-License-Identifier: Apache-2.0
 
+cmake_minimum_required(VERSION 3.16.3)
+
+project(mros2
+    LANGUAGES C CXX
+)
+
+if (DEFINED CMAKE_OS_POSIX)
+    include(cmake-build/posix.cmake)
+else()
+
 target_include_directories(mros2
   BEFORE INTERFACE
   embeddedRTPS/thirdparty/Micro-CDR/include
@@ -32,3 +42,4 @@ target_sources(mros2
   embeddedRTPS/thirdparty/Micro-CDR/src/c/types/sequence.c
   embeddedRTPS/thirdparty/Micro-CDR/src/c/types/array.c
 )
+endif()
