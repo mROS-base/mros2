@@ -1,3 +1,7 @@
+import os
+import re
+from header_generator import genDepMsgHeader
+
 # mapping between ros2Type to cppType
 msgCppTypes = {
     "int8": "int8_t",
@@ -27,10 +31,12 @@ msgSizes = {
     "header": -1
 }
 
+def toSnakeCase(string):
+    return re.sub("(.[A-Z])",lambda x:x.group(1)[0] + "_" +x.group(1)[1],string).lower()
+
 # generate detail data of type definition
 
-
-def msgDefGenerator(msgDefStr, dependingDict):
+def msgDefGenerator(msgDefStr, dependingFileNames):
 
     # split the type def and name of the type ('string name' -> ['string', 'name'])
     msgDefArr = msgDefStr.split(' ')
@@ -61,16 +67,23 @@ def msgDefGenerator(msgDefStr, dependingDict):
             'isCustomType': False
         }
         
-    elif msgType in dependingDict:  # when custom type
-        return {
-            'rosType': dependingDict[msgType],
-            'cppType': dependingDict[msgType],
-            'typeName': msgName,
-            'size': 0,
-            'isArray': isArray,
-            'boundedArray': boundedArray,
-            'isCustomType': True
-        }    
-        
     else:
-        print(msgType+' is not found')
+        if os.path.isfile("custom_msgs/" + msgType + ".msg"): # when custom type
+            dependingFileName = toSnakeCase(msgType) + ".hpp"
+            depFileArr = dependingFileName.split("/")
+            if depFileArr[2][0] == "_":
+                depFileArr[2] = depFileArr[2][1:]
+            dependingFileName = "/".join(depFileArr)
+            dependingFileNames.append(dependingFileName)
+            genDepMsgHeader(msgType+".msg")
+            return {
+                'rosType': msgType.replace("/","::"),
+                'cppType': msgType.replace("/","::"),
+                'typeName': msgName,
+                'size': 0,
+                'isArray': isArray,
+                'boundedArray': boundedArray,
+                'isCustomType': True
+            }      
+        else:
+            print(msgType+' is not found')

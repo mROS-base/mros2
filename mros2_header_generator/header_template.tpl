@@ -26,7 +26,7 @@
 {%- endfor %}
 
 {%- for dependingFileName in msg.dependingFileNames%}
-#include "../../{{dependingFileName}}"
+#include "{{dependingFileName}}"
 {%- endfor%}
 
 using namespace std;
@@ -52,10 +52,32 @@ public:
     uint32_t stringSize;
     {%for def_data in msg.def %}
     {% if def_data.isCustomType%}
+    {% if def_data.isArray%}
+    {
+    if (cntPub%4 >0){
+      for(int i=0; i<(4-(cntPub%4)) ; i++){
+        *addrPtr = 0;
+        addrPtr += 1;
+      }
+      cntPub += 4-(cntPub%4);
+    }
+    arraySize = {{def_data.typeName}}.size();
+    memcpy(addrPtr,&arraySize,4);
+    addrPtr += 4;
+    cntPub += 4;
+
+    for(int i=0; i<arraySize ; i++){
+      tmpPub = {{def_data.typeName}}[i].copyToBuf(addrPtr);
+      cntPub += tmpPub;
+      addrPtr += tmpPub;
+    }
+    }
+
+    {% else %}
     tmpPub = {{def_data.typeName}}.copyToBuf(addrPtr);
     cntPub += tmpPub;
     addrPtr += tmpPub;
-
+    {% endif %}
     {% elif def_data.boundedArray%}
     {
     {%if def_data.size==2%}
@@ -240,9 +262,30 @@ public:
 
     {% for def_data in msg.def %}
     {% if def_data.isCustomType%}
+    {% if def_data.isArray %}
+    {
+    if (cntSub%4 >0){
+      for(int i=0; i<(4-(cntSub%4)) ; i++){
+        addrPtr += 1;
+      }
+      cntSub += 4-(cntSub%4);
+    }
+    memcpy(&arraySize,addrPtr,4);
+    addrPtr += 4;    
+    cntSub += 4;
+    for(int i=0;i<arraySize;i++){
+      {{def_data.cppType}} buf;
+      tmpSub = buf.copyFromBuf(addrPtr);
+      {{def_data.typeName}}.push_back(buf);
+      addrPtr += tmpSub;
+      cntSub += tmpSub;
+    }
+    }
+    {% else %}
     tmpSub = {{def_data.typeName}}.copyFromBuf(addrPtr);
     cntSub += tmpSub;
     addrPtr += tmpSub;
+    {% endif %}
 
     {% elif def_data.boundedArray%}
     {

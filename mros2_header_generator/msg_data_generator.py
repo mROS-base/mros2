@@ -3,13 +3,14 @@ from msg_def_generator import msgDefGenerator
 
 # generate message data is mainly about the name, definition of the type 
 
-def msgDataGenerator(line, appDir, dependingDict, dependingFileNames):
-    if os.path.isfile(appDir + "/" + line):
-        with open(appDir + "/" + line, 'r') as m_f:
+def msgDataGenerator(line):
+    dependingFileNames = []
+    if os.path.isfile("custom_msgs/" + line):
+        with open("custom_msgs/" + line, 'r') as m_f:
             arr = m_f.readlines()
             msgDef = []
             for m_line in arr:
-                msgDef.append(msgDefGenerator(m_line, dependingDict))
+                msgDef.append(msgDefGenerator(m_line, dependingFileNames))
 
         lineArr = line.strip().split('/')
         lineArr[2] = lineArr[2].rstrip('.msg')
