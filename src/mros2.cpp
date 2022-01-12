@@ -9,11 +9,6 @@
 #include "cmsis_os.h"
 #endif /* __MBED__ */
 
-#ifndef __MBED__
-/* Statement to avoid link error */
-void* __dso_handle=0;
-#endif /* __MBED__ */
-
 
 namespace mros2
 {
