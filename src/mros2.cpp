@@ -2,7 +2,6 @@
 #include "mros2_user_config.h"
 
 #include <rtps/rtps.h>
-#include <kernel.h>
 
 #ifdef __MBED__
 #include "mbed.h"
@@ -24,9 +23,6 @@ osMessageQueueId_t subscriber_msg_gueue_id;
 bool completeNodeInit = false;
 uint8_t endpointId = 0;
 uint32_t subCbArray[10];
-
-std::array<uint32_t, 230> timeArr;
-uint32_t count = 0;
 
 uint8_t buf[100];
 uint8_t buf_index = 4;
@@ -220,24 +216,12 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(
 template <class T>
 void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
-  if (count == 201){
-     for (int i=0; i< 200; i++){
-       MROS2_INFO("%lu", timeArr[i]);
-       dly_tsk(1000);
-     }
-     MROS2_INFO("----------------");
-  } else if (count > 201){
+  T msg;
+  msg.copyFromBuf(&cacheChange.data[4]);
 
-  } else {
-    timeArr[count] = fch_hrt();
-    T msg;
-    msg.copyFromBuf(&cacheChange.data[4]);
-    count++ ;
-
-    SubscribeDataType *sub = (SubscribeDataType *)callee;
-    void (*fp)(intptr_t) = sub->cb_fp;
-    fp((intptr_t)&msg);
-  }
+  SubscribeDataType *sub = (SubscribeDataType *)callee;
+  void (*fp)(intptr_t) = sub->cb_fp;
+  fp((intptr_t)&msg);
 }
 
 

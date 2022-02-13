@@ -21,7 +21,7 @@ def main():
     # load msg settings & prepare information for .tpl file
     with open(msgDir + "/" + "msg_settings.json", 'r') as f:
         jsonData = json.load(f)
-        for genMsg in jsonData['includingMsgs']:
+        for genMsg in jsonData['pubsubMsgs']:
             msgs.append(msgDataGenerator(genMsg.strip()))
 
     # generate header file for mros2
