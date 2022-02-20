@@ -1,0 +1,1 @@
+#include "../workspace/{{app}}/templates.hpp"
