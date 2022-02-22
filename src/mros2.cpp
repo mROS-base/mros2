@@ -18,7 +18,7 @@ rtps::Participant *part_ptr = NULL; //TODO: detele this
 rtps::Writer *pub_ptr = NULL;
 
 #define SUB_MSG_SIZE	4	// addr size
-osMessageQueueId_t subscriber_msg_gueue_id;
+osMessageQueueId_t subscriber_msg_queue_id;
 
 bool completeNodeInit = false;
 uint8_t endpointId = 0;
@@ -92,8 +92,8 @@ void mros2_init(void *args)
 
 #ifndef __MBED__
   sub_msg_count = mros2_get_submsg_count();
-  subscriber_msg_gueue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
-  if (subscriber_msg_gueue_id == NULL) {
+  subscriber_msg_queue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
+  if (subscriber_msg_queue_id == NULL) {
     MROS2_ERROR("[MROS2LIB] ERROR: mROS2 init failed");
     return;
   }
@@ -234,7 +234,7 @@ void spin()
 #ifndef __MBED__
     osStatus_t ret;
     SubscribeDataType* msg;
-    ret = osMessageQueueGet(subscriber_msg_gueue_id, &msg, NULL, osWaitForever);
+    ret = osMessageQueueGet(subscriber_msg_queue_id, &msg, NULL, osWaitForever);
     if (ret != osOK) {
       MROS2_ERROR("[MROS2LIB] ERROR: mROS2 spin() wait error %d", ret);
     }
