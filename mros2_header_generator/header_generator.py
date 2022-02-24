@@ -1,14 +1,13 @@
 # generate message type header file for mROS2
 
 import os
-import json
 import sys
 import re
 from jinja2 import Environment, FileSystemLoader
 
 arg = sys.argv
 mros2Dir = arg[1]
-msgDir = arg[2]
+msgFile= arg[2]
 
 def toCamelCase(string):
     return ''.join(x.capitalize() for x in string.split('_'))
@@ -19,10 +18,7 @@ def toSnakeCase(string):
 def main():
     from msg_data_generator import msgDataGenerator
     # load msg settings & prepare information for .tpl file
-    with open(msgDir + "/" + "msg_settings.json", 'r') as f:
-        jsonData = json.load(f)
-        for genMsg in jsonData['pubsubMsgs']:
-            msgs.append(msgDataGenerator(genMsg.strip()))
+    msgs.append(msgDataGenerator(msgFile))
 
     # generate header file for mros2
     for msg in msgs:
@@ -30,10 +26,10 @@ def main():
         template = env.get_template('header_template.tpl')
         datatext = template.render({ "msg": msg })
         
-        msgPkgPath = "../mros2_msgs" + "/" + msg['pkg'] 
+        msgPkgPath = "custom_msgs" + "/" + msg['pkg'] 
         
-        if not(os.path.isdir("../mros2_msgs")):
-            os.mkdir("../mros2_msgs")  
+        if not(os.path.isdir("custom_msgs")):
+            os.mkdir("custom_msgs")  
         if not(os.path.isdir(msgPkgPath)):
             os.mkdir(msgPkgPath)
         if not(os.path.isdir(msgPkgPath + "/msg")):
@@ -51,10 +47,10 @@ def genDepMsgHeader(genMsg):
         template = env.get_template('header_template.tpl')
         datatext = template.render({ "msg": msg })
         
-        msgPkgPath = "../mros2_msgs" + "/" + msg['pkg'] 
+        msgPkgPath = "custom_msgs" + "/" + msg['pkg'] 
         
-        if not(os.path.isdir("../mros2_msgs")):
-            os.mkdir("../mros2_msgs")  
+        if not(os.path.isdir("custom_msgs")):
+            os.mkdir("custom_msgs")  
         if not(os.path.isdir(msgPkgPath)):
             os.mkdir(msgPkgPath)
         if not(os.path.isdir(msgPkgPath + "/msg")):
