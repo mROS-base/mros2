@@ -6,8 +6,7 @@ import re
 from jinja2 import Environment, FileSystemLoader
 
 arg = sys.argv
-mros2Dir = arg[1]
-msgFile= arg[2]
+msgFile = arg[1]
 
 def toCamelCase(string):
     return ''.join(x.capitalize() for x in string.split('_'))
@@ -22,7 +21,7 @@ def main():
 
     # generate header file for mros2
     for msg in msgs:
-        env = Environment(loader=FileSystemLoader(mros2Dir + '/mros2_header_generator'))
+        env = Environment(loader=FileSystemLoader('../mros2/mros2_header_generator'))
         template = env.get_template('header_template.tpl')
         datatext = template.render({ "msg": msg })
         
@@ -43,7 +42,7 @@ def genDepMsgHeader(genMsg):
     msgs=[]
     msgs.append(msgDataGenerator(genMsg.strip()))
     for msg in msgs:
-        env = Environment(loader=FileSystemLoader(mros2Dir + '/mros2_header_generator'))
+        env = Environment(loader=FileSystemLoader('../mros2/mros2_header_generator'))
         template = env.get_template('header_template.tpl')
         datatext = template.render({ "msg": msg })
         

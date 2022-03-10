@@ -4,8 +4,7 @@ import re
 from jinja2 import Environment, FileSystemLoader
 
 arg = sys.argv
-mros2Dir = arg[1]
-app = arg[2]
+app = arg[1]
 
 includeFiles = []
 pubMsgTypes = []
@@ -39,13 +38,13 @@ def main():
                 includeFiles.append(includeFile)
                 
                 
-    env = Environment(loader=FileSystemLoader(mros2Dir + '/mros2_header_generator'))
+    env = Environment(loader=FileSystemLoader('../mros2/mros2_header_generator'))
     template = env.get_template('templates.tpl')
     datatext = template.render({ "includeFiles":includeFiles, "pubMsgTypes":pubMsgTypes, "subMsgTypes":subMsgTypes  })
     with open(os.path.join(app+"/templates.hpp"), "wb") as f:
         f.write(datatext.encode('utf-8'))
         
-    env = Environment(loader=FileSystemLoader(mros2Dir + '/mros2_header_generator'))
+    env = Environment(loader=FileSystemLoader('../mros2/mros2_header_generator'))
     template = env.get_template('header_includer.tpl')
     datatext = template.render({ "app": app  })
     with open(os.path.join("../header_includer/header_includer.hpp"), "wb") as f:
