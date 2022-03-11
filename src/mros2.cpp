@@ -274,8 +274,7 @@ void setTrue(void* args)
   *static_cast<volatile bool*>(args) = true;
 }
 
-
 /*
- *  specialize template functions
+ * specialize template functions described in platform's workspace
  */
-#include "../../header_includer/header_includer.hpp"
+#include "templates.hpp"

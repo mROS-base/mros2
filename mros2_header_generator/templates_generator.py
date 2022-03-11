@@ -43,12 +43,7 @@ def main():
     datatext = template.render({ "includeFiles":includeFiles, "pubMsgTypes":pubMsgTypes, "subMsgTypes":subMsgTypes  })
     with open(os.path.join(app+"/templates.hpp"), "wb") as f:
         f.write(datatext.encode('utf-8'))
-        
-    env = Environment(loader=FileSystemLoader('../mros2/mros2_header_generator'))
-    template = env.get_template('header_includer.tpl')
-    datatext = template.render({ "app": app  })
-    with open(os.path.join("../header_includer/header_includer.hpp"), "wb") as f:
-        f.write(datatext.encode('utf-8'))
-        
+
+
 if __name__ == "__main__":
     main()
