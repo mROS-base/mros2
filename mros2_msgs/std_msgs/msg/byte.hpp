@@ -20,6 +20,11 @@ public:
     memcpy(&data, addrPtr, 1);
     addrPtr += 1;
   }
+
+  void memAlign(uint8_t *addrPtr){
+    return;
+  }
+  
   uint8_t getTotalSize()
   {
     return 1;

@@ -9,23 +9,6 @@
 #include "cmsis_os.h"
 #endif /* __MBED__ */
 
-#include "std_msgs/msg/bool.hpp"
-#include "std_msgs/msg/byte.hpp"
-#include "std_msgs/msg/char.hpp"
-#include "std_msgs/msg/float32.hpp"
-#include "std_msgs/msg/float64.hpp"
-#include "std_msgs/msg/int8.hpp"
-#include "std_msgs/msg/int16.hpp"
-#include "std_msgs/msg/int32.hpp"
-#include "std_msgs/msg/int64.hpp"
-#include "std_msgs/msg/string.hpp"
-#include "std_msgs/msg/u_int8.hpp"
-#include "std_msgs/msg/u_int16.hpp"
-#include "std_msgs/msg/u_int32.hpp"
-#include "std_msgs/msg/u_int64.hpp"
-
-#include "TEST.hpp"
-
 
 namespace mros2
 {
@@ -35,7 +18,7 @@ rtps::Participant *part_ptr = NULL; //TODO: detele this
 rtps::Writer *pub_ptr = NULL;
 
 #define SUB_MSG_SIZE	4	// addr size
-osMessageQueueId_t subscriber_msg_gueue_id;
+osMessageQueueId_t subscriber_msg_queue_id;
 
 bool completeNodeInit = false;
 uint8_t endpointId = 0;
@@ -109,8 +92,8 @@ void mros2_init(void *args)
 
 #ifndef __MBED__
   sub_msg_count = mros2_get_submsg_count();
-  subscriber_msg_gueue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
-  if (subscriber_msg_gueue_id == NULL) {
+  subscriber_msg_queue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
+  if (subscriber_msg_queue_id == NULL) {
     MROS2_ERROR("[MROS2LIB] ERROR: mROS2 init failed");
     return;
   }
@@ -191,6 +174,7 @@ template <class T>
 void Publisher::publish(T& msg)
 {
   msg.copyToBuf(&buf[4]);
+  msg.memAlign(&buf[4]);
   pub_ptr->newChange(rtps::ChangeKind_t::ALIVE, buf, msg.getTotalSize() + 4);
 }
 
@@ -234,7 +218,7 @@ template <class T>
 void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
   T msg;
-  msg.copyFromBuf(&cacheChange.getData()[4]);
+  msg.copyFromBuf(&cacheChange.data[4]);
 
   SubscribeDataType *sub = (SubscribeDataType *)callee;
   void (*fp)(intptr_t) = sub->cb_fp;
@@ -251,7 +235,7 @@ void spin()
 #ifndef __MBED__
     osStatus_t ret;
     SubscribeDataType* msg;
-    ret = osMessageQueueGet(subscriber_msg_gueue_id, &msg, NULL, osWaitForever);
+    ret = osMessageQueueGet(subscriber_msg_queue_id, &msg, NULL, osWaitForever);
     if (ret != osOK) {
       MROS2_ERROR("[MROS2LIB] ERROR: mROS2 spin() wait error %d", ret);
     }
@@ -291,83 +275,7 @@ void setTrue(void* args)
   *static_cast<volatile bool*>(args) = true;
 }
 
-
 /*
- *  specialize template functions
+ * specialize template functions described in platform's workspace
  */
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Bool>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Bool*));
-template void mros2::Publisher::publish(std_msgs::msg::Bool &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::Bool>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Byte>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Byte*));
-template void mros2::Publisher::publish(std_msgs::msg::Byte &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::Byte>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Char>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Char*));
-template void mros2::Publisher::publish(std_msgs::msg::Char &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::Char>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Float32>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Float32*));
-template void mros2::Publisher::publish(std_msgs::msg::Float32 &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::Float32>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Float64>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Float64*));
-template void mros2::Publisher::publish(std_msgs::msg::Float64 &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::Float64>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int8>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int8*));
-template void mros2::Publisher::publish(std_msgs::msg::Int8 &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::Int8>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int16>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription<std_msgs::msg::Int16>(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int16*));
-template void mros2::Publisher::publish(std_msgs::msg::Int16 &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::Int16>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int32>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int32*));
-template void mros2::Publisher::publish(std_msgs::msg::Int32 &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::Int32>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::Int64>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::Int64*));
-template void mros2::Publisher::publish(std_msgs::msg::Int64 &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::Int64>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::String>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::String*));
-template void mros2::Publisher::publish(std_msgs::msg::String &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::String>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::UInt8>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::UInt8*));
-template void mros2::Publisher::publish(std_msgs::msg::UInt8 &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::UInt8>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::UInt16>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::UInt16*));
-template void mros2::Publisher::publish(std_msgs::msg::UInt16 &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::UInt16>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::UInt32>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::UInt32*));
-template void mros2::Publisher::publish(std_msgs::msg::UInt32 &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::UInt32>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-template mros2::Publisher mros2::Node::create_publisher<std_msgs::msg::UInt64>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(std_msgs::msg::UInt64*));
-template void mros2::Publisher::publish(std_msgs::msg::UInt64 &msg);
-template void mros2::Subscriber::callback_handler<std_msgs::msg::UInt64>(void *callee, const rtps::ReaderCacheChange &cacheChange);
-
-/* Work in Progress: for custom message
-template mros2::Publisher mros2::Node::create_publisher<TEST>(std::string topic_name, int qos);
-template mros2::Subscriber mros2::Node::create_subscription(std::string topic_name, int qos, void (*fp)(TEST*));
-template void mros2::Publisher::publish(TEST& msg);
-*/
+#include "templates.hpp"

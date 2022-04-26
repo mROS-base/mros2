@@ -22,6 +22,10 @@ public:
     addrPtr += 2;
   }
 
+  void memAlign(uint8_t *addrPtr){
+    return;
+  }
+
   uint8_t getTotalSize()
   {
     return 2;
