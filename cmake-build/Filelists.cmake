@@ -1,0 +1,23 @@
+set(mros2_SRCS
+  ${MROS2_DIR}/src/mros2.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/communication/UdpDriver.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/messages/MessageTypes.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/messages/MessageReceiver.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/discovery/TopicData.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/discovery/ParticipantProxyData.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/discovery/SEDPAgent.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/discovery/SPDPAgent.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/storages/HistoryCache.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/storages/SimpleHistoryCache.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/storages/PBufWrapper.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/ThreadPool.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/entities/Participant.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/entities/Domain.cpp
+  ${MROS2_DIR}/embeddedRTPS/src/entities/StatelessReader.cpp
+  ${MROS2_DIR}/embeddedRTPS/thirdparty/Micro-CDR/src/c/common.c
+  ${MROS2_DIR}/embeddedRTPS/thirdparty/Micro-CDR/src/c/types/basic.c
+  ${MROS2_DIR}/embeddedRTPS/thirdparty/Micro-CDR/src/c/types/string.c
+  ${MROS2_DIR}/embeddedRTPS/thirdparty/Micro-CDR/src/c/types/sequence.c
+  ${MROS2_DIR}/embeddedRTPS/thirdparty/Micro-CDR/src/c/types/array.c
+)
+
