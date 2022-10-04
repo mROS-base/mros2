@@ -19,8 +19,6 @@ target_sources(mros2
   embeddedRTPS/src/discovery/ParticipantProxyData.cpp
   embeddedRTPS/src/discovery/SEDPAgent.cpp
   embeddedRTPS/src/discovery/SPDPAgent.cpp
-  embeddedRTPS/src/storages/HistoryCache.cpp
-  embeddedRTPS/src/storages/SimpleHistoryCache.cpp
   embeddedRTPS/src/storages/PBufWrapper.cpp
   embeddedRTPS/src/ThreadPool.cpp
   embeddedRTPS/src/entities/Participant.cpp
