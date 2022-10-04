@@ -67,7 +67,7 @@ void init(int argc, char * argv[])
   osThreadAttr_t attributes;
 
   attributes.name = "mROS2Thread",
-  attributes.stack_size = 1000,
+  attributes.stack_size = 5000,
   attributes.priority = (osPriority_t)24,
 
   osThreadNew(mros2_init, NULL, (const osThreadAttr_t*)&attributes);
