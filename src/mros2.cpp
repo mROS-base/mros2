@@ -61,7 +61,7 @@ void init(int argc, char * argv[])
   buf[3] = 0;
 
 #ifdef __MBED__
-  mros2_init_thread =  new Thread(osPriorityAboveNormal, 2000, nullptr, "mROS2Thread");
+  mros2_init_thread =  new Thread(osPriorityAboveNormal, 5000, nullptr, "mROS2Thread");
   mros2_init_thread->start(callback(mros2_init, (void *)NULL));
 #else /* __MBED__ */
   osThreadAttr_t attributes;
