@@ -8,7 +8,7 @@ project(mros2
 )
 
 if (DEFINED CMAKE_OS_POSIX)
-    include(cmake-build/posix.cmake)
+    include(../mros2_cmake_build/posix.cmake)
 else()
 
 target_include_directories(mros2
