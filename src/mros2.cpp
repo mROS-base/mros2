@@ -86,12 +86,11 @@ void mros2_init(void *args)
   MROS2_DEBUG("[MROS2LIB] Initilizing lwIP complete");
 #endif /* __MBED__ */
 
-  int sub_msg_count;
   static rtps::Domain domain;
   domain_ptr = &domain;
 
 #ifndef __MBED__
-  sub_msg_count = mros2_get_submsg_count();
+  int sub_msg_count = mros2_get_submsg_count();
   subscriber_msg_queue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
   if (subscriber_msg_queue_id == NULL) {
     MROS2_ERROR("[MROS2LIB] ERROR: mROS2 init failed");
