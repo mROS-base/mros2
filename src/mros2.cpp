@@ -1,11 +1,11 @@
 #include "mros2.h"
-#include "mros2_user_config.h"
 
 #include <rtps/rtps.h>
 
 #ifdef __MBED__
 #include "mbed.h"
 #else  /* __MBED__ */
+#include "mros2_config.h"
 #include "cmsis_os.h"
 #endif /* __MBED__ */
 
@@ -90,8 +90,7 @@ void mros2_init(void *args)
   domain_ptr = &domain;
 
 #ifndef __MBED__
-  int sub_msg_count = mros2_get_submsg_count();
-  subscriber_msg_queue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
+  subscriber_msg_queue_id = osMessageQueueNew(SUB_MSG_COUNT, SUB_MSG_SIZE, NULL);
   if (subscriber_msg_queue_id == NULL) {
     MROS2_ERROR("[MROS2LIB] ERROR: mROS2 init failed");
     return;

@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-extern int mros2_get_submsg_count(void);
+#define SUB_MSG_COUNT 10
 
 #ifdef __cplusplus
 }
