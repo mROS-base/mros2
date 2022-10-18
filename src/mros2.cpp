@@ -1,11 +1,11 @@
 #include "mros2.h"
-#include "mros2_user_config.h"
 
 #include <rtps/rtps.h>
 
 #ifdef __MBED__
 #include "mbed.h"
 #else  /* __MBED__ */
+#include "mros2_config.h"
 #include "cmsis_os.h"
 #endif /* __MBED__ */
 
@@ -61,13 +61,13 @@ void init(int argc, char * argv[])
   buf[3] = 0;
 
 #ifdef __MBED__
-  mros2_init_thread =  new Thread(osPriorityAboveNormal, 2000, nullptr, "mROS2Thread");
+  mros2_init_thread =  new Thread(osPriorityAboveNormal, 5000, nullptr, "mROS2Thread");
   mros2_init_thread->start(callback(mros2_init, (void *)NULL));
 #else /* __MBED__ */
   osThreadAttr_t attributes;
 
   attributes.name = "mROS2Thread",
-  attributes.stack_size = 1000,
+  attributes.stack_size = 5000,
   attributes.priority = (osPriority_t)24,
 
   osThreadNew(mros2_init, NULL, (const osThreadAttr_t*)&attributes);
@@ -86,13 +86,11 @@ void mros2_init(void *args)
   MROS2_DEBUG("[MROS2LIB] Initilizing lwIP complete");
 #endif /* __MBED__ */
 
-  int sub_msg_count;
   static rtps::Domain domain;
   domain_ptr = &domain;
 
 #ifndef __MBED__
-  sub_msg_count = mros2_get_submsg_count();
-  subscriber_msg_queue_id = osMessageQueueNew(sub_msg_count, SUB_MSG_SIZE, NULL);
+  subscriber_msg_queue_id = osMessageQueueNew(SUB_MSG_COUNT, SUB_MSG_SIZE, NULL);
   if (subscriber_msg_queue_id == NULL) {
     MROS2_ERROR("[MROS2LIB] ERROR: mROS2 init failed");
     return;
@@ -209,7 +207,7 @@ Subscriber Node::create_subscription(std::string topic_name, int qos, void(*fp)(
   /* Register callback to ensure that a subscriber is matched to the reader before receiving messages */
   part_ptr->registerOnNewPublisherMatchedCallback(subMatch, &pubMatched);
 
-  MROS2_DEBUG("[MROS2LIB] create_subscription complete. data memory address=0x%x", data_p);
+  MROS2_DEBUG("[MROS2LIB] create_subscription complete.");
   return sub;
 }
 
@@ -217,7 +215,8 @@ template <class T>
 void Subscriber::callback_handler(void *callee, const rtps::ReaderCacheChange &cacheChange)
 {
   T msg;
-  msg.copyFromBuf(&cacheChange.data[4]);
+  const uint8_t *cacheData = cacheChange.getData();
+  msg.copyFromBuf(&cacheData[4]);
 
   SubscribeDataType *sub = (SubscribeDataType *)callee;
   void (*fp)(intptr_t) = sub->cb_fp;
