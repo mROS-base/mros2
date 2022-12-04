@@ -13,7 +13,7 @@ def msgDataGenerator(line):
                 msgDef.append(msgDefGenerator(m_line, dependingFileNames))
 
         lineArr = line.strip().split('/')
-        lineArr[2] = lineArr[2].rstrip('.msg')
+        lineArr[2] = os.path.splitext(lineArr[2])[0]
         return {
             'name': lineArr[2],
             'pkg': lineArr[0],
