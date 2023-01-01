@@ -24,7 +24,7 @@ bool completeNodeInit = false;
 uint8_t endpointId = 0;
 uint32_t subCbArray[10];
 
-uint8_t buf[100];
+uint8_t buf[100], frag_buf[64];
 uint8_t buf_index = 4;
 
 /* Callback function to set the boolean to true upon a match */
@@ -171,9 +171,47 @@ Publisher Node::create_publisher(std::string topic_name, int qos)
 template <class T>
 void Publisher::publish(T& msg)
 {
-  msg.copyToBuf(&buf[4]);
-  msg.memAlign(&buf[4]);
-  pub_ptr->newChange(rtps::ChangeKind_t::ALIVE, buf, msg.getTotalSize() + 4);
+  auto func = [&msg]{
+    rtps::DataSize_t len = 0;
+    rtps::DataSize_t mod_len = 0;
+    size_t cdr_enc_offset = 0;
+
+    if (0 == msg.getPubCnt()) {
+      cdr_enc_offset = 4;
+      frag_buf[0] = 0;
+      frag_buf[1] = 1;
+      frag_buf[2] = 0;
+      frag_buf[3] = 0;
+    }
+
+    auto ret = msg.copyToFragBuf(&frag_buf[cdr_enc_offset],
+				 sizeof(frag_buf) - cdr_enc_offset);
+    len = ret.second + cdr_enc_offset;
+    if (ret.first) {
+      if (0 < ret.second) {
+	mod_len = len % 4;
+	if (mod_len > 0) {
+	  for(int i= 0; i < (4 - mod_len) ; i++){
+	    frag_buf[len++] = 0;
+	  }
+	}
+      } else {
+	msg.resetCount();
+      }
+    }
+
+    return std::make_pair(frag_buf, (rtps::DataSize_t)(len));
+  };
+
+  if (sizeof(buf) < msg.calcTotalSize()) {
+    pub_ptr->newChangeCallback(rtps::ChangeKind_t::ALIVE,
+			       func, msg.calcTotalSize());
+  } else {
+    msg.copyToBuf(&buf[4]);
+    msg.memAlign(&buf[4]);
+    pub_ptr->newChange(rtps::ChangeKind_t::ALIVE, buf,
+		       msg.getTotalSize() + 4);
+  }
 }
 
 
