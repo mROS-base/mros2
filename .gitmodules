@@ -1,4 +1,4 @@
 [submodule "embeddedRTPS"]
 	path = embeddedRTPS
 	url = https://github.com/smoriemb/embeddedRTPS.git
-	branch = mros2
+	branch = feature/mros2-frag-msg-proto
