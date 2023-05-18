@@ -1,10 +1,16 @@
 import os
 import sys
 import re
+from os import path
 from jinja2 import Environment, FileSystemLoader
 
 arg = sys.argv
 app = arg[1]
+print(len(arg))
+if len(arg) > 2:
+    outputPath = arg[2]
+else:
+    outputPath = app
 
 includeFiles = []
 pubMsgTypes = []
@@ -37,13 +43,11 @@ def main():
                 includeFile = '#include "' + includeFile + '.hpp"'
                 includeFiles.append(includeFile)
                 
-                
-    env = Environment(loader=FileSystemLoader('../mros2/mros2_header_generator'))
+    env = Environment(loader=FileSystemLoader(path.dirname(__file__)))
     template = env.get_template('templates.tpl')
     datatext = template.render({ "includeFiles":includeFiles, "pubMsgTypes":pubMsgTypes, "subMsgTypes":subMsgTypes  })
-    with open(os.path.join(app+"/templates.hpp"), "wb") as f:
+    with open(os.path.join(outputPath+"/templates.hpp"), "wb") as f:
         f.write(datatext.encode('utf-8'))
-
 
 if __name__ == "__main__":
     main()
