@@ -12,7 +12,7 @@ This repository maintains the communication layer of mROS 2, that mainly offers 
 - **Agent-less**: A node on mROS 2 autonomously discovers communication nodes on the host. No agent/bridge is required for pub/sub communication from the embedded devices.
   - mros2 adopts [embeddedRTPS](https://github.com/mROS-base/embeddedRTPS) with some modifications. 
 - **Lightweight**: mROS 2 APIs are implemented by C++ to be operated on the embedded devices. All software stacks are also implemented only in C/C++.
-- **Real-time**: mROS 2 adopts the real-time kernel (e.g., [TOPPERS kernel](https://www.toppers.jp/en/project.html), [Mbed OS](https://os.mbed.com/mbed-os/)) as the runtime platform in order to enhance the real-time capability.
+- **Real-time**: mROS 2 uses the real-time kernel (e.g., [TOPPERS kernel](https://www.toppers.jp/en/project.html), [Mbed OS](https://os.mbed.com/mbed-os/)) as the runtime platform in order to enhance the real-time capability.
 
 ## Functionalities and limitations
 
@@ -39,6 +39,7 @@ Please see each repository to learn how to use it.
 |:---|:---|:---|:---|
 | [mros2-asp3-f767zi](https://github.com/mROS-base/mros2-asp3-f767zi) | [TOPPERS/ASP3](https://www.toppers.jp/en/project.html) | [STM32 NUCLEO-F767ZI](https://www.st.com/en/evaluation-tools/nucleo-f767zi.html) | currently supported up to v0.3.2 (see [status](https://github.com/mROS-base/mros2-asp3-f767zi/issues/74)) |
 | [mros2-mbed](https://github.com/mROS-base/mros2-mbed) | [Mbed OS 6](https://github.com/ARMmbed/mbed-os) | Mbed enabled boards having an Ethernet port (See [detail](https://github.com/mROS-base/mros2-mbed#supported-environment)) | well maintained and easy to try |
+| [mros2-esp32](https://github.com/mROS-base/mros2-esp32) | [ESP-IDF FreeRTOS](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/freertos_idf.html) | ESP32 boards with 2.4 GHz Wi-Fi (See [detail](https://github.com/mROS-base/mros2-esp32#supported-environment)) | well maintained |
 | [mros2-posix](https://github.com/mROS-base/mros2-posix) | POSIX (pthread) | any machine that runs Linux | partly maintained |
 
 Please let us know if you have a request for support for other boards/kernels, or if you could implement this layer on other platforms.
