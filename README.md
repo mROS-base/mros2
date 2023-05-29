@@ -10,9 +10,9 @@ This repository maintains the communication layer of mROS 2, that mainly offers 
 ## Features
 
 - **Agent-less**: A node on mROS 2 autonomously discovers communication nodes on the host. No agent/bridge is required for pub/sub communication from the embedded devices.
-  - mros2 employs [embeddedRTPS](https://github.com/mROS-base/embeddedRTPS) with some modifications. 
+  - mros2 adopts [embeddedRTPS](https://github.com/mROS-base/embeddedRTPS) with some modifications. 
 - **Lightweight**: mROS 2 APIs are implemented by C++ to be operated on the embedded devices. All software stacks are also implemented only in C/C++.
-- **Real-time**: mROS 2 employs the real-time kernel (e.g., [TOPPERS kernel](https://www.toppers.jp/en/project.html), [Mbed OS](https://os.mbed.com/mbed-os/)) as the runtime platform in order to enhance the real-time capability.
+- **Real-time**: mROS 2 adopts the real-time kernel (e.g., [TOPPERS kernel](https://www.toppers.jp/en/project.html), [Mbed OS](https://os.mbed.com/mbed-os/)) as the runtime platform in order to enhance the real-time capability.
 
 ## Functionalities and limitations
 
