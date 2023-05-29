@@ -24,7 +24,8 @@ Here are the functionalities that mROS 2 offers for you, and current limitations
     - `array` types are not supported
   - Some custom message types (e.g., Twist, Pose)
     - Please check [mros2-mbed#generating-header-files-for-custom-msgtypes](https://github.com/mROS-base/mros2-mbed#generating-header-files-for-custom-msgtypes) for more details.
-    - We think variable-length types and types exceeding one packet cannot be handled, probably due to the limitation of lwIP.
+    - Fragmented message types (that exceed one packet) are experimentally supported. See [PR#36](https://github.com/mROS-base/mros2/pull/36) for more details.
+    - We think variable-length types cannot be handled, probably due to the limitation of lwIP.
 - Service, Actions, and Parameters are not supported
   - Please let us know if you want to use them as soon as possible. We can consider raising the priority of these supports.
 
