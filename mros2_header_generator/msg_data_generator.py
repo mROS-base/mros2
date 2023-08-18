@@ -10,7 +10,9 @@ def msgDataGenerator(line):
             arr = m_f.readlines()
             msgDef = []
             for m_line in arr:
-                msgDef.append(msgDefGenerator(m_line, dependingFileNames))
+                stripped_line = m_line.strip()
+                if stripped_line == "": continue
+                msgDef.append(msgDefGenerator(stripped_line, dependingFileNames))
 
         lineArr = line.strip().split('/')
         lineArr[2] = os.path.splitext(lineArr[2])[0]
