@@ -4,6 +4,7 @@ import os
 import sys
 import re
 from jinja2 import Environment, FileSystemLoader
+from os import path
 
 arg = sys.argv
 msgFile = arg[1]
@@ -21,7 +22,7 @@ def main():
 
     # generate header file for mros2
     for msg in msgs:
-        env = Environment(loader=FileSystemLoader('../mros2/mros2_header_generator'))
+        env = Environment(loader=FileSystemLoader(path.dirname(__file__)))
         template = env.get_template('header_template.tpl')
         datatext = template.render({ "msg": msg })
         
@@ -42,7 +43,8 @@ def genDepMsgHeader(genMsg):
     msgs=[]
     msgs.append(msgDataGenerator(genMsg.strip()))
     for msg in msgs:
-        env = Environment(loader=FileSystemLoader('../mros2/mros2_header_generator'))
+        env = Environment(loader=FileSystemLoader(path.dirname(__file__)))
+
         template = env.get_template('header_template.tpl')
         datatext = template.render({ "msg": msg })
         
