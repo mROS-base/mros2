@@ -28,6 +28,7 @@ Here are the functionalities that mROS 2 offers for you, and current limitations
     - We think variable-length types cannot be handled, probably due to the limitation of lwIP.
 - Service, Actions, and Parameters are not supported
   - Please let us know if you want to use them as soon as possible. We can consider raising the priority of these supports.
+- mros2 node name cannot be observed from ROS 2 host (see [Issue#44](https://github.com/mROS-base/mros2/issues/44))
 
 ## Supported platform
 
