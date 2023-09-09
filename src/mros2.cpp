@@ -282,6 +282,13 @@ void spin()
   }
 }
 
+void setIPAddrRTPS(std::array<uint8_t, 4> ipaddr)
+{
+  rtps::Config::IP_ADDRESS = ipaddr;
+
+  MROS2_DEBUG("[MROS2LIB] set IP address for RTPS communication");
+}
+
 }  /* namespace mros2 */
 
 
@@ -310,6 +317,14 @@ void setTrue(void* args)
 {
   *static_cast<volatile bool*>(args) = true;
 }
+
+namespace rtps
+{
+namespace Config
+{
+std::array<uint8_t, 4> IP_ADDRESS;
+}
+} /* namespace rtps */
 
 /*
  * specialize template functions described in platform's workspace
