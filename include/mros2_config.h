@@ -2,7 +2,8 @@
 #define _MROS2_USER_CONFIG_H_
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #define SUB_MSG_COUNT 10
