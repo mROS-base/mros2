@@ -13,6 +13,14 @@
 extern void* __dso_handle;
 #endif
 
+namespace rtps
+{
+namespace Config
+{
+extern std::array<uint8_t, 4> IP_ADDRESS;
+}
+}
+
 namespace mros2
 {
 
@@ -80,6 +88,8 @@ private:
 };
 
 void spin();
+
+void setIPAddrRTPS(std::array<uint8_t, 4> ipaddr);
 
 }  /* namespace mros2 */
 
