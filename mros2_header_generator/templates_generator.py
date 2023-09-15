@@ -16,18 +16,18 @@ def main():
     print('Generate template.hpp from mros2 app code file.')
 
     parser = argparse.ArgumentParser(description='Generate template.hpp from mros2 app code file.')
-    parser.add_argument('--app', default='echoreply_string',
-                    help='application name (default: \'echoreply_string\')')
+    parser.add_argument('--outdir', default='.',
+                    help='directry name to output template.hpp (default: \'.\' (current dir))')
     parser.add_argument('--file', nargs='*', type=str, default=['app.cpp'],
                     help='filename(s) of mros2 app code (default: \'app.cpp\')')
 
     args = parser.parse_args()
-    app = args.app
+    outdir = args.outdir
     file = args.file
 
     for f in file:
-        print('  Analyzing {}/{} file to generate...'.format(app, f))
-        with open(app + "/" + f, 'r') as m_f:
+        print('  Analyzing \'{}\' to generate...'.format(f))
+        with open(f, 'r') as m_f:
             arr = m_f.readlines()
             for m_line in arr:
                 if "create_publisher" in m_line:
@@ -53,10 +53,10 @@ def main():
     env = Environment(loader=FileSystemLoader(path.dirname(__file__)))
     template = env.get_template('templates.tpl')
     datatext = template.render({ "includeFiles":includeFiles, "pubMsgTypes":pubMsgTypes, "subMsgTypes":subMsgTypes  })
-    with open(os.path.join(app+"/templates.hpp"), "wb") as f:
+    with open(os.path.join(outdir + "/templates.hpp"), "wb") as f:
         f.write(datatext.encode('utf-8'))
 
-    print('Generate {}/template.hpp done.'.format(app))
+    print('Generate {}/template.hpp done.'.format(outdir))
 
 if __name__ == "__main__":
     main()
