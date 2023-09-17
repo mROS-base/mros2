@@ -86,9 +86,15 @@ namespace mros2
 
   void spin();
 
-  void setIPAddrRTPS(std::array<uint8_t, 4> ipaddr);
+#ifdef __MBED__
+  int setIPAddrRTPS(std::array<uint8_t, 4> ipaddr);
+#endif /* __MBED__ */
 
 } /* namespace mros2 */
+
+#ifndef __MBED__
+extern "C" int mros2_setIPAddrRTPS(uint32_t ipaddr);
+#endif /* __MBED__ */
 
 namespace message_traits
 {
