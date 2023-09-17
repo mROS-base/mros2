@@ -49,3 +49,21 @@ Please let us know if you have a request for support for other boards/kernels, o
 
 The source code of this repository itself is published under [Apache License 2.0](https://github.com/mROS-base/mros2/blob/main/LICENSE).  
 Please note that this repository contains [embeddedRTPS and its third-party libraries](https://github.com/mROS-base/embeddedRTPS#third-party-libraries) as the submodule, and also check their Licenses.
+
+## Publications/References
+
+### English
+
+- [ROSCon 2022](https://roscon.ros.org/2022/): ``mROS 2: yet another runtime environment onto embedded devices'' [movie](https://vimeo.com/showcase/9954564/video/767140724) [slide](https://speakerdeck.com/takasehideki/mros-2-yet-another-runtime-environment-onto-embedded-devices)
+
+### Japanese ;(
+
+- Paper
+  - 細合，高瀬：[mros2-esp32: ロボットソフトウェア軽量実行環境の無線通信対応の検討](https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&active_action=repository_view_main_item_detail&item_id=226824&item_no=1&page_id=13&block_id=8)，情報処理学会研究報告 組込みシステム，2023年7月．
+  - 柿本，松原，高瀬：[クラウド連携を対象としたアーキテクチャ中立なROSランタイムの検討](https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&active_action=repository_view_main_item_detail&item_id=225558&item_no=1&page_id=13&block_id=8)，情報処理学会研究報告 組込みシステム，2023年3月．
+  - 細合，田中，高瀬：[ロボットソフトウェア軽量実行環境mROS 2のPOSIX対応の検討](https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&active_action=repository_view_main_item_detail&item_id=218783&item_no=1&page_id=13&block_id=8)，情報処理学会研究報告 組込みシステム，2022年7月．
+  - 檜原，中村，高瀬：[ROS 2ノード軽量実行環境mROS 2における任意型メッセージの通信処理方式](https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&active_action=repository_view_main_item_detail&item_id=217258&item_no=1&page_id=13&block_id=8)，情報処理学会研究報告 組込みシステム，2022年3月．
+  - 高瀬，祐源：[mROS 2：組込みデバイス向けのROS 2ノード軽量実行環境](https://ipsj.ixsq.nii.ac.jp/ej/?action=pages_view_main&active_action=repository_view_main_item_detail&item_id=217257&item_no=1&page_id=13&block_id=8)，情報処理学会研究報告 組込みシステム，2022年3月．
+- Presentation
+  - [ROSCon JP 2022](https://roscon.jp/2022/): ``Now and Next about mROS 2'' [video](https://vimeo.com/781671042) [slide](https://speakerdeck.com/takasehideki/now-and-next-about-mros-2)
+  - [TOPPERSカンファレンス2022](https://www.toppers.jp/conference2022.html): ``mROS 2：ロボットソフトウェアの組込みデバイス向け軽量実行環境'' [video](https://www.youtube.com/watch?v=RbMYe4FWtc0) [slide](https://speakerdeck.com/takasehideki/mros-2-robotutosohutoueafalsezu-ip-midebaisuxiang-keqing-liang-shi-xing-huan-jing)
