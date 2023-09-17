@@ -303,14 +303,49 @@ namespace mros2
     }
   }
 
-  void setIPAddrRTPS(std::array<uint8_t, 4> ipaddr)
+  /* implementation for mros2-mbed */
+#ifdef __MBED__
+  int setIPAddrRTPS(std::array<uint8_t, 4> ipaddr)
   {
-    rtps::Config::IP_ADDRESS = ipaddr;
+    /* check whether IP address has been obtained */
+    if (!(ipaddr[0] + ipaddr[1] + ipaddr[2] + ipaddr[3]))
+    {
+      MROS2_ERROR("IP address has not been obtained!");
+      return 0;
+    }
 
-    MROS2_DEBUG("[MROS2LIB] set IP address for RTPS communication");
+    rtps::Config::IP_ADDRESS = ipaddr;
+    MROS2_DEBUG("[MROS2LIB] set \"%d.%d.%d.%d\" for RTPS communication",
+                rtps::Config::IP_ADDRESS[0], rtps::Config::IP_ADDRESS[1], rtps::Config::IP_ADDRESS[2], rtps::Config::IP_ADDRESS[3]);
+
+    return 1;
   }
+#endif /* __MBED__ */
 
 } /* namespace mros2 */
+
+/* implementation for mros2-esp32 */
+#ifndef __MBED__
+extern "C" int mros2_setIPAddrRTPS(uint32_t ipaddr)
+{
+  /* check whether IP address has been obtained */
+  if (!ipaddr)
+  {
+    MROS2_ERROR("IP address has not been obtained!");
+    return 0;
+  }
+
+  std::array<uint8_t, 4> rtps_ipaddr;
+  for (int i = 0; i < 4; i++)
+    rtps_ipaddr[i] = ipaddr >> (i * 8);
+
+  rtps::Config::IP_ADDRESS = rtps_ipaddr;
+  MROS2_DEBUG("[MROS2LIB] set \"%d.%d.%d.%d\" for RTPS communication",
+              rtps::Config::IP_ADDRESS[0], rtps::Config::IP_ADDRESS[1], rtps::Config::IP_ADDRESS[2], rtps::Config::IP_ADDRESS[3]);
+
+  return 1;
+}
+#endif /* __MBED__ */
 
 /*
  *  Declaration for embeddedRTPS participants
