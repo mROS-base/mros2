@@ -5,8 +5,8 @@ from msg_def_generator import msgDefGenerator
 
 def msgDataGenerator(line):
     dependingFileNames = []
-    if os.path.isfile("custom_msgs/" + line):
-        with open("custom_msgs/" + line, 'r') as m_f:
+    if os.path.isfile(line):
+        with open(line, 'r') as m_f:
             arr = m_f.readlines()
             msgDef = []
             for m_line in arr:

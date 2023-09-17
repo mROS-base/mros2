@@ -68,7 +68,7 @@ def msgDefGenerator(msgDefStr, dependingFileNames):
         }
         
     else:
-        if os.path.isfile("custom_msgs/" + msgType + ".msg"): # when custom type
+        if os.path.isfile(msgType + ".msg"): # when custom type
             dependingFileName = toSnakeCase(msgType) + ".hpp"
             depFileArr = dependingFileName.split("/")
             if depFileArr[2][0] == "_":
