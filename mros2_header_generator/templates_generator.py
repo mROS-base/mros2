@@ -1,5 +1,5 @@
 import os
-import sys
+import glob
 import re
 import argparse
 from os import path
@@ -18,13 +18,16 @@ def main():
     parser = argparse.ArgumentParser(description='Generate template.hpp from mros2 app code file.')
     parser.add_argument('--outdir', default='.',
                     help='directry name to output template.hpp (default: \'.\' (current dir))')
-    parser.add_argument('--file', nargs='*', type=str, default=['app.cpp'],
-                    help='filename(s) of mros2 app code (default: \'app.cpp\')')
+    parser.add_argument('--indir', nargs='*', type=str, required=True,
+                    help='input dir(s) that contains mros2 app code (required)')
 
     args = parser.parse_args()
     outdir = args.outdir
-    file = args.file
+    indir = args.indir
+    file = []
 
+    for id in indir:
+        file = file + glob.glob(os.path.join(id, "*.cpp"))
     for f in file:
         print('  Analyzing \'{}\' to generate...'.format(f))
         with open(f, 'r') as m_f:
