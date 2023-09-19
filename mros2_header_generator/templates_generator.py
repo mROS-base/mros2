@@ -2,6 +2,8 @@ import os
 import glob
 import re
 import argparse
+import filecmp
+import shutil
 from os import path
 from jinja2 import Environment, FileSystemLoader
 
@@ -22,12 +24,12 @@ def main():
                     help='input dir(s) that contains mros2 app code (required)')
 
     args = parser.parse_args()
-    outdir = args.outdir
     indir = args.indir
+    outdir = args.outdir
     file = []
-
     for id in indir:
         file = file + glob.glob(os.path.join(id, "*.cpp"))
+
     for f in file:
         print('  Analyzing \'{}\' to generate...'.format(f))
         with open(f, 'r') as m_f:
@@ -56,8 +58,18 @@ def main():
     env = Environment(loader=FileSystemLoader(path.dirname(__file__)))
     template = env.get_template('templates.tpl')
     datatext = template.render({ "includeFiles":includeFiles, "pubMsgTypes":pubMsgTypes, "subMsgTypes":subMsgTypes  })
-    with open(os.path.join(outdir + "/templates.hpp"), "wb") as f:
+
+    outfile_path = os.path.join(outdir, "templates.hpp")
+    outtemp_path = os.path.join(outdir, "templates.hpp.tmp")
+    if (not os.path.isfile(outfile_path)):
+        with open(outfile_path, "wb") as f:
+            f.write(datatext.encode('utf-8'))
+    with open(outtemp_path, "wb") as f:
         f.write(datatext.encode('utf-8'))
+    if filecmp.cmp(outtemp_path, outfile_path, shallow=True):
+        os.remove(outtemp_path)
+    else:
+        shutil.move(outtemp_path, outfile_path)
 
     print('Generate {}/template.hpp done.'.format(outdir))
 
