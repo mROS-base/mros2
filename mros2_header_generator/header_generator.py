@@ -26,10 +26,8 @@ def main():
         template = env.get_template('header_template.tpl')
         datatext = template.render({ "msg": msg })
         
-        msgPkgPath = "custom_msgs" + "/" + msg['pkg'] 
+        msgPkgPath = msg['pkg']
         
-        if not(os.path.isdir("custom_msgs")):
-            os.mkdir("custom_msgs")  
         if not(os.path.isdir(msgPkgPath)):
             os.mkdir(msgPkgPath)
         if not(os.path.isdir(msgPkgPath + "/msg")):
@@ -48,10 +46,8 @@ def genDepMsgHeader(genMsg):
         template = env.get_template('header_template.tpl')
         datatext = template.render({ "msg": msg })
         
-        msgPkgPath = "custom_msgs" + "/" + msg['pkg'] 
+        msgPkgPath = msg['pkg']
         
-        if not(os.path.isdir("custom_msgs")):
-            os.mkdir("custom_msgs")  
         if not(os.path.isdir(msgPkgPath)):
             os.mkdir(msgPkgPath)
         if not(os.path.isdir(msgPkgPath + "/msg")):

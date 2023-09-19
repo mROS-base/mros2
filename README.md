@@ -23,7 +23,7 @@ Here are the functionalities that mROS 2 offers for you, and current limitations
     - `wstring` (UTF-16) is not provided due to its difficulty in verification, but it is unlikely to be used.
     - `array` types are not supported
   - Some custom message types (e.g., Twist, Pose)
-    - Please check [mros2-mbed#generating-header-files-for-custom-msgtypes](https://github.com/mROS-base/mros2-mbed#generating-header-files-for-custom-msgtypes) for more details.
+    - Please check [#generating-header-files-for-custom-msgtypes](https://github.com/mROS-base/mros2#generating-header-files-for-custom-msgtypes) for more details.
     - Fragmented message types (that exceed one packet) are experimentally supported. See [PR#36](https://github.com/mROS-base/mros2/pull/36) for more details.
     - We think variable-length types cannot be handled, probably due to the limitation of lwIP.
 - Service, Actions, and Parameters are not supported
@@ -44,6 +44,88 @@ Please see each repository to learn how to use it.
 | [mros2-posix](https://github.com/mROS-base/mros2-posix) | POSIX (pthread) | any machine that runs Linux | partly maintained |
 
 Please let us know if you have a request for support for other boards/kernels, or if you could implement this layer on other platforms.
+
+## Generating header files for custom MsgTypes
+
+You can use almost any [built-in-types in ROS 2](https://docs.ros.org/en/rolling/Concepts/About-ROS-Interfaces.html#field-types) on the embedded device.
+Not that `array` types are not supported yet.
+
+You can also use following message types that are commonly used. We have prepared and located them in `mros2_msgs/`.
+
+- [geometry_msgs/msg/Twist](https://docs.ros2.org/latest/api/geometry_msgs/msg/Twist.html)
+- [geometry_msgs/msg/Vector3](https://docs.ros2.org/latest/api/geometry_msgs/msg/Vector3.html)
+- [geometry_msgs/msg/Pose](https://docs.ros2.org/latest/api/geometry_msgs/msg/Pose.html)
+- [geometry_msgs/msg/Point](https://docs.ros2.org/latest/api/geometry_msgs/msg/Point.html)
+- [geometry_msgs/msg/Quaternion](https://docs.ros2.org/latest/api/geometry_msgs/msg/Quaternion.html)
+- [sensor_msgs/msg/Image](https://docs.ros2.org/latest/api/sensor_msgs/msg/Image.html) (experimental)
+
+In additon, you can define a customized message type in the same way as in ROS 2, and use its header file for your application.  
+The rest of this section describes how to generate header files for your own MsgTypes. 
+The example assumes the location as `<this_repo_dir>/mros2_msgs/` and target as `geometry_msgs::msg::Twist`.
+The location is arbitrary, but be careful with the paths of the Python script and the .msg file.
+
+### Prepare .msg files
+
+`.msg` files are simple text files that describe the fields of a ROS message (see [About ROS 2 interface](https://docs.ros.org/en/rolling/Concepts/About-ROS-Interfaces.html)). In mros2, they are used to generate header files for messages in embedded applications.
+
+Prepare `Twist.msg` file and make sure it is in `<this_repo_dir>/mros2_msgs/geometry_msgs/msg/`.
+
+```
+$ pwd
+<this_repo_dir>/mros2_msgs
+
+$ cat geometry_msgs/msg/Twist.msg
+geometry_msgs/msg/Vector3 linear
+geometry_msgs/msg/Vector3 angular
+```
+
+In this example, `Twist` has a nested structure with `Vector3` as a child element. So you also need to prepare its file.
+
+```
+$ cat geometry_msgs/msg/Vector3.msg
+float64 x
+float64 y
+float64 z
+```
+
+### Generate header files
+
+To generate header files for `Twist` and `Vector3`, run the following command in `<this_repo_dir>/mros2_msgs/` (again, be careful about the paths!).
+
+```
+$ cd <this_repo_dir>/mros2_msgs
+$ python3 ../mros2_header_generator/header_generator.py geometry_msgs/msg/Twist.msg
+```
+
+Make sure header files for custom MsgType are generated in `geometry_msgs/`.
+
+```
+$ ls -R geometry_msgs/
+geometry_msgs:
+msg
+
+geometry_msgs/msg:
+twist.hpp  vector3.hpp  Twist.msg  Vector3.msg
+```
+
+You can now use them in your applicaton like this.
+
+```
+#include "mros2.hpp"
+#include "mros2-platform.hpp"
+#include "geometry_msgs/msg/vector3.hpp"
+#include "geometry_msgs/msg/twist.hpp"
+
+int main(int argc, char * argv[])
+{
+<snip.>
+  pub = node.create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
+<snip.>
+```
+
+When you generated your own header files at an arbitrary location, you need to add its path as an include path for build (e.g., CMakeLists.txt).
+
+If you generated new header files at `<this_repo_dir>/mros2_msgs/`, we are very welcome to your PR!!
 
 ## License
 
