@@ -20,11 +20,10 @@ public:
     pubSize = data.size();
     memcpy(addrPtr, &pubSize, 4);
     addrPtr += 4;
-    cntPub += 4 ;
-    memcpy(addrPtr, data.c_str(),pubSize);
+    cntPub += 4;
+    memcpy(addrPtr, data.c_str(), pubSize);
     addrPtr += pubSize;
-    cntPub += pubSize;  
-    
+    cntPub += pubSize;
   }
 
   void copyFromBuf(const uint8_t *addrPtr)
@@ -33,17 +32,19 @@ public:
     addrPtr += 4;
     data.resize(subSize);
     memcpy(&data[0], addrPtr, subSize);
-
   }
 
-  void memAlign(uint8_t *addrPtr){
-    if (cntPub%4 > 0){
+  void memAlign(uint8_t *addrPtr)
+  {
+    if (cntPub % 4 > 0)
+    {
       addrPtr += cntPub;
-      for(int i=0; i<(4-(cntPub%4)) ; i++){
+      for (int i = 0; i < (4 - (cntPub % 4)); i++)
+      {
         *addrPtr = 0;
         addrPtr += 1;
       }
-      cntPub += 4-(cntPub%4);
+      cntPub += 4 - (cntPub % 4);
     }
     return;
   }
@@ -52,7 +53,7 @@ public:
   {
     uint32_t tmpCntPub = cntPub;
     cntPub = 0;
-    return tmpCntPub ;
+    return tmpCntPub;
   }
 
   uint32_t getPubCnt()
@@ -77,8 +78,9 @@ public:
     uint32_t tmp;
     tmp = 4 // CDR encoding version.
           + calcRawTotalSize();
-    tmp += ( 0 == (tmp % 4) ? // Padding
-	     0 : (4 - (tmp % 4)) );
+    tmp += (0 == (tmp % 4) ? // Padding
+                0
+                           : (4 - (tmp % 4)));
     return tmp;
   }
 
@@ -87,20 +89,23 @@ public:
     uint32_t pubStrSize = data.size();
     uint32_t cntLocalFrag = 0; // Countor of locallly fragmented data.
 
-    if (cntPub < sizeof(uint32_t)) {
-      if (size < sizeof(uint32_t)) {
+    if (cntPub < sizeof(uint32_t))
+    {
+      if (size < sizeof(uint32_t))
+      {
         return {false, 0};
       }
       memcpy(addrPtr, &pubStrSize, sizeof(uint32_t));
       addrPtr += 4;
-      cntPub += 4 ;
+      cntPub += 4;
       cntLocalFrag += 4;
     }
 
     uint32_t cntFrag = (cntPub - sizeof(uint32_t));
     uint32_t tmp = std::min(pubStrSize - cntFrag,
-			    size - cntLocalFrag);
-    if (0 < tmp) {
+                            size - cntLocalFrag);
+    if (0 < tmp)
+    {
       memcpy(addrPtr, data.c_str() + cntFrag, tmp);
       addrPtr += tmp;
       cntPub += tmp;
