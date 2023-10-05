@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <cstring>
 {%- set ns = namespace(break=0) -%}
 {%- for def_data in msg.def %}
 {%- if def_data.isArray %}
