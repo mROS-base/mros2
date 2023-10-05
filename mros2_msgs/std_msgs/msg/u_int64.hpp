@@ -1,4 +1,5 @@
 #include <string>
+#include <cstring>
 
 namespace std_msgs
 {
@@ -26,7 +27,8 @@ public:
     addrPtr += 8;
   }
 
-  void memAlign(uint8_t *addrPtr){
+  void memAlign(uint8_t *addrPtr)
+  {
     return;
   }
 
@@ -34,7 +36,7 @@ public:
   {
     uint32_t tmpCntPub = cntPub;
     cntPub = 0;
-    return tmpCntPub ;
+    return tmpCntPub;
   }
 
   uint32_t getPubCnt()
@@ -56,10 +58,8 @@ public:
   uint32_t calcTotalSize()
   {
     uint32_t tmp;
-    tmp = 4 // CDR encoding version.
-          + calcRawTotalSize();
-    tmp += ( 0 == (tmp % 4) ? // Padding
-	     0 : (4 - (tmp % 4)) );
+    tmp = 4 + calcRawTotalSize();                  // CDR encoding version.
+    tmp += (0 == (tmp % 4) ? 0 : (4 - (tmp % 4))); // Padding
     return tmp;
   }
 
@@ -71,6 +71,7 @@ public:
     // fragmented messages.
     return {false, 0};
   }
+
 private:
   std::string type_name = "std_msgs::msg::dds_::UInt64";
 };

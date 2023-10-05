@@ -1,4 +1,5 @@
 #include <string>
+#include <cstring>
 
 namespace std_msgs
 {
@@ -29,7 +30,7 @@ public:
     memcpy(addrPtr, &pubSize, 4);
     addrPtr += 4;
     cntPub += 4;
-    memcpy(addrPtr, frame_id.c_str(),pubSize);
+    memcpy(addrPtr, frame_id.c_str(), pubSize);
     addrPtr += pubSize;
     cntPub += pubSize;
   }
@@ -46,14 +47,17 @@ public:
     memcpy(&frame_id[0], addrPtr, subSize);
   }
 
-   void memAlign(uint8_t *addrPtr){
-    if (cntPub%4 > 0){
+  void memAlign(uint8_t *addrPtr)
+  {
+    if (cntPub % 4 > 0)
+    {
       addrPtr += cntPub;
-      for(int i=0; i<(4-(cntPub%4)) ; i++){
+      for (uint32_t i = 0; i < (4 - (cntPub % 4)); i++)
+      {
         *addrPtr = 0;
         addrPtr += 1;
       }
-      cntPub += 4-(cntPub%4);
+      cntPub += 4 - (cntPub % 4);
     }
     return;
   }
@@ -62,7 +66,7 @@ public:
   {
     uint32_t tmpCntPub = cntPub;
     cntPub = 0;
-    return tmpCntPub ;
+    return tmpCntPub;
   }
 
   uint32_t getPubCnt()
@@ -84,10 +88,8 @@ public:
   uint32_t calcTotalSize()
   {
     uint32_t tmp;
-    tmp = 4 // CDR encoding version.
-          + calcRawTotalSize();
-    tmp += ( 0 == (tmp % 4) ? // Padding
-	     0 : (4 - (tmp % 4)) );
+    tmp = 4 + calcRawTotalSize();                  // CDR encoding version.
+    tmp += (0 == (tmp % 4) ? 0 : (4 - (tmp % 4))); // Padding
     return tmp;
   }
 
@@ -97,6 +99,7 @@ public:
     // as a part of fragmented messages.
     return {false, 0};
   }
+
 private:
   std::string type_name = "std_msgs::msg::dds_::Header";
 };
