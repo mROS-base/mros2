@@ -88,11 +88,8 @@ public:
   uint32_t calcTotalSize()
   {
     uint32_t tmp;
-    tmp = 4 // CDR encoding version.
-          + calcRawTotalSize();
-    tmp += (0 == (tmp % 4) ? // Padding
-                0
-                           : (4 - (tmp % 4)));
+    tmp = 4 + calcRawTotalSize();                  // CDR encoding version.
+    tmp += (0 == (tmp % 4) ? 0 : (4 - (tmp % 4))); // Padding
     return tmp;
   }
 
