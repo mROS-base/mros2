@@ -1,4 +1,5 @@
 #include <string>
+#include <cstring>
 
 namespace std_msgs
 {
