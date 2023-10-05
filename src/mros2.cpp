@@ -298,7 +298,7 @@ namespace mros2
       }
 #else  /* __MBED__ */
       // The queue above seems not to be pushed anywhere. So just sleep.
-      ThisThread::sleep_for(1000);
+      ThisThread::sleep_for(1s);
 #endif /* __MBED__ */
     }
   }
