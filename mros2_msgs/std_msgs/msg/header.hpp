@@ -52,7 +52,7 @@ public:
     if (cntPub % 4 > 0)
     {
       addrPtr += cntPub;
-      for (int i = 0; i < (4 - (cntPub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntPub % 4)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
