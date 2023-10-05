@@ -117,7 +117,7 @@ public:
     {% if def_data.isArray%}
     if (cntPub % 4 > 0)
     {
-      for (int i = 0; i < (4 - (cntPub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntPub % 4)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -145,7 +145,7 @@ public:
     {%if def_data.size==2%}
     if (cntPub % 4 > 0 && 2 <= (4 - (cntPub % 4)))
     {
-      for (int i = 0; i < (4 - (cntPub % 4))-2; i++)
+      for (uint32_t i = 0; i < (4 - (cntPub % 4))-2; i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -153,7 +153,7 @@ public:
       cntPub += (4 - (cntPub % 4)) - 2;
     } else if (cntPub % 4 > 0)
     {
-      for (int i = 0; i < (4 - (cntPub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntPub % 4)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -163,7 +163,7 @@ public:
     {% elif def_data.size==4 %}
     if (cntPub % 4 > 0)
     {
-      for (int i = 0; i < (4 - (cntPub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntPub % 4)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -173,7 +173,7 @@ public:
     {% elif def_data.size==8 %}
     if (cntPub % 8 > 0)
     {
-      for (int i = 0; i < (8 - (cntPub % 8)); i++)
+      for (uint32_t i = 0; i < (8 - (cntPub % 8)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -191,7 +191,7 @@ public:
     {% elif def_data.isArray %}
     if (cntPub % 4 > 0)
     {
-      for (int i = 0; i < (4 - (cntPub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntPub % 4)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -205,7 +205,7 @@ public:
 
     {% if def_data.size==8 %}
     if (cntPub % 8 > 0){
-      for (int i = 0; i < (8 - (cntPub % 8)); i++)
+      for (uint32_t i = 0; i < (8 - (cntPub % 8)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -221,7 +221,7 @@ public:
     {
       if (cntPub % 4 > 0)
       {
-        for (int j = 0; j < (4 - (cntPub % 4)); j++)
+        for (uint32_t j = 0; j < (4 - (cntPub % 4)); j++)
         {
           *addrPtr = 0;
           addrPtr += 1;
@@ -249,7 +249,7 @@ public:
     {% elif def_data.cppType == "string"%}
     if (cntPub % 4 >0)
     {
-      for (int i = 0; i < (4 - (cntPub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntPub % 4)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -267,7 +267,7 @@ public:
     {% elif def_data.cppType == "header"%}
     if (cntPub % 4 > 0)
     {
-      for (int i = 0; i < (4 - (cntPub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntPub % 4)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -295,7 +295,7 @@ public:
     {%if def_data.size==2%}
     if (cntPub % 4 >0 && 2 <= (4 - (cntPub % 4)))
     {
-      for (int i = 0; i < (4 - (cntPub % 4)) - 2; i++)
+      for (uint32_t i = 0; i < (4 - (cntPub % 4)) - 2; i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -304,7 +304,7 @@ public:
     }
     else if (cntPub % 4 > 0)
     {
-      for (int i = 0; i < (4 - (cntPub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntPub % 4)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -314,7 +314,7 @@ public:
     {% elif def_data.size==4 %}
     if (cntPub % 4 > 0)
     {
-      for (int i = 0; i < (4 - (cntPub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntPub % 4)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -324,7 +324,7 @@ public:
     {% elif def_data.size==8 %}
     if (cntPub % 8 > 0)
     {
-      for (int i = 0; i < (8 - (cntPub % 8)); i++)
+      for (uint32_t i = 0; i < (8 - (cntPub % 8)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
@@ -354,7 +354,7 @@ public:
     {
     if (cntSub % 4 >0)
     {
-      for (int i = 0; i < (4 - (cntSub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntSub % 4)); i++)
       {
         addrPtr += 1;
       }
@@ -381,7 +381,7 @@ public:
     {%if def_data.size==2 %}
     if (cntSub % 4 > 0 and 2 <= (4 - (cntSub % 4)))
     {
-      for (int i = 0; i < (4 - (cntSub % 4)) - {{def_data.size}}; i++)
+      for (uint32_t i = 0; i < (4 - (cntSub % 4)) - {{def_data.size}}; i++)
       {
         addrPtr += 1;
       }
@@ -389,7 +389,7 @@ public:
     }
     else if (cntSub % 4 > 0)
     {
-      for (int i = 0; i < (4 - (cntSub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntSub % 4)); i++)
       {
         addrPtr += 1;
       }
@@ -398,7 +398,7 @@ public:
     {% elif def_data.size==4 %}
     if (cntSub % 4 > 0)
     {
-      for (int i = 0; i < (4 - (cntSub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntSub % 4)); i++)
       {
         addrPtr += 1;
       }
@@ -407,7 +407,7 @@ public:
     {% elif def_data.size==8 %}
     if (cntSub % 8 > 0)
     {
-      for (int i = 0; i < (8 - (cntSub % 8)); i++)
+      for (uint32_t i = 0; i < (8 - (cntSub % 8)); i++)
       {
         addrPtr += 1;
       }
@@ -425,7 +425,7 @@ public:
     {% elif def_data.isArray %}
     if (cntSub % 4 >0)
     {
-      for (int i = 0; i < (4 - (cntSub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntSub % 4)); i++)
       {
         addrPtr += 1;
       }
@@ -437,7 +437,7 @@ public:
 
     {%if def_data.size==8 %}
     if (cntSub % 8 > 0){
-      for (int i = 0; i < (8 - (cntSub % 8)); i++)
+      for (uint32_t i = 0; i < (8 - (cntSub % 8)); i++)
       {
         addrPtr += 1;
       }
@@ -452,7 +452,7 @@ public:
     {
       if (cntSub % 4 >0)
       {
-        for (int j=0; j < (4 - (cntSub % 4)); j++)
+        for (uint32_t j=0; j < (4 - (cntSub % 4)); j++)
         {
           addrPtr += 1;
         }
@@ -482,7 +482,7 @@ public:
     {% elif def_data.cppType == "string"%}
     if (cntSub % 4 >0)
     {
-      for (int i = 0; i < (4 - (cntSub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntSub % 4)); i++)
       {
         addrPtr += 1;
       }
@@ -499,7 +499,7 @@ public:
     {% elif def_data.cppType == "header"%}
     if (cntSub%4 > 0)
     {
-      for (int i = 0; i < (4 - (cntSub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntSub % 4)); i++)
       {
         addrPtr += 1;
       }
@@ -525,7 +525,7 @@ public:
     {%if def_data.size==2 %}
     if (cntSub%4 > 0 and 2 <= (4 - (cntSub % 4)))
     {
-      for (int i = 0; i < (4 - (cntSub % 4)) - {{def_data.size}}; i++)
+      for (uint32_t i = 0; i < (4 - (cntSub % 4)) - {{def_data.size}}; i++)
       {
         addrPtr += 1;
       }
@@ -533,7 +533,7 @@ public:
     }
     else if (cntSub % 4 > 0)
     {
-      for (int i = 0; i < (4 - (cntSub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntSub % 4)); i++)
       {
         addrPtr += 1;
       }
@@ -542,7 +542,7 @@ public:
     {% elif def_data.size==4 %}
     if (cntSub % 4 > 0)
     {
-      for (int i = 0; i < (4 - (cntSub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntSub % 4)); i++)
       {
         addrPtr += 1;
       }
@@ -551,7 +551,7 @@ public:
     {% elif def_data.size==8 %}
     if (cntSub % 8 > 0)
     {
-      for (int i = 0; i < (8 - (cntSub % 8)); i++)
+      for (uint32_t i = 0; i < (8 - (cntSub % 8)); i++)
       {
         addrPtr += 1;
       }
@@ -572,7 +572,7 @@ public:
     if (cntPub % 4 > 0)
     {
       addrPtr += cntPub;
-      for (int i = 0; i < (4 - (cntPub % 4)); i++)
+      for (uint32_t i = 0; i < (4 - (cntPub % 4)); i++)
       {
         *addrPtr = 0;
         addrPtr += 1;
