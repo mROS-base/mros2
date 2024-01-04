@@ -136,7 +136,7 @@ Please note that this repository contains [embeddedRTPS and its third-party libr
 
 ### English
 
-- [ROSCon 2022](https://roscon.ros.org/2022/): ``mROS 2: yet another runtime environment onto embedded devices'' [movie](https://vimeo.com/showcase/9954564/video/767140724) [slide](https://speakerdeck.com/takasehideki/mros-2-yet-another-runtime-environment-onto-embedded-devices)
+- [ROSCon 2022](https://roscon.ros.org/2022/): ``mROS 2: yet another runtime environment onto embedded devices'' [movie](https://vimeo.com/showcase/9954564/video/767150435) [slide](https://speakerdeck.com/takasehideki/mros-2-yet-another-runtime-environment-onto-embedded-devices)
 
 ### Japanese ;(
 
